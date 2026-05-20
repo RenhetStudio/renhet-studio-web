@@ -5,15 +5,11 @@ const socialLinks = [
   },
   {
     label: "Instagram",
-    href: "https://instagram.com/renhetstudio",
+    href: "https://www.instagram.com/renhet.studio/",
   },
   {
-    label: "TikTok",
-    href: "https://tiktok.com/@renhetstudio",
-  },
-  {
-    label: "YouTube",
-    href: "https://youtube.com/@renhetstudio",
+    label: "itch.io",
+    href: "https://renhetstudio.itch.io/",
   },
 ];
 
@@ -117,6 +113,15 @@ export default function Home() {
                 Our first game is currently in early development. Follow Renhet
                 Studio for future updates.
               </p>
+
+              <a
+                href="https://renhetstudio.itch.io/"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 inline-flex rounded-full border border-neutral-800 px-5 py-2 text-sm font-medium text-neutral-200 transition hover:border-neutral-500 hover:text-neutral-100"
+              >
+                Visit our itch.io
+              </a>
             </div>
           </div>
         </section>
@@ -135,12 +140,14 @@ export default function Home() {
               <div className="mt-8 flex flex-wrap gap-3">
                 {socialLinks.map((link) => (
                   <a
-                    key={link.label}
-                    href={link.href}
-                    className="rounded-full border border-neutral-800 px-4 py-2 text-sm text-neutral-300 transition hover:border-neutral-500 hover:text-neutral-100"
-                  >
-                    {link.label}
-                  </a>
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-neutral-800 px-4 py-2 text-sm text-neutral-300 transition hover:border-neutral-500 hover:text-neutral-100"
+                >
+                  {link.label}
+                </a>
                 ))}
               </div>
             </div>
