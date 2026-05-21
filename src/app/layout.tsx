@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
+import { Geist } from "next/font/google";
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -7,12 +12,12 @@ export const metadata: Metadata = {
     template: "%s | Renhet Studio",
   },
   description:
-    "Renhet Studio is an independent video game studio crafting atmospheric games with memorable worlds.",
+    "Renhet Studio is an independent international game studio shaping handmade worlds through code, art, music, sound, design, and production.",
   metadataBase: new URL("https://www.renhetstudio.com"),
   openGraph: {
     title: "Renhet Studio",
     description:
-      "Independent video game studio crafting atmospheric games with memorable worlds.",
+      "Independent international game studio shaping handmade worlds through code, art, music, sound, design, and production.",
     url: "https://www.renhetstudio.com",
     siteName: "Renhet Studio",
     type: "website",
@@ -21,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Renhet Studio",
     description:
-      "Independent video game studio crafting atmospheric games with memorable worlds.",
+      "Independent international game studio shaping handmade worlds through code, art, music, sound, design, and production.",
   },
 };
 
@@ -31,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={geist.className}>
       <body>{children}</body>
     </html>
   );
