@@ -294,12 +294,13 @@ a {
 
 .team-name {
   color: #fffdf3;
-  font-size: clamp(1.25rem, 1.55vw, 2.05rem);
+  font-size: clamp(1.2rem, 1.35vw, 1.8rem);
   font-weight: 950;
   line-height: 0.94;
   margin: 0.55rem 0 0;
   max-width: 12rem;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .team-country {

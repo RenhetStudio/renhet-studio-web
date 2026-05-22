@@ -242,7 +242,7 @@ export default function Home() {
               className="mb-8 w-full max-w-[360px] rounded-[1.7rem] border-2 border-[#fffdf3]/60"
             />
             <h2 className="max-w-4xl text-[clamp(3rem,7vw,7rem)] font-black leading-[0.88] tracking-normal">
-              Follow the sparks.
+              Follow the adventures.
             </h2>
           </div>
 
