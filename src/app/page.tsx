@@ -30,7 +30,14 @@ const team = [
     accent: "art",
   },
   {
-    name: "Daniel",
+    name: "Habin",
+    role: "Animator",
+    country: "South Korea",
+    href: "https://www.notion.so/Habin-Yoon_Portfolio-c07cfee2d7fc828880a281241bc94189",
+    accent: "animation",
+  },
+  {
+    name: "Daniël",
     role: "Composer",
     country: "The Netherlands",
     href: "https://daniel-otten.bandcamp.com/",
@@ -210,7 +217,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="team-accordion rounded-[2rem] border-2 border-[#d6d5ca]">
+          <div className="team-grid">
             {team.map((member) => (
               <a
                 href={member.href}
