@@ -151,16 +151,6 @@ a {
   pointer-events: none;
 }
 
-.mascot-eye {
-  position: absolute;
-  top: 34%;
-  height: 32%;
-  width: 24%;
-  border-radius: 999px;
-  background: #4f5f70;
-  box-shadow: inset 11px 0 0 rgba(255, 253, 243, 0.62);
-}
-
 .craft-card:nth-child(2n) {
   transform: rotate(0.45deg);
 }
