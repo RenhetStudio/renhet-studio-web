@@ -23,7 +23,7 @@ const team = [
     accent: "programming",
   },
   {
-    name: "Eunji",
+    name: "Jay",
     role: "Artist",
     country: "South Korea",
     href: "https://www.artstation.com/kiwi_lee",
@@ -63,6 +63,20 @@ const team = [
     country: "Czech Republic",
     href: "https://www.linkedin.com/in/vaclavkorycanek/",
     accent: "production",
+  },
+  {
+    name: "Freya",
+    role: "Marketer",
+    country: "UK",
+    href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
+    accent: "production",
+  },
+  {
+    name: "Jun",
+    role: "VFX Artist",
+    country: "South Korea",
+    href: "https://www.linkedin.com/in/gwngjun-lee-477ba5139/",
+    accent: "art",
   },
 ];
 
