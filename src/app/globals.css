@@ -126,29 +126,9 @@ a {
   border-color: #b8d4f0;
 }
 
-.game-window-art,
 .team-panel-image {
   position: absolute;
   inset: 0;
-}
-
-.game-window-art {
-  background:
-    linear-gradient(180deg, rgba(255, 253, 243, 0.08), rgba(47, 61, 75, 0.16)),
-    url("https://picsum.photos/seed/renhet-cozy-game-cabin/1200/1400");
-  background-position: center;
-  background-size: cover;
-  filter: saturate(0.86) contrast(1.08);
-}
-
-.game-window::before {
-  position: absolute;
-  inset: 7%;
-  z-index: 1;
-  border: 2px dashed rgba(255, 253, 243, 0.44);
-  border-radius: 2rem;
-  content: "";
-  pointer-events: none;
 }
 
 .craft-card:nth-child(2n) {

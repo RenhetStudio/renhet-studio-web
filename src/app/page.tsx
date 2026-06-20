@@ -3,10 +3,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const studioLinks = [
   { label: "X", href: "https://x.com/renhetstudio" },
@@ -100,30 +97,14 @@ export default function Home() {
         ease: "power3.out",
       });
 
-      gsap.to(".mascot-float", {
-        y: -18,
-        rotate: 2,
-        duration: 2.8,
+      gsap.to(".game-logo-float", {
+        y: -14,
+        rotate: 1.2,
+        duration: 3.2,
         yoyo: true,
         repeat: -1,
         ease: "sine.inOut",
       });
-
-      gsap.fromTo(
-        ".image-scrub",
-        { scale: 0.86, opacity: 0.45 },
-        {
-          scale: 1,
-          opacity: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".image-scrub",
-            start: "top 88%",
-            end: "bottom 28%",
-            scrub: true,
-          },
-        },
-      );
     },
     { scope: root },
   );
@@ -147,8 +128,8 @@ export default function Home() {
           </a>
 
           <div className="hidden items-center gap-1 md:flex">
-            <a className="nav-link" href="#studio">
-              Studio
+            <a className="nav-link" href="#game">
+              Beelze Pub
             </a>
             <a className="nav-link" href="#team">
               Crew
@@ -159,12 +140,12 @@ export default function Home() {
           </div>
 
           <a
-            href="https://renhetstudio.itch.io/"
+            href="https://renhetstudio.itch.io/beelze-pub"
             target="_blank"
             rel="noreferrer"
             className="rounded-full bg-[#fffdf3] px-5 py-3 text-sm font-black text-[#4f5f70] transition duration-300 hover:-translate-y-0.5 hover:bg-[#b8d4f0]"
           >
-            Itch.io
+            Play now
           </a>
         </div>
       </nav>
@@ -187,37 +168,44 @@ export default function Home() {
               A tiny indie game studio making warm, handmade things.
             </p>
             <div className="hero-enter mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a className="button-primary" href="#team">
-                Meet the crew
+              <a className="button-primary" href="#game">
+                Play our first game
               </a>
-              <a className="button-secondary" href="#contact">
-                Follow along
+              <a className="button-secondary" href="#team">
+                Meet the crew
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="studio" className="px-5 py-24 sm:px-8 md:py-32 lg:px-10">
+      <section id="game" className="px-5 py-24 sm:px-8 md:py-32 lg:px-10">
         <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.52fr_0.48fr] lg:items-center">
-          <h2 className="max-w-5xl text-[clamp(2.6rem,6vw,6.2rem)] font-black leading-[0.92] tracking-normal text-[#4f5f70]">
-            Small team. Special charm. First game underway.
-          </h2>
-          <div className="relative min-h-[520px]">
-            <div className="image-scrub game-window group absolute inset-x-0 top-0 min-h-[450px] overflow-hidden rounded-[2.25rem] border-2 border-[#d6d5ca] bg-[#8fb8d8] shadow-[0_28px_80px_rgba(79,95,112,0.12)]">
-              <div className="game-window-art transition duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#2f3d4b]/76 via-[#2f3d4b]/14 to-transparent" />
-              <p className="absolute left-7 top-7 max-w-[15rem] text-3xl font-black leading-none text-[#fffdf3] sm:text-5xl">
-                Workbench first. Trailer later.
-              </p>
+          <div>
+            <h2 className="max-w-5xl text-[clamp(2.6rem,6vw,6.2rem)] font-black leading-[0.92] tracking-normal text-[#4f5f70]">
+              Our first game is out now.
+            </h2>
+            <p className="mt-6 max-w-xl text-lg font-bold leading-8 text-[#627383] sm:text-xl">
+              Mix drinks, serve customers, and keep the business running as Skelly, a laid-back skeletender filling in at Beelze Pub for the weekend.
+            </p>
+            <div className="mt-8 flex max-w-xl justify-center">
+              <a
+                href="https://renhetstudio.itch.io/beelze-pub"
+                target="_blank"
+                rel="noreferrer"
+                className="button-primary"
+              >
+                Play free on Itch.io
+              </a>
             </div>
+          </div>
+          <div className="flex min-h-[420px] items-center justify-center">
             <Image
-              src="/renhet-symbol-dark.png"
-              alt=""
-              width={475}
-              height={475}
-              aria-hidden="true"
-              className="mascot-float absolute -bottom-2 right-2 h-40 w-40 object-contain drop-shadow-[0_18px_0_rgba(79,95,112,0.16)] sm:h-52 sm:w-52"
+              src="/beelze-pub/logo.png"
+              alt="Beelze Pub"
+              width={558}
+              height={558}
+              className="game-logo-float h-auto w-full max-w-[420px] object-contain drop-shadow-[0_24px_28px_rgba(79,95,112,0.18)]"
             />
           </div>
         </div>
