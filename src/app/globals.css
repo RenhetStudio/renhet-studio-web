@@ -165,7 +165,7 @@ a {
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -175,7 +175,7 @@ a {
   border-radius: 1.65rem;
   box-shadow: 0 22px 52px rgba(79, 95, 112, 0.12);
   display: block;
-  grid-column: span 3;
+  grid-column: auto;
   isolation: isolate;
   min-width: 0;
   overflow: hidden;
@@ -190,12 +190,6 @@ a {
 .team-panel:focus-visible {
   box-shadow: 0 30px 70px rgba(79, 95, 112, 0.18);
   transform: translateY(-0.45rem) rotate(0deg);
-}
-
-.team-panel:nth-child(1),
-.team-panel:nth-child(2),
-.team-panel:nth-child(3) {
-  grid-column: span 4;
 }
 
 .team-panel:nth-child(2n) {
