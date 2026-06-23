@@ -9,6 +9,7 @@ import Link from "next/link";
 const studioLinks = [
   { label: "X", href: "https://x.com/renhetstudio" },
   { label: "Instagram", href: "https://www.instagram.com/renhet.studio/" },
+  { label: "TikTok", href: "https://www.tiktok.com/@renhetstudio" },
   { label: "Itch.io", href: "https://renhetstudio.itch.io/" },
 ];
 
@@ -134,14 +135,22 @@ export default function Home() {
             </a>
           </div>
 
-          <a
-            href="https://renhetstudio.itch.io/beelze-pub"
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full bg-[#fffdf3] px-5 py-3 text-sm font-black text-[#4f5f70] transition duration-300 hover:-translate-y-0.5 hover:bg-[#b8d4f0]"
-          >
-            Play now
-          </a>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/blog"
+              className="rounded-full px-3 py-3 text-sm font-black text-[#fffdf3] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fffdf3]/15 md:hidden"
+            >
+              Blog
+            </Link>
+            <a
+              href="https://renhetstudio.itch.io/beelze-pub"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-[#fffdf3] px-5 py-3 text-sm font-black text-[#4f5f70] transition duration-300 hover:-translate-y-0.5 hover:bg-[#b8d4f0]"
+            >
+              Play now
+            </a>
+          </div>
         </div>
       </nav>
 
