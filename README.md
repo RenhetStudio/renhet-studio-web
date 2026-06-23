@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Renhet Studio website
 
-## Getting Started
+Renhet Studio's official site and blog.
 
-First, run the development server:
+## Blog
+
+- Public blog: `/blog`
+- Editorial dashboard: `/blog/dashboard`
+- Login: `/login`
+- Account page: `/account`
+- RSS feed: `/blog/feed.xml`
+
+Authors can create rich posts, upload cover/media files, preview drafts, schedule publication, and moderate comments. Readers can sign in with Google or an email magic link, edit their display name, and submit moderated comments.
+
+The blog name and tagline are editable in `src/lib/blog/config.ts`.
+
+## Operations
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Required environment variables:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+NEXT_PUBLIC_SITE_URL=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Do not expose a Supabase service-role key in this application.
 
-## Learn More
+## Security model
 
-To learn more about Next.js, take a look at the following resources:
+- Supabase row-level security is the source of truth for post, comment, profile, and media permissions.
+- Reader accounts cannot write posts, upload media, preview drafts, publish, or moderate.
+- Comments are inserted as `pending` and require author/admin approval.
+- Comment submissions are rate-limited in the database.
+- Rich post content is stored as structured JSON and rendered through an allowlisted React renderer. User-authored HTML is not executed.
+- Uploaded files are limited to approved image, video, and audio MIME types and 50 MB.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The database schema and policies live in `supabase/migrations/202606220001_blog.sql`.

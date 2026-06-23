@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
+import Link from "next/link";
 
 const studioLinks = [
   { label: "X", href: "https://x.com/renhetstudio" },
@@ -125,6 +126,9 @@ export default function Home() {
             <a className="nav-link" href="#team">
               Crew
             </a>
+            <Link className="nav-link" href="/blog">
+              Renhet Between Builds
+            </Link>
             <a className="nav-link" href="#contact">
               Follow
             </a>
