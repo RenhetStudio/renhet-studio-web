@@ -21,6 +21,18 @@ const team = [
     href: "https://www.bitemdev.com/",
   },
   {
+    name: "Vaclav",
+    role: "Producer",
+    country: "Czech Republic",
+    href: "https://www.linkedin.com/in/vaclavkorycanek/",
+  },
+  {
+    name: "Todd",
+    role: "Game Designer",
+    country: "USA",
+    href: "https://nat20.mal.plus/technical-portfolio/",
+  },
+  {
     name: "Jay",
     role: "Artist",
     country: "South Korea",
@@ -33,16 +45,16 @@ const team = [
     href: "https://www.notion.so/Habin-Yoon_Portfolio-c07cfee2d7fc828880a281241bc94189",
   },
   {
+    name: "Jun",
+    role: "VFX Artist",
+    country: "South Korea",
+    href: "https://www.linkedin.com/in/gwngjun-lee-477ba5139/",
+  },
+  {
     name: "Daniël",
     role: "Composer",
     country: "The Netherlands",
     href: "https://daniel-otten.bandcamp.com/",
-  },
-  {
-    name: "Todd",
-    role: "Game Designer",
-    country: "USA",
-    href: "https://nat20.mal.plus/technical-portfolio/",
   },
   {
     name: "Ben",
@@ -51,22 +63,16 @@ const team = [
     href: "https://benaaronaudio.com/",
   },
   {
-    name: "Vaclav",
-    role: "Producer",
-    country: "Czech Republic",
-    href: "https://www.linkedin.com/in/vaclavkorycanek/",
-  },
-  {
     name: "Freya",
     role: "Marketer",
     country: "UK",
     href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
   },
   {
-    name: "Jun",
-    role: "VFX Artist",
-    country: "South Korea",
-    href: "https://www.linkedin.com/in/gwngjun-lee-477ba5139/",
+    name: "Ren",
+    role: "Marketer",
+    country: "UK",
+    href: "https://www.linkedin.com/in/lawrenceyoung90/",
   },
 ];
 
