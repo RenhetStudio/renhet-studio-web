@@ -23,7 +23,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: "article",
       publishedTime: post.published_at ?? undefined,
       modifiedTime: post.updated_at,
-      images: post.cover_image_url ? [{ url: post.cover_image_url, alt: post.cover_image_alt }] : undefined,
     },
   };
 }
@@ -46,7 +45,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     description: post.excerpt,
     datePublished: publishedDate,
     dateModified: post.updated_at,
-    image: post.cover_image_url || undefined,
     publisher: { "@type": "Organization", name: "Renhet Studio", url: "https://www.renhetstudio.com" },
     mainEntityOfPage: `https://www.renhetstudio.com/blog/${post.slug}`,
   };
@@ -67,12 +65,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             {new Intl.DateTimeFormat("en", { dateStyle: "long" }).format(new Date(publishedDate))}
           </time>
         </header>
-        {post.cover_image_url && (
-          <figure className="post-cover">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={post.cover_image_url} alt={post.cover_image_alt || ""} />
-          </figure>
-        )}
         <RichContent content={post.content} />
       </article>
 

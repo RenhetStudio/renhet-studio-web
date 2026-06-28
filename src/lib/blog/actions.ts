@@ -31,8 +31,6 @@ export async function savePostAction(
     slug: input.slug,
     excerpt: input.excerpt,
     category: input.category,
-    cover_image_url: input.coverImageUrl || null,
-    cover_image_alt: input.coverImageAlt,
     content: input.content,
     status: input.status,
     published_at: publishedAt,

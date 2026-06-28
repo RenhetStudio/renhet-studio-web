@@ -25,6 +25,12 @@ function youtubeEmbed(value: unknown) {
   }
 }
 
+function mediaStyle(value: unknown): React.CSSProperties {
+  const width = Number(value);
+  const safeWidth = [25, 50, 75, 100].includes(width) ? width : 100;
+  return { width: `${safeWidth}%` };
+}
+
 function renderText(node: JSONContent, key: string) {
   let content: React.ReactNode = node.text ?? "";
   for (const [index, mark] of (node.marks ?? []).entries()) {
@@ -77,7 +83,7 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
       const src = safeUrl(node.attrs?.src);
       if (!src) return null;
       return (
-        <figure key={key}>
+        <figure className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={src} alt={typeof node.attrs?.alt === "string" ? node.attrs.alt : ""} />
           {node.attrs?.title && <figcaption>{String(node.attrs.title)}</figcaption>}
@@ -86,15 +92,15 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
     }
     case "youtube": {
       const src = youtubeEmbed(node.attrs?.src);
-      return src ? <div className="content-embed" key={key}><iframe src={src} title="Embedded YouTube video" allowFullScreen loading="lazy" /></div> : null;
+      return src ? <div className="content-embed" key={key} style={mediaStyle(node.attrs?.mediaWidth)}><iframe src={src} title="Embedded YouTube video" allowFullScreen loading="lazy" /></div> : null;
     }
     case "video": {
       const src = safeUrl(node.attrs?.src);
-      return src ? <video key={key} src={src} controls preload="metadata" /> : null;
+      return src ? <video className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth)} src={src} controls preload="metadata" /> : null;
     }
     case "audio": {
       const src = safeUrl(node.attrs?.src);
-      return src ? <audio key={key} src={src} controls preload="metadata" /> : null;
+      return src ? <audio className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth)} src={src} controls preload="metadata" /> : null;
     }
     case "table": return <div className="content-table-wrap" key={key}><table>{children}</table></div>;
     case "tableRow": return <tr key={key}>{children}</tr>;

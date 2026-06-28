@@ -7,7 +7,6 @@ import { BLOG_CATEGORIES } from "@/lib/blog/config";
 import type { BlogPost } from "@/lib/blog/types";
 import { savePostAction, type ActionState } from "@/lib/blog/actions";
 import { RichEditor } from "./rich-editor";
-import { createClient } from "@/lib/supabase/client";
 
 const EMPTY_CONTENT: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
 const initialState: ActionState = { ok: false, message: "" };
@@ -29,19 +28,6 @@ function localDate(value: string | null) {
   return shifted.toISOString().slice(0, 16);
 }
 
-async function uploadCover(file: File) {
-  const response = await fetch("/api/media", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ filename: file.name, contentType: file.type, size: file.size }),
-  });
-  const signed = (await response.json()) as { path?: string; token?: string; publicUrl?: string; error?: string };
-  if (!response.ok || !signed.path || !signed.token || !signed.publicUrl) throw new Error(signed.error ?? "Upload failed");
-  const { error } = await createClient().storage.from("blog-media").uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
-  if (error) throw error;
-  return signed.publicUrl;
-}
-
 export function PostEditor({ post }: { post?: BlogPost }) {
   const router = useRouter();
   const [state, action, pending] = useActionState(savePostAction, initialState);
@@ -49,9 +35,6 @@ export function PostEditor({ post }: { post?: BlogPost }) {
   const [slug, setSlug] = useState(post?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(post));
   const [content, setContent] = useState<JSONContent>(post?.content ?? EMPTY_CONTENT);
-  const [cover, setCover] = useState(post?.cover_image_url ?? "");
-  const [coverBusy, setCoverBusy] = useState(false);
-  const [coverError, setCoverError] = useState("");
 
   useEffect(() => {
     if (state.ok && state.id && !post) router.replace(`/blog/dashboard/posts/${state.id}`);
@@ -61,7 +44,6 @@ export function PostEditor({ post }: { post?: BlogPost }) {
     <form action={action} className="post-editor-form">
       {post && <input type="hidden" name="id" value={post.id} />}
       <input type="hidden" name="content" value={JSON.stringify(content)} />
-      <input type="hidden" name="coverImageUrl" value={cover} />
 
       <div className="editor-topbar">
         <div>
@@ -70,7 +52,7 @@ export function PostEditor({ post }: { post?: BlogPost }) {
         </div>
         <div>
           {post && <a href={`/blog/preview/${post.id}`} target="_blank" rel="noreferrer">Preview</a>}
-          <button type="submit" disabled={pending || coverBusy}>{pending ? "Saving…" : "Save post"}</button>
+          <button type="submit" disabled={pending}>{pending ? "Saving…" : "Save post"}</button>
         </div>
       </div>
 
@@ -99,38 +81,6 @@ export function PostEditor({ post }: { post?: BlogPost }) {
 
         <label><span>Short summary</span><textarea name="excerpt" defaultValue={post?.excerpt} maxLength={320} rows={3} placeholder="Shown on the blog index and in search results." /></label>
 
-        <div className="cover-field">
-          <div>
-            <span>Cover image</span>
-            <p>JPEG, PNG, WebP, or GIF. Use a wide image and provide meaningful alt text.</p>
-            <label className="cover-upload">
-              {coverBusy ? "Uploading…" : cover ? "Replace cover" : "Upload cover"}
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                disabled={coverBusy}
-                onChange={async (event) => {
-                  const file = event.target.files?.[0];
-                  if (!file) return;
-                  setCoverBusy(true);
-                  setCoverError("");
-                  try { setCover(await uploadCover(file)); }
-                  catch (error) { setCoverError(error instanceof Error ? error.message : "Upload failed"); }
-                  finally { setCoverBusy(false); event.target.value = ""; }
-                }}
-              />
-            </label>
-            {cover && <button className="cover-remove" type="button" onClick={() => setCover("")}>Remove</button>}
-            {coverError && <p className="form-error">{coverError}</p>}
-          </div>
-          {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={cover} alt="Current cover preview" />
-          ) : <div className="cover-placeholder">No cover selected</div>}
-        </div>
-
-        <label><span>Cover image alt text</span><input name="coverImageAlt" defaultValue={post?.cover_image_alt} maxLength={180} placeholder="Describe the image for screen readers" /></label>
-
         <div className="editor-content-field">
           <span>Story</span>
           <RichEditor value={content} onChange={setContent} />
@@ -141,4 +91,3 @@ export function PostEditor({ post }: { post?: BlogPost }) {
     </form>
   );
 }
-

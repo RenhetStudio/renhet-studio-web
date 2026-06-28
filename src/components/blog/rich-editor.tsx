@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Node, mergeAttributes, type JSONContent } from "@tiptap/core";
+import { Extension, Node, mergeAttributes, type JSONContent } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -37,6 +37,22 @@ const VideoNode = Node.create({
   addAttributes: () => ({ src: { default: null } }),
   parseHTML: () => [{ tag: "video[src]" }],
   renderHTML: ({ HTMLAttributes }) => ["video", mergeAttributes(HTMLAttributes, { controls: "true" })],
+});
+
+const ResizableMedia = Extension.create({
+  name: "resizableMedia",
+  addGlobalAttributes() {
+    return [{
+      types: ["image", "video", "audio", "youtube"],
+      attributes: {
+        mediaWidth: {
+          default: 100,
+          parseHTML: (element) => Number(element.getAttribute("data-media-width")) || 100,
+          renderHTML: (attributes) => ({ "data-media-width": attributes.mediaWidth }),
+        },
+      },
+    }];
+  },
 });
 
 type MediaKind = "image" | "video" | "audio";
@@ -140,6 +156,7 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
       Typography,
       AudioNode,
       VideoNode,
+      ResizableMedia,
     ],
     content: value,
     onUpdate: ({ editor: currentEditor }) => {
@@ -167,6 +184,10 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
   const inTable = activeEditor.isActive("table");
   const canUndo = activeEditor.can().undo();
   const canRedo = activeEditor.can().redo();
+  const selectedMedia = (["image", "video", "audio", "youtube"] as const).find((type) => activeEditor.isActive(type));
+  const selectedMediaWidth = selectedMedia
+    ? Number(activeEditor.getAttributes(selectedMedia).mediaWidth) || 100
+    : 100;
 
   const blockStyle: BlockStyle = activeEditor.isActive("heading", { level: 1 })
     ? "h1"
@@ -300,6 +321,21 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
                   }}
                 />
               </label>
+            ))}
+          </ToolbarGroup>
+
+          <ToolbarGroup label="Selected media size">
+            {([25, 50, 75, 100] as const).map((width) => (
+              <ToolButton
+                key={width}
+                label={`${width}%`}
+                title={selectedMedia ? `Set selected ${selectedMedia} to ${width}% width` : "Select media in the post first"}
+                active={Boolean(selectedMedia) && selectedMediaWidth === width}
+                disabled={!selectedMedia}
+                onClick={() => {
+                  if (selectedMedia) activeEditor.chain().focus().updateAttributes(selectedMedia, { mediaWidth: width }).run();
+                }}
+              />
             ))}
           </ToolbarGroup>
 

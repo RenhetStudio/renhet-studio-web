@@ -1,12 +1,6 @@
 import { z } from "zod";
 import { BLOG_CATEGORIES } from "./config";
 
-const urlOrEmpty = z
-  .string()
-  .trim()
-  .max(2048)
-  .refine((value) => !value || /^https:\/\//i.test(value), "Use a secure HTTPS URL");
-
 export const postSchema = z.object({
   id: z.string().uuid().optional(),
   title: z.string().trim().min(1).max(160),
@@ -18,8 +12,6 @@ export const postSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase words separated by hyphens"),
   excerpt: z.string().trim().max(320),
   category: z.enum(BLOG_CATEGORIES),
-  coverImageUrl: urlOrEmpty,
-  coverImageAlt: z.string().trim().max(180),
   content: z.string().min(1).max(1_000_000).transform((value, context) => {
     try {
       const parsed = JSON.parse(value) as unknown;
@@ -57,4 +49,3 @@ export const mediaSchema = z.object({
   ]),
   size: z.number().int().positive().max(52_428_800),
 });
-
