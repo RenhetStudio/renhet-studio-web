@@ -289,6 +289,7 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
             <ToolButton label="Left" active={activeEditor.isActive({ textAlign: "left" })} onClick={() => activeEditor.chain().focus().setTextAlign("left").run()} />
             <ToolButton label="Center" active={activeEditor.isActive({ textAlign: "center" })} onClick={() => activeEditor.chain().focus().setTextAlign("center").run()} />
             <ToolButton label="Right" active={activeEditor.isActive({ textAlign: "right" })} onClick={() => activeEditor.chain().focus().setTextAlign("right").run()} />
+            <ToolButton label="Justify" active={activeEditor.isActive({ textAlign: "justify" })} onClick={() => activeEditor.chain().focus().setTextAlign("justify").run()} />
           </ToolbarGroup>
         </div>
 
