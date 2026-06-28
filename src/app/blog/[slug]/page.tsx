@@ -38,6 +38,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   ]);
 
   const publishedDate = post.published_at ?? post.created_at;
+  const canEdit = profile && ["author", "admin"].includes(profile.role);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -64,6 +65,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <time dateTime={publishedDate}>
             {new Intl.DateTimeFormat("en", { dateStyle: "long" }).format(new Date(publishedDate))}
           </time>
+          {canEdit && <Link className="post-edit-link" href={`/blog/dashboard/posts/${post.id}`}>Edit this post</Link>}
         </header>
         <RichContent content={post.content} />
       </article>

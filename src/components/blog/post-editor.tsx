@@ -52,7 +52,7 @@ export function PostEditor({ post }: { post?: BlogPost }) {
         </div>
         <div>
           {post && <a href={`/blog/preview/${post.id}`} target="_blank" rel="noreferrer">Preview</a>}
-          <button type="submit" disabled={pending}>{pending ? "Saving…" : "Save post"}</button>
+          <button type="submit" disabled={pending}>{pending ? "Saving…" : post ? "Update post" : "Save post"}</button>
         </div>
       </div>
 

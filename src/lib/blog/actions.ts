@@ -54,7 +54,7 @@ export async function savePostAction(
   revalidatePath("/blog");
   revalidatePath("/blog/dashboard");
   revalidatePath(`/blog/${input.slug}`);
-  return { ok: true, message: "Post saved", id: data.id };
+  return { ok: true, message: input.id ? "Post updated" : "Post saved", id: data.id };
 }
 
 export async function deletePostAction(formData: FormData) {

@@ -33,7 +33,7 @@ export default async function DashboardPage() {
                     <td>{post.category}</td>
                     <td><span className={`status-badge status-${post.status}`}>{post.status}{post.status === "published" && post.published_at && new Date(post.published_at) > new Date() ? " · scheduled" : ""}</span></td>
                     <td>{new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(new Date(post.updated_at))}</td>
-                    <td><div className="dashboard-actions"><a href={`/blog/preview/${post.id}`} target="_blank" rel="noreferrer">Preview</a><DeletePostButton id={post.id} title={post.title} /></div></td>
+                    <td><div className="dashboard-actions"><Link href={`/blog/dashboard/posts/${post.id}`}>Edit</Link><a href={`/blog/preview/${post.id}`} target="_blank" rel="noreferrer">Preview</a><DeletePostButton id={post.id} title={post.title} /></div></td>
                   </tr>
                 ))}</tbody>
               </table>
@@ -62,4 +62,3 @@ export default async function DashboardPage() {
     </BlogShell>
   );
 }
-
