@@ -312,7 +312,11 @@ a {
 .editor-prose .ProseMirror-selectednode { outline: 3px solid #8fb8d8; outline-offset: 3px; }
 .editor-media-size { align-items: center; display: inline-flex; gap: .35rem; padding: 0 .4rem; }
 .editor-media-size span,.editor-media-hint { color: #718191; font-size: .72rem; font-weight: 850; }
-.editor-media-size input[type="range"] { accent-color: #344253; cursor: pointer; width: 8rem; }
+.editor-media-size input[type="range"] { appearance: none; background: linear-gradient(#c9c7bf,#c9c7bf) center / calc(100% - 1rem) .25rem no-repeat; cursor: pointer; height: 1rem; width: 8rem; }
+.editor-media-size input[type="range"]::-webkit-slider-runnable-track { background: transparent; height: .25rem; }
+.editor-media-size input[type="range"]::-webkit-slider-thumb { appearance: none; background: #344253; border: 0; border-radius: 50%; height: 1rem; margin-top: -.375rem; width: 1rem; }
+.editor-media-size input[type="range"]::-moz-range-track { background: transparent; height: .25rem; }
+.editor-media-size input[type="range"]::-moz-range-thumb { background: #344253; border: 0; border-radius: 50%; height: 1rem; width: 1rem; }
 .editor-media-size input[type="number"] { background: #fffdf3; border: 1px solid #c9c7bf; border-radius: .45rem; color: #344253; font: inherit; font-size: .78rem; font-weight: 850; padding: .3rem; width: 3.5rem; }
 .editor-media-size input:disabled { cursor: not-allowed; opacity: .45; }
 .editor-media-hint { padding: 0 .4rem; }
