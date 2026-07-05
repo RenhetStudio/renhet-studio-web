@@ -25,6 +25,7 @@ const AudioNode = Node.create({
   name: "audio",
   group: "block",
   atom: true,
+  draggable: true,
   addAttributes: () => ({ src: { default: null } }),
   parseHTML: () => [{ tag: "audio[src]" }],
   renderHTML: ({ HTMLAttributes }) => ["audio", mergeAttributes(HTMLAttributes, { controls: "true" })],
@@ -34,6 +35,7 @@ const VideoNode = Node.create({
   name: "video",
   group: "block",
   atom: true,
+  draggable: true,
   addAttributes: () => ({ src: { default: null } }),
   parseHTML: () => [{ tag: "video[src]" }],
   renderHTML: ({ HTMLAttributes }) => ["video", mergeAttributes(HTMLAttributes, { controls: "true" })],
@@ -47,8 +49,16 @@ const ResizableMedia = Extension.create({
       attributes: {
         mediaWidth: {
           default: 100,
-          parseHTML: (element) => Number(element.getAttribute("data-media-width")) || 100,
-          renderHTML: (attributes) => ({ "data-media-width": attributes.mediaWidth }),
+          parseHTML: (element) => Math.min(100, Math.max(10, Number(element.getAttribute("data-media-width")) || 100)),
+          renderHTML: (attributes) => {
+            const width = Math.min(100, Math.max(10, Number(attributes.mediaWidth) || 100));
+            return { "data-media-width": width, style: `width: ${width}%` };
+          },
+        },
+        mediaLayout: {
+          default: "standalone",
+          parseHTML: (element) => element.getAttribute("data-media-layout") || "standalone",
+          renderHTML: (attributes) => ({ "data-media-layout": attributes.mediaLayout }),
         },
       },
     }];
@@ -188,6 +198,13 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
   const selectedMediaWidth = selectedMedia
     ? Number(activeEditor.getAttributes(selectedMedia).mediaWidth) || 100
     : 100;
+  const selectedMediaLayout = selectedMedia
+    ? String(activeEditor.getAttributes(selectedMedia).mediaLayout || "standalone")
+    : "standalone";
+
+  function updateSelectedMedia(attributes: { mediaWidth?: number; mediaLayout?: string }) {
+    if (selectedMedia) activeEditor.chain().focus().updateAttributes(selectedMedia, attributes).run();
+  }
 
   const blockStyle: BlockStyle = activeEditor.isActive("heading", { level: 1 })
     ? "h1"
@@ -325,19 +342,58 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
             ))}
           </ToolbarGroup>
 
+          <ToolbarGroup label="Selected media layout">
+            <ToolButton
+              label="Wrap left"
+              title={selectedMedia ? `Place selected ${selectedMedia} on the left and wrap text around it` : "Select media in the post first"}
+              active={Boolean(selectedMedia) && selectedMediaLayout === "left"}
+              disabled={!selectedMedia}
+              onClick={() => updateSelectedMedia({ mediaLayout: "left" })}
+            />
+            <ToolButton
+              label="No wrap"
+              title={selectedMedia ? `Place selected ${selectedMedia} on its own line` : "Select media in the post first"}
+              active={Boolean(selectedMedia) && selectedMediaLayout === "standalone"}
+              disabled={!selectedMedia}
+              onClick={() => updateSelectedMedia({ mediaLayout: "standalone" })}
+            />
+            <ToolButton
+              label="Wrap right"
+              title={selectedMedia ? `Place selected ${selectedMedia} on the right and wrap text around it` : "Select media in the post first"}
+              active={Boolean(selectedMedia) && selectedMediaLayout === "right"}
+              disabled={!selectedMedia}
+              onClick={() => updateSelectedMedia({ mediaLayout: "right" })}
+            />
+          </ToolbarGroup>
+
           <ToolbarGroup label="Selected media size">
-            {([25, 50, 75, 100] as const).map((width) => (
-              <ToolButton
-                key={width}
-                label={`${width}%`}
-                title={selectedMedia ? `Set selected ${selectedMedia} to ${width}% width` : "Select media in the post first"}
-                active={Boolean(selectedMedia) && selectedMediaWidth === width}
+            <label className="editor-media-size">
+              <span>Width</span>
+              <input
+                type="range"
+                min="10"
+                max="100"
+                step="1"
+                value={selectedMediaWidth}
                 disabled={!selectedMedia}
-                onClick={() => {
-                  if (selectedMedia) activeEditor.chain().focus().updateAttributes(selectedMedia, { mediaWidth: width }).run();
-                }}
+                aria-label="Selected media width"
+                onChange={(event) => updateSelectedMedia({ mediaWidth: Number(event.target.value) })}
               />
-            ))}
+              <input
+                type="number"
+                min="10"
+                max="100"
+                step="1"
+                value={selectedMediaWidth}
+                disabled={!selectedMedia}
+                aria-label="Selected media width percentage"
+                onChange={(event) => updateSelectedMedia({ mediaWidth: Math.min(100, Math.max(10, Number(event.target.value) || 10)) })}
+              />
+              <span>%</span>
+            </label>
+            <span className="editor-media-hint">
+              {selectedMedia ? "Drag it in the document to move it." : "Select media first."}
+            </span>
           </ToolbarGroup>
 
           <ToolbarGroup label="Tables">

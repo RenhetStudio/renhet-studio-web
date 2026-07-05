@@ -25,10 +25,12 @@ function youtubeEmbed(value: unknown) {
   }
 }
 
-function mediaStyle(value: unknown): React.CSSProperties {
-  const width = Number(value);
-  const safeWidth = [25, 50, 75, 100].includes(width) ? width : 100;
-  return { width: `${safeWidth}%` };
+function mediaStyle(widthValue: unknown, layoutValue: unknown): React.CSSProperties {
+  const width = Math.min(100, Math.max(10, Number(widthValue) || 100));
+  const layout = ["left", "right"].includes(String(layoutValue)) ? String(layoutValue) : "standalone";
+  if (layout === "left") return { clear: "left", float: "left", margin: "0.5rem 2rem 1.25rem 0", width: `${width}%` };
+  if (layout === "right") return { clear: "right", float: "right", margin: "0.5rem 0 1.25rem 2rem", width: `${width}%` };
+  return { clear: "both", marginLeft: "auto", marginRight: "auto", width: `${width}%` };
 }
 
 function renderText(node: JSONContent, key: string) {
@@ -83,7 +85,7 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
       const src = safeUrl(node.attrs?.src);
       if (!src) return null;
       return (
-        <figure className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth)}>
+        <figure className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={src} alt={typeof node.attrs?.alt === "string" ? node.attrs.alt : ""} />
           {node.attrs?.title && <figcaption>{String(node.attrs.title)}</figcaption>}
@@ -92,15 +94,15 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
     }
     case "youtube": {
       const src = youtubeEmbed(node.attrs?.src);
-      return src ? <div className="content-embed" key={key} style={mediaStyle(node.attrs?.mediaWidth)}><iframe src={src} title="Embedded YouTube video" allowFullScreen loading="lazy" /></div> : null;
+      return src ? <div className="content-embed" key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)}><iframe src={src} title="Embedded YouTube video" allowFullScreen loading="lazy" /></div> : null;
     }
     case "video": {
       const src = safeUrl(node.attrs?.src);
-      return src ? <video className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth)} src={src} controls preload="metadata" /> : null;
+      return src ? <video className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)} src={src} controls preload="metadata" /> : null;
     }
     case "audio": {
       const src = safeUrl(node.attrs?.src);
-      return src ? <audio className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth)} src={src} controls preload="metadata" /> : null;
+      return src ? <audio className="content-media" key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)} src={src} controls preload="metadata" /> : null;
     }
     case "table": return <div className="content-table-wrap" key={key}><table>{children}</table></div>;
     case "tableRow": return <tr key={key}>{children}</tr>;

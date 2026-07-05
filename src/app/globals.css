@@ -303,10 +303,19 @@ a {
 .rich-content figure.content-media img,.rich-content video.content-media { height: auto; margin: 0; max-width: 100%; transform: none; width: 100%; }
 .rich-content audio.content-media { margin: 2rem auto; max-width: 100%; }
 .content-embed { margin: 3rem auto; max-width: 100%; transform: none; }
-.editor-prose [data-media-width="25"] { display: block; margin-left: auto; margin-right: auto; width: 25%; }
-.editor-prose [data-media-width="50"] { display: block; margin-left: auto; margin-right: auto; width: 50%; }
-.editor-prose [data-media-width="75"] { display: block; margin-left: auto; margin-right: auto; width: 75%; }
-.editor-prose [data-media-width="100"] { display: block; margin-left: auto; margin-right: auto; width: 100%; }
+.rich-content::after,.editor-prose::after { clear: both; content: ""; display: table; }
+.editor-prose [data-media-layout="standalone"] { clear: both; display: block; margin: 1.5rem auto; }
+.editor-prose [data-media-layout="left"] { clear: left; float: left; margin: .5rem 1.5rem 1rem 0; }
+.editor-prose [data-media-layout="right"] { clear: right; float: right; margin: .5rem 0 1rem 1.5rem; }
+.editor-prose div[data-youtube-video] { aspect-ratio: 16/9; }
+.editor-prose div[data-youtube-video] iframe { height: 100%; max-width: 100%; width: 100%; }
+.editor-prose .ProseMirror-selectednode { outline: 3px solid #8fb8d8; outline-offset: 3px; }
+.editor-media-size { align-items: center; display: inline-flex; gap: .35rem; padding: 0 .4rem; }
+.editor-media-size span,.editor-media-hint { color: #718191; font-size: .72rem; font-weight: 850; }
+.editor-media-size input[type="range"] { accent-color: #344253; cursor: pointer; width: 8rem; }
+.editor-media-size input[type="number"] { background: #fffdf3; border: 1px solid #c9c7bf; border-radius: .45rem; color: #344253; font: inherit; font-size: .78rem; font-weight: 850; padding: .3rem; width: 3.5rem; }
+.editor-media-size input:disabled { cursor: not-allowed; opacity: .45; }
+.editor-media-hint { padding: 0 .4rem; }
 
 @media (prefers-reduced-motion: reduce) { .category-marquee > div { animation: none; }.blog-reveal-image,.blog-scrub-copy { opacity: 1 !important; transform: none !important; } }
 @media (max-width: 900px) {
