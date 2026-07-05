@@ -369,13 +369,13 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
 
           <ToolbarGroup label="Selected media size">
             <label className="editor-media-size">
-              <span>Width</span>
+              <span className="editor-media-label">Width</span>
               <span className="editor-range-control">
                 <span className="editor-range-track" aria-hidden="true" />
                 <span
                   className="editor-range-thumb"
                   aria-hidden="true"
-                  style={{ left: `calc(${selectedMediaProgress}% - ${selectedMediaProgress / 100}rem)` }}
+                  style={{ left: `${selectedMediaProgress}%` }}
                 />
                 <input
                   type="range"
@@ -388,17 +388,19 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
                   onChange={(event) => updateSelectedMedia({ mediaWidth: Number(event.target.value) })}
                 />
               </span>
-              <input
-                type="number"
-                min="10"
-                max="100"
-                step="1"
-                value={selectedMediaWidth}
-                disabled={!selectedMedia}
-                aria-label="Selected media width percentage"
-                onChange={(event) => updateSelectedMedia({ mediaWidth: Math.min(100, Math.max(10, Number(event.target.value) || 10)) })}
-              />
-              <span>%</span>
+              <span className="editor-media-value">
+                <input
+                  type="number"
+                  min="10"
+                  max="100"
+                  step="1"
+                  value={selectedMediaWidth}
+                  disabled={!selectedMedia}
+                  aria-label="Selected media width percentage"
+                  onChange={(event) => updateSelectedMedia({ mediaWidth: Math.min(100, Math.max(10, Number(event.target.value) || 10)) })}
+                />
+                <span className="editor-media-unit">%</span>
+              </span>
             </label>
             <span className="editor-media-hint">
               {selectedMedia ? "Drag it in the document to move it." : "Select media first."}
