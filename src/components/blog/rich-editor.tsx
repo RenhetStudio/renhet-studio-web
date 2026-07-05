@@ -201,6 +201,7 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
   const selectedMediaLayout = selectedMedia
     ? String(activeEditor.getAttributes(selectedMedia).mediaLayout || "standalone")
     : "standalone";
+  const selectedMediaProgress = Math.min(100, Math.max(0, ((selectedMediaWidth - 10) / 90) * 100));
 
   function updateSelectedMedia(attributes: { mediaWidth?: number; mediaLayout?: string }) {
     if (selectedMedia) activeEditor.chain().focus().updateAttributes(selectedMedia, attributes).run();
@@ -369,16 +370,24 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
           <ToolbarGroup label="Selected media size">
             <label className="editor-media-size">
               <span>Width</span>
-              <input
-                type="range"
-                min="10"
-                max="100"
-                step="1"
-                value={selectedMediaWidth}
-                disabled={!selectedMedia}
-                aria-label="Selected media width"
-                onChange={(event) => updateSelectedMedia({ mediaWidth: Number(event.target.value) })}
-              />
+              <span className="editor-range-control">
+                <span className="editor-range-track" aria-hidden="true" />
+                <span
+                  className="editor-range-thumb"
+                  aria-hidden="true"
+                  style={{ left: `calc(${selectedMediaProgress}% - ${selectedMediaProgress / 100}rem)` }}
+                />
+                <input
+                  type="range"
+                  min="10"
+                  max="100"
+                  step="1"
+                  value={selectedMediaWidth}
+                  disabled={!selectedMedia}
+                  aria-label="Selected media width"
+                  onChange={(event) => updateSelectedMedia({ mediaWidth: Number(event.target.value) })}
+                />
+              </span>
               <input
                 type="number"
                 min="10"
