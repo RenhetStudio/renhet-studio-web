@@ -68,12 +68,6 @@ const team = [
     country: "UK",
     href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
   },
-  {
-    name: "Ren",
-    role: "Marketer",
-    country: "UK",
-    href: "https://www.linkedin.com/in/lawrenceyoung90/",
-  },
 ];
 
 export default function Home() {
