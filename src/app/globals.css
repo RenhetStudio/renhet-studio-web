@@ -307,6 +307,15 @@ a {
 .editor-prose [data-media-layout="standalone"] { clear: both; display: block; margin: 1.5rem auto; }
 .editor-prose [data-media-layout="left"] { clear: left; float: left; margin: .5rem 1.5rem 1rem 0; }
 .editor-prose [data-media-layout="right"] { clear: right; float: right; margin: .5rem 0 1rem 1.5rem; }
+.editor-prose [data-media-layout="row"] { box-sizing: border-box; display: inline-block; margin: .5rem 0 1rem; padding: .375rem; vertical-align: top; }
+.rich-content h1,.rich-content h2,.rich-content h3,.editor-prose h1,.editor-prose h2,.editor-prose h3 { clear: both; }
+.content-section-gap { clear: both; height: 3rem; }
+.content-section-gap[data-gap-size="small"] { height: 1.5rem; }
+.content-section-gap[data-gap-size="large"] { height: 6rem; }
+.editor-prose [data-section-gap] { clear: both; color: #718191; height: 3rem; margin: 1rem 0; position: relative; }
+.editor-prose [data-section-gap]::before { border-top: 2px dashed #c9c7bf; content: "Section gap"; font-size: .7rem; font-weight: 850; left: 0; letter-spacing: .08em; padding-top: .25rem; position: absolute; right: 0; text-align: center; text-transform: uppercase; top: 50%; }
+.editor-prose [data-section-gap][data-gap-size="small"] { height: 1.5rem; }
+.editor-prose [data-section-gap][data-gap-size="large"] { height: 6rem; }
 .editor-prose div[data-youtube-video] { aspect-ratio: 16/9; }
 .editor-prose div[data-youtube-video] iframe { height: 100%; max-width: 100%; width: 100%; }
 .editor-prose .ProseMirror-selectednode { outline: 3px solid #8fb8d8; outline-offset: 3px; }

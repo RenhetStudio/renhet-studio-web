@@ -41,6 +41,36 @@ const VideoNode = Node.create({
   renderHTML: ({ HTMLAttributes }) => ["video", mergeAttributes(HTMLAttributes, { controls: "true" })],
 });
 
+const SectionGapNode = Node.create({
+  name: "sectionGap",
+  group: "block",
+  atom: true,
+  draggable: true,
+  addAttributes: () => ({
+    size: {
+      default: "medium",
+      parseHTML: (element) => {
+        const size = element.getAttribute("data-gap-size");
+        return ["small", "medium", "large"].includes(size ?? "") ? size : "medium";
+      },
+      renderHTML: (attributes) => ({
+        "data-gap-size": ["small", "medium", "large"].includes(String(attributes.size))
+          ? attributes.size
+          : "medium",
+      }),
+    },
+  }),
+  parseHTML: () => [{ tag: "div[data-section-gap]" }],
+  renderHTML: ({ HTMLAttributes }) => [
+    "div",
+    mergeAttributes(HTMLAttributes, {
+      "data-section-gap": "",
+      role: "separator",
+      "aria-label": "Section gap",
+    }),
+  ],
+});
+
 const ResizableMedia = Extension.create({
   name: "resizableMedia",
   addGlobalAttributes() {
@@ -166,6 +196,7 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
       Typography,
       AudioNode,
       VideoNode,
+      SectionGapNode,
       ResizableMedia,
     ],
     content: value,
@@ -205,6 +236,13 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
 
   function updateSelectedMedia(attributes: { mediaWidth?: number; mediaLayout?: string }) {
     if (selectedMedia) activeEditor.chain().focus().updateAttributes(selectedMedia, attributes).run();
+  }
+
+  function insertSectionGap(size: "small" | "medium" | "large") {
+    activeEditor.chain().focus().insertContent([
+      { type: "sectionGap", attrs: { size } },
+      { type: "paragraph" },
+    ]).run();
   }
 
   const blockStyle: BlockStyle = activeEditor.isActive("heading", { level: 1 })
@@ -319,6 +357,12 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
             <ToolButton label="Rule" title="Horizontal rule" onClick={() => activeEditor.chain().focus().setHorizontalRule().run()} />
           </ToolbarGroup>
 
+          <ToolbarGroup label="Section spacing">
+            <ToolButton label="Gap S" title="Start a new section after a small gap" onClick={() => insertSectionGap("small")} />
+            <ToolButton label="Gap M" title="Start a new section after a medium gap" onClick={() => insertSectionGap("medium")} />
+            <ToolButton label="Gap L" title="Start a new section after a large gap" onClick={() => insertSectionGap("large")} />
+          </ToolbarGroup>
+
           <ToolbarGroup label="Links and media">
             <ToolButton label="Link" active={activeEditor.isActive("link")} onClick={addLink} />
             <ToolButton label="Unlink" disabled={!activeEditor.isActive("link")} onClick={() => activeEditor.chain().focus().unsetLink().run()} />
@@ -350,6 +394,13 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
               active={Boolean(selectedMedia) && selectedMediaLayout === "left"}
               disabled={!selectedMedia}
               onClick={() => updateSelectedMedia({ mediaLayout: "left" })}
+            />
+            <ToolButton
+              label="Row"
+              title={selectedMedia ? "Place consecutive row media side by side" : "Select media in the post first"}
+              active={Boolean(selectedMedia) && selectedMediaLayout === "row"}
+              disabled={!selectedMedia}
+              onClick={() => updateSelectedMedia({ mediaLayout: "row", mediaWidth: Math.min(selectedMediaWidth, 50) })}
             />
             <ToolButton
               label="No wrap"
@@ -403,7 +454,11 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
               </span>
             </label>
             <span className="editor-media-hint">
-              {selectedMedia ? "Drag it in the document to move it." : "Select media first."}
+              {selectedMediaLayout === "row"
+                ? "Set consecutive media to Row; two at 50% share one line."
+                : selectedMedia
+                  ? "Drag it in the document to move it."
+                  : "Select media first."}
             </span>
           </ToolbarGroup>
 

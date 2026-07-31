@@ -27,10 +27,22 @@ function youtubeEmbed(value: unknown) {
 
 function mediaStyle(widthValue: unknown, layoutValue: unknown): React.CSSProperties {
   const width = Math.min(100, Math.max(10, Number(widthValue) || 100));
-  const layout = ["left", "right"].includes(String(layoutValue)) ? String(layoutValue) : "standalone";
+  const layout = ["left", "right", "row"].includes(String(layoutValue)) ? String(layoutValue) : "standalone";
   if (layout === "left") return { clear: "left", float: "left", margin: "0.5rem 2rem 1.25rem 0", width: `${width}%` };
   if (layout === "right") return { clear: "right", float: "right", margin: "0.5rem 0 1.25rem 2rem", width: `${width}%` };
+  if (layout === "row") return {
+    boxSizing: "border-box",
+    display: "inline-block",
+    margin: "0.5rem 0 1.25rem",
+    padding: "0.375rem",
+    verticalAlign: "top",
+    width: `${width}%`,
+  };
   return { clear: "both", marginLeft: "auto", marginRight: "auto", width: `${width}%` };
+}
+
+function sectionGapSize(value: unknown) {
+  return ["small", "medium", "large"].includes(String(value)) ? String(value) : "medium";
 }
 
 function renderText(node: JSONContent, key: string) {
@@ -80,6 +92,14 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
     case "blockquote": return <blockquote key={key}>{children}</blockquote>;
     case "codeBlock": return <pre key={key}><code>{children}</code></pre>;
     case "horizontalRule": return <hr key={key} />;
+    case "sectionGap": return (
+      <div
+        aria-hidden="true"
+        className="content-section-gap"
+        data-gap-size={sectionGapSize(node.attrs?.size)}
+        key={key}
+      />
+    );
     case "hardBreak": return <br key={key} />;
     case "image": {
       const src = safeUrl(node.attrs?.src);
