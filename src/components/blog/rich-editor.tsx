@@ -455,7 +455,7 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
             </label>
             <span className="editor-media-hint">
               {selectedMediaLayout === "row"
-                ? "Set consecutive media to Row; two at 50% share one line."
+                ? "Row media is centered; two at 50% share one line."
                 : selectedMedia
                   ? "Drag it in the document to move it."
                   : "Select media first."}
