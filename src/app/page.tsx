@@ -33,24 +33,6 @@ const team = [
     href: "https://nat20.mal.plus/technical-portfolio/",
   },
   {
-    name: "Jay",
-    role: "Artist",
-    country: "South Korea",
-    href: "https://www.artstation.com/kiwi_lee",
-  },
-  {
-    name: "Habin",
-    role: "Animator",
-    country: "South Korea",
-    href: "https://www.notion.so/Habin-Yoon_Portfolio-c07cfee2d7fc828880a281241bc94189",
-  },
-  {
-    name: "Jun",
-    role: "VFX Artist",
-    country: "South Korea",
-    href: "https://www.linkedin.com/in/gwngjun-lee-477ba5139/",
-  },
-  {
     name: "Daniël",
     role: "Composer",
     country: "The Netherlands",
