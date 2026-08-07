@@ -50,6 +50,12 @@ const team = [
     country: "UK",
     href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
   },
+  {
+    name: "Matt",
+    role: "3D Artist",
+    country: "UK",
+    href: "https://www.artstation.com/mattcane",
+  },
 ];
 
 export default function Home() {
@@ -154,12 +160,12 @@ export default function Home() {
               A tiny indie game studio making warm, handmade things.
             </p>
             <div className="hero-enter mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a className="button-primary" href="#game">
+              {/* <a className="button-primary" href="#game">
                 Play our first game
-              </a>
-              <a className="button-secondary" href="#team">
+              </a> */}
+              {/* <a className="button-secondary" href="#team">
                 Meet the crew
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
