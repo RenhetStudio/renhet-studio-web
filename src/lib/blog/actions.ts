@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireAuthor, requireUser } from "@/lib/supabase/auth";
@@ -54,6 +54,7 @@ export async function savePostAction(
   revalidatePath("/blog");
   revalidatePath("/blog/dashboard");
   revalidatePath(`/blog/${input.slug}`);
+  updateTag("published-posts");
   return { ok: true, message: input.id ? "Post updated" : "Post saved", id: data.id };
 }
 
@@ -65,6 +66,7 @@ export async function deletePostAction(formData: FormData) {
   await supabase.from("posts").delete().eq("id", id);
   revalidatePath("/blog");
   revalidatePath("/blog/dashboard");
+  updateTag("published-posts");
 }
 
 export async function submitCommentAction(

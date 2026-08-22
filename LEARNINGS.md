@@ -81,3 +81,21 @@ The home page and blog wrapper no longer load GSAP. Their introductory animation
 **Tradeoffs / pitfalls**
 
 CSS is ideal for bounded presentation effects. Keep a client component only when the animation needs live application state, gestures, or complex scroll interaction.
+
+### Caching public database reads
+
+**Simple explanation**
+
+Public content does not need the visitor's login cookies, so it can be cached safely across visitors. Authenticated editor queries must remain separate and uncached.
+
+**How it works**
+
+`unstable_cache` stores the published post queries for five minutes and associates them with the `published-posts` tag. A post mutation calls `updateTag` so the next render receives fresh public content immediately.
+
+**In this project**
+
+`src/lib/blog/data.ts` uses a cookie-free Supabase client for published posts. Dashboard, profile, and comment queries retain the session-aware server client in `src/lib/supabase/server.ts`.
+
+**Tradeoffs / pitfalls**
+
+Only use this split where row-level security permits anonymous reads. Never cache a client created with request cookies, or personalized data could be shared between visitors.

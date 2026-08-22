@@ -1,12 +1,22 @@
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
+import { getSupabaseEnv } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 import type { BlogComment, BlogPost } from "./types";
 
-export async function getPublishedPosts(options?: {
+type PublishedPostsOptions = {
   category?: string;
   query?: string;
   limit?: number;
-}) {
-  const supabase = await createClient();
+};
+
+function createPublicClient() {
+  const { url, anonKey } = getSupabaseEnv();
+  return createSupabaseClient(url, anonKey, { auth: { persistSession: false } });
+}
+
+async function queryPublishedPosts(options?: PublishedPostsOptions) {
+  const supabase = createPublicClient();
   let request = supabase
     .from("posts")
     .select("*")
@@ -26,8 +36,8 @@ export async function getPublishedPosts(options?: {
   return (data ?? []) as BlogPost[];
 }
 
-export async function getPublishedPost(slug: string) {
-  const supabase = await createClient();
+async function queryPublishedPost(slug: string) {
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("posts")
     .select("*")
@@ -37,6 +47,16 @@ export async function getPublishedPost(slug: string) {
     .maybeSingle();
   return data as BlogPost | null;
 }
+
+export const getPublishedPosts = unstable_cache(queryPublishedPosts, ["published-posts"], {
+  revalidate: 300,
+  tags: ["published-posts"],
+});
+
+export const getPublishedPost = unstable_cache(queryPublishedPost, ["published-post"], {
+  revalidate: 300,
+  tags: ["published-posts"],
+});
 
 export async function getPostForEditor(id: string) {
   const supabase = await createClient();
@@ -76,4 +96,3 @@ export async function getPendingComments() {
   if (error) throw new Error(`Could not load moderation queue: ${error.message}`);
   return (data ?? []) as BlogComment[];
 }
-
