@@ -46,20 +46,38 @@ Requiring a write credential for public reads creates an unnecessary failure mod
 
 The public endpoint must never return private spreadsheet data. Keep mutation credentials server-only and configure them separately in production.
 
-### Refreshing stale App Router data
+### Caching public App Router data
 
 **Simple explanation**
 
-Next.js can keep a previously visited route in the browser so back/forward navigation feels instant. A server-rendered page can therefore temporarily show data from its earlier visit.
+Public data that changes occasionally should be cached on the server for a bounded time. This makes normal page loads fast without making changes permanently stale.
 
 **How it works**
 
-`router.refresh()` clears the current route's client payload and asks the server to render it again. It preserves client state instead of causing a full document reload.
+Next.js stores the GET response for the configured revalidation window. Once the window expires, the next request triggers a refresh while callers can still receive the previous cached response. This avoids a blocking request to the origin service for every visitor.
 
 **In this project**
 
-`CareersDataRefresh` refreshes the careers route on mount so job listings are requested again from the Apps Script endpoint.
+`getPublishedPositions` caches the public Apps Script GET request for five minutes and `src/app/careers/page.tsx` uses the same revalidation policy. The application POST remains uncached.
 
 **Tradeoffs / pitfalls**
 
-Refreshing adds one server render when the careers page opens. Use it only for data that should be current immediately; ordinary pages should retain the default client navigation cache.
+New and removed job listings can take up to five minutes to appear. Do not cache user-specific, authenticated, or write requests this way.
+
+### Server Components reduce browser JavaScript
+
+**Simple explanation**
+
+An interactive effect does not require an entire page to be a Client Component. Static pages can stay server-rendered and use CSS for simple visual motion.
+
+**How it works**
+
+The `"use client"` directive makes a component and its imports part of the browser bundle. CSS keyframe animations run without React hydration or a JavaScript animation library, and `prefers-reduced-motion` can disable them for users who request less motion.
+
+**In this project**
+
+The home page and blog wrapper no longer load GSAP. Their introductory animations are CSS-only in `src/app/globals.css`; the GSAP dependencies were removed from `package.json`.
+
+**Tradeoffs / pitfalls**
+
+CSS is ideal for bounded presentation effects. Keep a client component only when the animation needs live application state, gestures, or complex scroll interaction.

@@ -23,6 +23,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: "article",
       publishedTime: post.published_at ?? undefined,
       modifiedTime: post.updated_at,
+      images: post.cover_image_url ? [{ url: post.cover_image_url, alt: post.cover_image_alt || post.title }] : undefined,
+    },
+    twitter: {
+      card: post.cover_image_url ? "summary_large_image" : "summary",
+      title: post.title,
+      description: post.excerpt,
+      images: post.cover_image_url ? [post.cover_image_url] : undefined,
     },
   };
 }
@@ -48,6 +55,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     dateModified: post.updated_at,
     publisher: { "@type": "Organization", name: "Renhet Studio", url: "https://www.renhetstudio.com" },
     mainEntityOfPage: `https://www.renhetstudio.com/blog/${post.slug}`,
+    image: post.cover_image_url || undefined,
   };
 
   return (

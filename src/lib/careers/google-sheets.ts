@@ -37,7 +37,7 @@ function normalizePosition(value: AppsScriptPosition): CareerPosition {
 
 export async function getPublishedPositions(): Promise<CareerPosition[]> {
   const url = getUrl();
-  const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(8_000) });
+  const response = await fetch(url, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8_000) });
   if (!response.ok) throw new Error(`Google Apps Script positions request failed (${response.status})`);
   const payload = (await response.json()) as { positions?: AppsScriptPosition[]; error?: string };
   if (payload.error || !Array.isArray(payload.positions)) throw new Error(payload.error || "Invalid positions response");

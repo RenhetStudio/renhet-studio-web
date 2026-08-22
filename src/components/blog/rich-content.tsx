@@ -111,7 +111,7 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
       return (
         <figure className="content-media" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={src} alt={typeof node.attrs?.alt === "string" ? node.attrs.alt : ""} />
+          <img src={src} alt={typeof node.attrs?.alt === "string" ? node.attrs.alt : ""} loading="lazy" decoding="async" />
           {node.attrs?.title && <figcaption>{String(node.attrs.title)}</figcaption>}
         </figure>
       );

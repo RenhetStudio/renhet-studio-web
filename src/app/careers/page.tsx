@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ApplicationForm } from "@/components/careers/application-form";
-import { CareersDataRefresh } from "@/components/careers/careers-data-refresh";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { getPublishedPositions } from "@/lib/careers/google-sheets";
@@ -9,9 +8,11 @@ import type { CareerPosition } from "@/lib/careers/types";
 export const metadata: Metadata = {
   title: "Careers",
   description: "Join Renhet Studio and help us build friendly, detailed game worlds.",
+  alternates: { canonical: "/careers" },
+  openGraph: { url: "/careers" },
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function CareersPage({
   searchParams,
@@ -34,7 +35,6 @@ export default async function CareersPage({
 
   return (
     <main className="careers-site">
-      <CareersDataRefresh />
       <SiteHeader />
 
       <header className="careers-hero">
