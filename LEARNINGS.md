@@ -45,3 +45,21 @@ Requiring a write credential for public reads creates an unnecessary failure mod
 **Tradeoffs / pitfalls**
 
 The public endpoint must never return private spreadsheet data. Keep mutation credentials server-only and configure them separately in production.
+
+### Refreshing stale App Router data
+
+**Simple explanation**
+
+Next.js can keep a previously visited route in the browser so back/forward navigation feels instant. A server-rendered page can therefore temporarily show data from its earlier visit.
+
+**How it works**
+
+`router.refresh()` clears the current route's client payload and asks the server to render it again. It preserves client state instead of causing a full document reload.
+
+**In this project**
+
+`CareersDataRefresh` refreshes the careers route on mount so job listings are requested again from the Apps Script endpoint.
+
+**Tradeoffs / pitfalls**
+
+Refreshing adds one server render when the careers page opens. Use it only for data that should be current immediately; ordinary pages should retain the default client navigation cache.
