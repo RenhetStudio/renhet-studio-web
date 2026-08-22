@@ -99,3 +99,21 @@ Public content does not need the visitor's login cookies, so it can be cached sa
 **Tradeoffs / pitfalls**
 
 Only use this split where row-level security permits anonymous reads. Never cache a client created with request cookies, or personalized data could be shared between visitors.
+
+### Structured data describes the site to search engines
+
+**Simple explanation**
+
+Structured data is machine-readable JSON in a page that identifies real-world entities such as an organization or article. It supplements, but never replaces, useful visible page content.
+
+**How it works**
+
+Search engines can read JSON-LD script tags without executing application code. The schema links the studio's name, canonical URL, logo, and verified social profiles, while each blog post supplies a `BlogPosting` record with its dates and canonical URL.
+
+**In this project**
+
+The organization schema is rendered on `src/app/page.tsx`; post schema is rendered in `src/app/blog/[slug]/page.tsx`.
+
+**Tradeoffs / pitfalls**
+
+Schema is an eligibility signal, not a guarantee of rich results. Keep every field truthful and current, and never add ratings, people, or product claims that are not visibly supported by the page.

@@ -46,11 +46,30 @@ const team = [
   },
 ];
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Renhet Studio",
+  url: "https://www.renhetstudio.com",
+  logo: "https://www.renhetstudio.com/renhet-logo-dark.png",
+  description: "An independent international game studio making warm, handmade games.",
+  sameAs: [
+    "https://x.com/renhetstudio",
+    "https://www.instagram.com/renhet.studio/",
+    "https://www.tiktok.com/@renhetstudio",
+    "https://renhetstudio.itch.io/",
+  ],
+};
+
 export default function Home() {
   return (
     <main
       className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f6f1e8] text-[#4f5f70]"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
       <SiteHeader />
 
       <section id="top" className="hero-pond relative isolate min-h-screen px-5 pb-24 pt-32 sm:px-8 lg:px-10">
