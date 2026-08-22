@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 
+// CSP nonces are created per request in proxy.ts, so HTML cannot be prerendered.
+export const dynamic = "force-dynamic";
+
 const outfit = Outfit({
   subsets: ["latin"],
   weight: ["400", "600", "700", "800", "900"],
