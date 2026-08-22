@@ -1,6 +1,29 @@
 import { z } from "zod";
 import { BLOG_CATEGORIES } from "./config";
 
+const richNodeTypes = new Set([
+  "doc", "paragraph", "text", "heading", "bulletList", "orderedList", "listItem",
+  "taskList", "taskItem", "blockquote", "codeBlock", "horizontalRule", "sectionGap",
+  "hardBreak", "image", "youtube", "video", "audio", "table", "tableRow", "tableHeader", "tableCell",
+]);
+const richMarkTypes = new Set(["bold", "italic", "underline", "strike", "code", "highlight", "link"]);
+
+function isSafeRichDocument(value: unknown) {
+  let nodes = 0;
+  let textLength = 0;
+  const visit = (node: unknown, depth: number): boolean => {
+    if (!node || typeof node !== "object" || Array.isArray(node) || depth > 30 || ++nodes > 10_000) return false;
+    const record = node as Record<string, unknown>;
+    if (typeof record.type !== "string" || !richNodeTypes.has(record.type)) return false;
+    if (record.text !== undefined) {
+      if (record.type !== "text" || typeof record.text !== "string" || (textLength += record.text.length) > 500_000) return false;
+    }
+    if (record.marks !== undefined && (!Array.isArray(record.marks) || record.marks.some((mark) => !mark || typeof mark !== "object" || !richMarkTypes.has((mark as { type?: unknown }).type as string)))) return false;
+    return record.content === undefined || (Array.isArray(record.content) && record.content.every((child) => visit(child, depth + 1)));
+  };
+  return visit(value, 0) && (value as { type?: unknown }).type === "doc";
+}
+
 export const postSchema = z.object({
   id: z.string().uuid().optional(),
   title: z.string().trim().min(1).max(160),
@@ -15,7 +38,7 @@ export const postSchema = z.object({
   content: z.string().min(1).max(1_000_000).transform((value, context) => {
     try {
       const parsed = JSON.parse(value) as unknown;
-      if (!parsed || typeof parsed !== "object") throw new Error("Invalid document");
+      if (!isSafeRichDocument(parsed)) throw new Error("Invalid document");
       return parsed;
     } catch {
       context.addIssue({ code: "custom", message: "The post content is invalid" });

@@ -17,6 +17,12 @@ const extensions: Record<string, string> = {
 };
 
 export async function POST(request: Request) {
+  const contentType = request.headers.get("content-type") ?? "";
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (!contentType.startsWith("application/json") || !Number.isSafeInteger(contentLength) || contentLength > 2_048) {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
   if (!authData.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -38,7 +44,7 @@ export async function POST(request: Request) {
   const extension = extensions[parsed.data.contentType];
   const path = `${authData.user.id}/${randomUUID()}.${extension}`;
   const { data, error } = await supabase.storage.from("blog-media").createSignedUploadUrl(path);
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error) return NextResponse.json({ error: "Could not prepare upload" }, { status: 400 });
 
   const { data: publicData } = supabase.storage.from("blog-media").getPublicUrl(path);
   return NextResponse.json({
@@ -47,4 +53,3 @@ export async function POST(request: Request) {
     publicUrl: publicData.publicUrl,
   });
 }
-

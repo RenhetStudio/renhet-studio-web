@@ -1,3 +1,5 @@
+import "server-only";
+
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "./server";
@@ -35,4 +37,3 @@ export async function requireAuthor() {
   }
   return profile;
 }
-

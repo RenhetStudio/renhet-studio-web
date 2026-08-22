@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const optionalUrl = z.union([
   z.literal(""),
-  z.string().trim().url("Enter a complete URL, including https://").max(500),
+  z.string().trim().url("Enter a complete URL, including https://").max(500)
+    .refine((value) => new URL(value).protocol === "https:", "Use an HTTPS URL"),
 ]);
 
 export const applicationSchema = z

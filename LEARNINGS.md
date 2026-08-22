@@ -117,3 +117,23 @@ The organization schema is rendered on `src/app/page.tsx`; post schema is render
 **Tradeoffs / pitfalls**
 
 Schema is an eligibility signal, not a guarantee of rich results. Keep every field truthful and current, and never add ratings, people, or product claims that are not visibly supported by the page.
+# Security
+
+### CSP nonces in Next.js
+
+**Simple explanation**
+A Content Security Policy nonce is a fresh, random value attached to trusted scripts for one response. Browsers reject inline scripts that do not have the matching value, which greatly reduces the impact of an injected script.
+
+**How it works**
+`proxy.ts` creates the nonce, sends it in the request CSP header so Next.js can attach it during rendering, then returns the same policy to the browser. A nonce-based policy requires dynamic rendering, while cached database data can still be reused independently.
+
+**Tradeoffs / pitfalls**
+Nonce CSP adds server rendering work and must be applied consistently to every HTML response. Development still needs `unsafe-eval` for React diagnostics, but production must not allow it.
+
+### Spreadsheet formula injection
+
+**Simple explanation**
+Spreadsheet cells beginning with `=`, `+`, `-`, or `@` can be interpreted as formulas instead of plain applicant text.
+
+**In this project**
+`integrations/google-apps-script/Code.gs` prefixes those values with an apostrophe before `appendRow`, preserving the submitted text as a literal value.

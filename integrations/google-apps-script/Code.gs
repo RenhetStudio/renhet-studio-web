@@ -26,6 +26,12 @@ function lines_(value) {
   return String(value || '').split(/\r?\n/).map(function (item) { return item.trim(); }).filter(Boolean);
 }
 
+function literal_(value) {
+  var text = String(value || '');
+  // Sheets evaluates cells starting with these characters as formulas.
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}
+
 function doGet() {
   try {
     var sheet = getSpreadsheet_().getSheetByName(POSITIONS_SHEET);
@@ -67,10 +73,10 @@ function doPost(event) {
     var sheet = getSpreadsheet_().getSheetByName(APPLICATIONS_SHEET);
     if (!sheet) throw new Error('Missing Applications sheet');
     sheet.appendRow([
-      new Date().toISOString(), application.positionId || '', application.positionTitle || '',
-      application.name || '', application.email || '', application.location || '',
-      application.portfolioUrl || '', application.linkedinUrl || '', application.resumeUrl || '',
-      application.message || '', 'Yes', 'New'
+      new Date().toISOString(), literal_(application.positionId), literal_(application.positionTitle),
+      literal_(application.name), literal_(application.email), literal_(application.location),
+      literal_(application.portfolioUrl), literal_(application.linkedinUrl), literal_(application.resumeUrl),
+      literal_(application.message), 'Yes', 'New'
     ]);
     return json_({ ok: true });
   } catch (error) {
