@@ -1,8 +1,3 @@
-"use client";
-
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import Image from "next/image";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -52,40 +47,8 @@ const team = [
 ];
 
 export default function Home() {
-  const root = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.from(".nav-shell", {
-        y: -22,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power3.out",
-      });
-
-      gsap.from(".hero-enter", {
-        y: 34,
-        opacity: 0,
-        duration: 0.95,
-        stagger: 0.09,
-        ease: "power3.out",
-      });
-
-      gsap.to(".game-logo-float", {
-        y: -14,
-        rotate: 1.2,
-        duration: 3.2,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-      });
-    },
-    { scope: root },
-  );
-
   return (
     <main
-      ref={root}
       className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f6f1e8] text-[#4f5f70]"
     >
       <SiteHeader />

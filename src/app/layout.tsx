@@ -14,7 +14,14 @@ export const metadata: Metadata = {
   },
   description:
     "Renhet Studio is an independent international game studio. Play our first game, Beelze Pub, free on Itch.io.",
+  applicationName: "Renhet Studio",
+  keywords: ["indie game studio", "independent games", "Beelze Pub", "cozy games", "game development"],
+  authors: [{ name: "Renhet Studio", url: "https://www.renhetstudio.com" }],
+  creator: "Renhet Studio",
+  publisher: "Renhet Studio",
   metadataBase: new URL("https://www.renhetstudio.com"),
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "Renhet Studio",
     description:
@@ -22,12 +29,14 @@ export const metadata: Metadata = {
     url: "https://www.renhetstudio.com",
     siteName: "Renhet Studio",
     type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Renhet Studio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Renhet Studio",
     description:
       "Play Renhet Studio's first game, Beelze Pub, free on Itch.io.",
+    images: ["/opengraph-image"],
   },
 };
 
