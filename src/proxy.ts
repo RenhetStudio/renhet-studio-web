@@ -9,6 +9,7 @@ export async function proxy(request: NextRequest) {
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""};
     style-src 'self'${isDev ? " 'unsafe-inline'" : ` 'nonce-${nonce}'`};
+    style-src-attr 'none';
     img-src 'self' blob: data: https://*.supabase.co;
     media-src 'self' blob: https://*.supabase.co;
     font-src 'self' data:;

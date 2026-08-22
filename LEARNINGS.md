@@ -127,6 +127,8 @@ A Content Security Policy nonce is a fresh, random value attached to trusted scr
 **How it works**
 `proxy.ts` creates the nonce, sends it in the request CSP header so Next.js can attach it during rendering, then returns the same policy to the browser. A nonce-based policy requires dynamic rendering, while cached database data can still be reused independently.
 
+Nonces authorize `<style>` elements, not `style="..."` attributes. Use classes or validated `data-*` attributes with stylesheet selectors for dynamic presentation. `style-src-attr 'none'` makes that distinction explicit and protects against a future inline-style regression.
+
 **Tradeoffs / pitfalls**
 Nonce CSP adds server rendering work and must be applied consistently to every HTML response. Development still needs `unsafe-eval` for React diagnostics, but production must not allow it.
 

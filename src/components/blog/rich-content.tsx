@@ -29,20 +29,12 @@ function mediaLayout(value: unknown) {
   return ["left", "right", "row"].includes(String(value)) ? String(value) : "standalone";
 }
 
-function mediaStyle(widthValue: unknown, layoutValue: unknown): React.CSSProperties {
-  const width = Math.min(100, Math.max(10, Number(widthValue) || 100));
-  const layout = mediaLayout(layoutValue);
-  if (layout === "left") return { clear: "left", float: "left", margin: "0.5rem 2rem 1.25rem 0", width: `${width}%` };
-  if (layout === "right") return { clear: "right", float: "right", margin: "0.5rem 0 1.25rem 2rem", width: `${width}%` };
-  if (layout === "row") return {
-    boxSizing: "border-box",
-    display: "inline-block",
-    margin: "0.5rem 0 1.25rem",
-    padding: "0.375rem",
-    verticalAlign: "top",
-    width: `${width}%`,
-  };
-  return { clear: "both", marginLeft: "auto", marginRight: "auto", width: `${width}%` };
+function mediaWidth(value: unknown) {
+  return Math.min(100, Math.max(10, Math.round((Number(value) || 100) / 5) * 5));
+}
+
+function textAlign(value: unknown) {
+  return ["left", "center", "right", "justify"].includes(String(value)) ? String(value) : undefined;
 }
 
 function sectionGapSize(value: unknown) {
@@ -70,18 +62,16 @@ function renderText(node: JSONContent, key: string) {
 function renderNode(node: JSONContent, key: string): React.ReactNode {
   if (node.type === "text") return renderText(node, key);
   const children = node.content?.map((child, index) => renderNode(child, `${key}-${index}`));
-  const align = ["left", "center", "right", "justify"].includes(node.attrs?.textAlign)
-    ? ({ textAlign: node.attrs?.textAlign } as React.CSSProperties)
-    : undefined;
+  const align = textAlign(node.attrs?.textAlign);
 
   switch (node.type) {
     case "doc": return <>{children}</>;
-    case "paragraph": return <p key={key} style={align}>{children}</p>;
+    case "paragraph": return <p key={key} data-text-align={align}>{children}</p>;
     case "heading": {
       const level = Math.min(3, Math.max(1, Number(node.attrs?.level) || 2));
-      if (level === 1) return <h1 key={key} style={align}>{children}</h1>;
-      if (level === 3) return <h3 key={key} style={align}>{children}</h3>;
-      return <h2 key={key} style={align}>{children}</h2>;
+      if (level === 1) return <h1 key={key} data-text-align={align}>{children}</h1>;
+      if (level === 3) return <h3 key={key} data-text-align={align}>{children}</h3>;
+      return <h2 key={key} data-text-align={align}>{children}</h2>;
     }
     case "bulletList": return <ul key={key}>{children}</ul>;
     case "orderedList": return <ol key={key}>{children}</ol>;
@@ -109,7 +99,7 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
       const src = safeUrl(node.attrs?.src);
       if (!src) return null;
       return (
-        <figure className="content-media" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)}>
+        <figure className="content-media" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} data-media-width={mediaWidth(node.attrs?.mediaWidth)} key={key}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={src} alt={typeof node.attrs?.alt === "string" ? node.attrs.alt : ""} loading="lazy" decoding="async" />
           {node.attrs?.title && <figcaption>{String(node.attrs.title)}</figcaption>}
@@ -118,20 +108,20 @@ function renderNode(node: JSONContent, key: string): React.ReactNode {
     }
     case "youtube": {
       const src = youtubeEmbed(node.attrs?.src);
-      return src ? <div className="content-embed" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)}><iframe src={src} title="Embedded YouTube video" allowFullScreen loading="lazy" /></div> : null;
+      return src ? <div className="content-embed" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} data-media-width={mediaWidth(node.attrs?.mediaWidth)} key={key}><iframe src={src} title="Embedded YouTube video" allowFullScreen loading="lazy" /></div> : null;
     }
     case "video": {
       const src = safeUrl(node.attrs?.src);
-      return src ? <video className="content-media" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)} src={src} controls preload="metadata" /> : null;
+      return src ? <video className="content-media" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} data-media-width={mediaWidth(node.attrs?.mediaWidth)} key={key} src={src} controls preload="metadata" /> : null;
     }
     case "audio": {
       const src = safeUrl(node.attrs?.src);
-      return src ? <audio className="content-media" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} key={key} style={mediaStyle(node.attrs?.mediaWidth, node.attrs?.mediaLayout)} src={src} controls preload="metadata" /> : null;
+      return src ? <audio className="content-media" data-media-layout={mediaLayout(node.attrs?.mediaLayout)} data-media-width={mediaWidth(node.attrs?.mediaWidth)} key={key} src={src} controls preload="metadata" /> : null;
     }
     case "table": return <div className="content-table-wrap" key={key}><table>{children}</table></div>;
     case "tableRow": return <tr key={key}>{children}</tr>;
-    case "tableHeader": return <th key={key} style={align}>{children}</th>;
-    case "tableCell": return <td key={key} style={align}>{children}</td>;
+    case "tableHeader": return <th key={key} data-text-align={align}>{children}</th>;
+    case "tableCell": return <td key={key} data-text-align={align}>{children}</td>;
     default: return children ? <div key={key}>{children}</div> : null;
   }
 }

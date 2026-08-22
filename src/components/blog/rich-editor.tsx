@@ -21,6 +21,48 @@ import TableCell from "@tiptap/extension-table-cell";
 import Typography from "@tiptap/extension-typography";
 import { createClient } from "@/lib/supabase/client";
 
+const CspTextAlign = TextAlign.extend({
+  addGlobalAttributes() {
+    return [{
+      types: this.options.types,
+      attributes: {
+        textAlign: {
+          default: this.options.defaultAlignment,
+          parseHTML: (element) => {
+            const alignment = element.getAttribute("data-text-align") || element.style.textAlign;
+            return this.options.alignments.includes(alignment) ? alignment : this.options.defaultAlignment;
+          },
+          renderHTML: (attributes) => attributes.textAlign ? { "data-text-align": attributes.textAlign } : {},
+        },
+      },
+    }];
+  },
+});
+
+const CspTable = Table.extend({
+  renderHTML({ HTMLAttributes }) {
+    const attributes = { ...HTMLAttributes };
+    delete attributes.style;
+    return ["table", mergeAttributes(this.options.HTMLAttributes, attributes), ["tbody", 0]];
+  },
+});
+
+const CspTableCell = TableCell.extend({
+  renderHTML({ HTMLAttributes }) {
+    const attributes = { ...HTMLAttributes };
+    delete attributes.style;
+    return ["td", mergeAttributes(this.options.HTMLAttributes, attributes), 0];
+  },
+});
+
+const CspTableHeader = TableHeader.extend({
+  renderHTML({ HTMLAttributes }) {
+    const attributes = { ...HTMLAttributes };
+    delete attributes.style;
+    return ["th", mergeAttributes(this.options.HTMLAttributes, attributes), 0];
+  },
+});
+
 const AudioNode = Node.create({
   name: "audio",
   group: "block",
@@ -79,10 +121,10 @@ const ResizableMedia = Extension.create({
       attributes: {
         mediaWidth: {
           default: 100,
-          parseHTML: (element) => Math.min(100, Math.max(10, Number(element.getAttribute("data-media-width")) || 100)),
+          parseHTML: (element) => Math.min(100, Math.max(10, Math.round((Number(element.getAttribute("data-media-width")) || 100) / 5) * 5)),
           renderHTML: (attributes) => {
-            const width = Math.min(100, Math.max(10, Number(attributes.mediaWidth) || 100));
-            return { "data-media-width": width, style: `width: ${width}%` };
+            const width = Math.min(100, Math.max(10, Math.round((Number(attributes.mediaWidth) || 100) / 5) * 5));
+            return { "data-media-width": width };
           },
         },
         mediaLayout: {
@@ -178,7 +220,7 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
       Image.configure({ allowBase64: false }),
       Youtube.configure({ controls: true, nocookie: true }),
       Underline,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      CspTextAlign.configure({ types: ["heading", "paragraph"] }),
       Placeholder.configure({
         placeholder: ({ node }) =>
           node.type.name === "heading"
@@ -189,10 +231,10 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
       Highlight,
       TaskList,
       TaskItem.configure({ nested: true }),
-      Table.configure({ resizable: true }),
+      CspTable,
       TableRow,
-      TableHeader,
-      TableCell,
+      CspTableHeader,
+      CspTableCell,
       Typography,
       AudioNode,
       VideoNode,
@@ -232,8 +274,6 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
   const selectedMediaLayout = selectedMedia
     ? String(activeEditor.getAttributes(selectedMedia).mediaLayout || "standalone")
     : "standalone";
-  const selectedMediaProgress = Math.min(100, Math.max(0, ((selectedMediaWidth - 10) / 90) * 100));
-
   function updateSelectedMedia(attributes: { mediaWidth?: number; mediaLayout?: string }) {
     if (selectedMedia) activeEditor.chain().focus().updateAttributes(selectedMedia, attributes).run();
   }
@@ -422,17 +462,11 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
             <label className="editor-media-size">
               <span className="editor-media-label">Width</span>
               <span className="editor-range-control">
-                <span className="editor-range-track" aria-hidden="true" />
-                <span
-                  className="editor-range-thumb"
-                  aria-hidden="true"
-                  style={{ left: `${selectedMediaProgress}%` }}
-                />
                 <input
                   type="range"
                   min="10"
                   max="100"
-                  step="1"
+                  step="5"
                   value={selectedMediaWidth}
                   disabled={!selectedMedia}
                   aria-label="Selected media width"
@@ -444,7 +478,7 @@ export function RichEditor({ value, onChange }: { value: JSONContent; onChange: 
                   type="number"
                   min="10"
                   max="100"
-                  step="1"
+                  step="5"
                   value={selectedMediaWidth}
                   disabled={!selectedMedia}
                   aria-label="Selected media width percentage"
