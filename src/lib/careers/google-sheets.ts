@@ -4,11 +4,16 @@ import type { CareerApplication, CareerPosition } from "./types";
 
 type AppsScriptPosition = Partial<CareerPosition> & { slug: string; niceToHave?: string[] };
 
-function getConfig() {
+function getUrl() {
   const url = process.env.GOOGLE_APPS_SCRIPT_URL?.trim();
+  if (!url) throw new Error("Google Apps Script careers URL is not configured");
+  return url;
+}
+
+function getSecret() {
   const secret = process.env.GOOGLE_APPS_SCRIPT_SECRET?.trim();
-  if (!url || !secret) throw new Error("Google Apps Script careers integration is not configured");
-  return { url, secret };
+  if (!secret) throw new Error("Google Apps Script careers secret is not configured");
+  return secret;
 }
 
 function lines(value: unknown) {
@@ -31,7 +36,7 @@ function normalizePosition(value: AppsScriptPosition): CareerPosition {
 }
 
 export async function getPublishedPositions(): Promise<CareerPosition[]> {
-  const { url } = getConfig();
+  const url = getUrl();
   const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(8_000) });
   if (!response.ok) throw new Error(`Google Apps Script positions request failed (${response.status})`);
   const payload = (await response.json()) as { positions?: AppsScriptPosition[]; error?: string };
@@ -40,7 +45,8 @@ export async function getPublishedPositions(): Promise<CareerPosition[]> {
 }
 
 export async function appendApplication(application: CareerApplication) {
-  const { url, secret } = getConfig();
+  const url = getUrl();
+  const secret = getSecret();
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

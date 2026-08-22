@@ -34,4 +34,4 @@ Submitted at | Position ID | Position | Name | Email | Location / Time Zone | Po
 7. Copy the deployment URL into `GOOGLE_APPS_SCRIPT_URL`.
 8. Add both environment variables to local `.env.local` and production hosting.
 
-The GET endpoint only returns published roles. The POST endpoint requires the secret and appends applications to the private sheet. Never prefix either environment variable with `NEXT_PUBLIC_`.
+The GET endpoint only returns published roles and only needs `GOOGLE_APPS_SCRIPT_URL`. The POST endpoint requires `GOOGLE_APPS_SCRIPT_SECRET` and appends applications to the private sheet. Never prefix either environment variable with `NEXT_PUBLIC_`.

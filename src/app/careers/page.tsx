@@ -43,12 +43,6 @@ export default async function CareersPage({
             We care about thoughtful craft, kind collaboration, and games full of personality.
             If that sounds like your kind of place, say hello.
           </p>
-          <a className="careers-hero-link" href="#openings">See opportunities</a>
-        </div>
-        <div className="careers-orbit" aria-hidden="true">
-          <span>Remote-first</span>
-          <span>Small team</span>
-          <span>Indie spirit</span>
         </div>
       </header>
 
