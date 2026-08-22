@@ -41,13 +41,13 @@ export default async function BlogPage({
           </div>
         </header>
 
-        <div className="category-marquee" aria-label="Blog categories">
+        {/* <div className="category-marquee" aria-label="Blog categories">
           <div>
             {[...BLOG_CATEGORIES, ...BLOG_CATEGORIES].map((item, index) => (
               <span key={`${item}-${index}`}>{item}</span>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <section id="stories" className="blog-stories">
           <div className="stories-heading">
@@ -88,12 +88,6 @@ export default async function BlogPage({
               {rest.slice(2).map((post) => <PostCard post={post} key={post.id} />)}
             </div>
           )}
-        </section>
-
-        <section className="blog-action">
-          <p>From tiny tests to finished adventures.</p>
-          <h2>Follow the things we are making.</h2>
-          <Link href="/">Meet Renhet Studio</Link>
         </section>
       </BlogMotion>
     </BlogShell>

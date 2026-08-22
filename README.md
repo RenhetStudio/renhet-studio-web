@@ -2,6 +2,14 @@
 
 Renhet Studio's official site and blog.
 
+## Careers
+
+- Public careers page: `/careers`
+- Open applications are always available.
+- Published positions and incoming applications use a private Google Sheet.
+
+See `docs/careers-google-sheets.md` for the required tabs, headers, and service account setup.
+
 ## Blog
 
 - Public blog: `/blog`
@@ -28,6 +36,8 @@ Required environment variables:
 NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+GOOGLE_APPS_SCRIPT_URL=
+GOOGLE_APPS_SCRIPT_SECRET=
 ```
 
 Do not expose a Supabase service-role key in this application.

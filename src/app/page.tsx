@@ -4,14 +4,8 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
-import Link from "next/link";
-
-const studioLinks = [
-  { label: "X", href: "https://x.com/renhetstudio" },
-  { label: "Instagram", href: "https://www.instagram.com/renhet.studio/" },
-  { label: "TikTok", href: "https://www.tiktok.com/@renhetstudio" },
-  { label: "Itch.io", href: "https://renhetstudio.itch.io/" },
-];
+import { SiteFooter } from "@/components/site/site-footer";
+import { SiteHeader } from "@/components/site/site-header";
 
 const team = [
   {
@@ -51,10 +45,9 @@ const team = [
     href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
   },
   {
-    name: "Matt",
-    role: "3D Artist",
-    country: "UK",
-    href: "https://www.artstation.com/mattcane",
+    name: "Anton",
+    role: "3D Character Artist",
+    country: "Finland",
   },
 ];
 
@@ -95,52 +88,7 @@ export default function Home() {
       ref={root}
       className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f6f1e8] text-[#4f5f70]"
     >
-      <nav className="nav-shell fixed inset-x-0 top-4 z-50 px-4">
-        <div className="mx-auto flex min-h-16 w-full max-w-[1180px] items-center justify-between gap-3 rounded-full border-2 border-[#eef0e9] bg-[#627383]/92 px-4 text-[#fffdf3] shadow-[0_18px_60px_rgba(50,62,75,0.16)] backdrop-blur-xl sm:px-5">
-          <a href="#top" className="flex items-center gap-3">
-            <Image
-              src="/renhet-logo-white.png"
-              alt="Renhet Studio"
-              width={2048}
-              height={1032}
-              priority
-              className="h-9 w-auto object-contain sm:h-11"
-            />
-          </a>
-
-          <div className="hidden items-center gap-1 md:flex">
-            <a className="nav-link" href="#game">
-              Beelze Pub
-            </a>
-            <a className="nav-link" href="#team">
-              Crew
-            </a>
-            <Link className="nav-link" href="/blog">
-              Renhet Between Builds
-            </Link>
-            <a className="nav-link" href="#contact">
-              Follow
-            </a>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Link
-              href="/blog"
-              className="rounded-full px-3 py-3 text-sm font-black text-[#fffdf3] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fffdf3]/15 md:hidden"
-            >
-              Blog
-            </Link>
-            <a
-              href="https://renhetstudio.itch.io/beelze-pub"
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-[#fffdf3] px-5 py-3 text-sm font-black text-[#4f5f70] transition duration-300 hover:-translate-y-0.5 hover:bg-[#b8d4f0]"
-            >
-              Play now
-            </a>
-          </div>
-        </div>
-      </nav>
+      <SiteHeader />
 
       <section id="top" className="hero-pond relative isolate min-h-screen px-5 pb-24 pt-32 sm:px-8 lg:px-10">
         <div className="mx-auto flex min-h-[78vh] max-w-[1500px] items-center justify-center">
@@ -230,38 +178,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer id="contact" className="relative overflow-hidden bg-[#4f5f70] px-5 py-24 text-[#fffdf3] sm:px-8 md:py-32 lg:px-10">
-        <div className="footer-ripple" />
-        <div className="relative mx-auto grid max-w-[1500px] gap-10 lg:grid-cols-[0.68fr_0.32fr]">
-          <div>
-            <Image
-              src="/renhet-logo-white.png"
-              alt="Renhet Studio"
-              width={2048}
-              height={1032}
-              className="mb-8 w-full max-w-[360px] object-contain"
-            />
-            <h2 className="max-w-4xl text-[clamp(3rem,7vw,7rem)] font-black leading-[0.88] tracking-normal">
-              Follow the adventures.
-            </h2>
-          </div>
-
-          <div className="flex flex-col justify-end gap-3">
-            {studioLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex min-h-16 items-center justify-between rounded-full border-2 border-[#fffdf3]/40 bg-[#fffdf3] px-6 text-lg font-black text-[#4f5f70] transition duration-300 hover:-translate-y-1 hover:bg-[#b8d4f0]"
-              >
-                {link.label}
-                <span className="transition duration-300 group-hover:translate-x-1">Visit</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
