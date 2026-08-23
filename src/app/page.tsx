@@ -35,7 +35,7 @@ const team = [
   },
   {
     name: "Freya",
-    role: "Marketer",
+    role: "Marketer & Writer",
     country: "UK",
     href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
   },
