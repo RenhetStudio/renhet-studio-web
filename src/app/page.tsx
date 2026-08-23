@@ -44,6 +44,12 @@ const team = [
     role: "3D Character Artist",
     country: "Finland",
   },
+  {
+    name: "Luca",
+    role: "Marketer & Content",
+    country: "Italy",
+    href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk",
+  },
 ];
 
 const structuredData = {
