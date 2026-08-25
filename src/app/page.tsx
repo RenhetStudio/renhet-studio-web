@@ -22,6 +22,12 @@ const team = [
     href: "https://nat20.mal.plus/technical-portfolio/",
   },
   {
+    name: "Maurice",
+    role: "UI/UX Designer",
+    country: "USA",
+    href: "https://www.linkedin.com/in/mauricebirchard/",
+  },
+  {
     name: "Daniël",
     role: "Composer",
     country: "The Netherlands",
