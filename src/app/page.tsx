@@ -68,6 +68,7 @@ const structuredData = {
   sameAs: [
     "https://x.com/renhetstudio",
     "https://www.instagram.com/renhet.studio/",
+    "https://www.reddit.com/user/RenhetStudio/",
     "https://www.tiktok.com/@renhetstudio",
     "https://renhetstudio.itch.io/",
   ],

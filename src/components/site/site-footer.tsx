@@ -4,6 +4,7 @@ import Link from "next/link";
 const socialLinks = [
   { label: "X", href: "https://x.com/renhetstudio" },
   { label: "Instagram", href: "https://www.instagram.com/renhet.studio/" },
+  { label: "Reddit", href: "https://www.reddit.com/user/RenhetStudio/" },
   { label: "TikTok", href: "https://www.tiktok.com/@renhetstudio" },
   { label: "Itch.io", href: "https://renhetstudio.itch.io/" },
 ];
