@@ -33,7 +33,7 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-col justify-end gap-3">
-          <Link href="/careers" className={`${linkClass} bg-[#b8d4f0] hover:bg-[#fffdf3]`}>
+          <Link href="/careers" className={linkClass}>
             Careers
             <span className="transition duration-300 group-hover:translate-x-1">Join us</span>
           </Link>
