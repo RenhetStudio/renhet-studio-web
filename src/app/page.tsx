@@ -47,7 +47,7 @@ const team = [
   },
   {
     name: "Anton",
-    role: "3D Character Artist",
+    role: "3D Artist",
     country: "Finland",
   },
   {
