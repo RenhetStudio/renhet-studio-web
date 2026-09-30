@@ -17,7 +17,7 @@ const team = [
   },
   {
     name: "Todd",
-    role: "Game Designer",
+    role: "Game Designer & Narrative Designer",
     country: "USA",
     href: "https://nat20.mal.plus/technical-portfolio/",
   },
@@ -29,7 +29,7 @@ const team = [
   },
   {
     name: "Daniël",
-    role: "Composer",
+    role: "Music Composer",
     country: "The Netherlands",
     href: "https://daniel-otten.bandcamp.com/",
   },
@@ -40,15 +40,20 @@ const team = [
     href: "https://benaaronaudio.com/",
   },
   {
+    name: "Anton",
+    role: "3D Artist",
+    country: "Finland",
+  },
+  {
+    name: "Ole",
+    role: "Concept Artist",
+    country: "The Netherlands",
+  },
+  {
     name: "Freya",
     role: "Marketer & Writer",
     country: "UK",
     href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
-  },
-  {
-    name: "Anton",
-    role: "3D Artist",
-    country: "Finland",
   },
   {
     name: "Luca",
