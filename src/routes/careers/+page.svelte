@@ -14,7 +14,7 @@
   <section id="openings" class="careers-openings">
     <div class="careers-section-heading"><div><h2>Find your place.</h2></div><p>Roles appear here as soon as they are published. No perfect match? The open application is always open.</p></div>
     <div class="careers-roles">
-      <article class="careers-open-card"><div><h3>Open application</h3><p>Show us what you make. Artists, developers, designers, audio people, producers, and delightful specialists are all welcome.</p></div><a href="?role=open-application#apply">Introduce yourself <span>↗</span></a></article>
+      <article class="careers-open-card"><div><h3>Open application</h3><p>Show us what you make. Artists, developers, designers, audio people, producers, and delightful specialists are all welcome.</p></div><a href="?role=open-application#apply">Introduce yourself!</a></article>
       {#await data.positions}
         <p class="careers-roles-status" role="status">Loading open roles…</p>
       {:then positions}
