@@ -29,40 +29,7 @@ a {
 }
 
 .hero-pond {
-  background:
-    radial-gradient(circle at 18% 22%, rgba(184, 212, 240, 0.72), transparent 26%),
-    radial-gradient(circle at 82% 12%, rgba(255, 253, 243, 0.68), transparent 24%),
-    radial-gradient(circle at 72% 84%, rgba(80, 99, 115, 0.36), transparent 26%),
-    linear-gradient(145deg, #647586 0%, #8fb8d8 54%, #d9e3e8 100%);
-}
-
-.hero-pond::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(rgba(255, 253, 243, 0.14) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(255, 253, 243, 0.14) 2px, transparent 2px);
-  background-size: 74px 74px;
-  content: "";
-  mask-image: linear-gradient(180deg, black, transparent 76%);
-}
-
-.hero-pond::after {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    radial-gradient(circle, rgba(255, 253, 243, 0.28) 1px, transparent 1px),
-    radial-gradient(circle, rgba(79, 95, 112, 0.18) 1px, transparent 1px);
-  background-position:
-    0 0,
-    18px 26px;
-  background-size:
-    44px 44px,
-    54px 54px;
-  content: "";
-  opacity: 0.34;
+  background: #8fb8d8;
 }
 
 .nav-link {
@@ -691,6 +658,10 @@ a {
 .editor-prose [data-media-layout="left"] { clear: left; float: left; margin: .5rem 1.5rem 1rem 0; }
 .editor-prose [data-media-layout="right"] { clear: right; float: right; margin: .5rem 0 1rem 1.5rem; }
 .editor-prose [data-media-layout="row"] { box-sizing: border-box; display: inline-block; margin: .5rem 0 1rem; padding: .375rem; vertical-align: top; }
+.rich-content [data-media-layout="standalone"] { clear: both; display: block; margin: 2.5rem auto; }
+.rich-content [data-media-layout="left"] { clear: left; float: left; margin: .5rem 1.5rem 1rem 0; }
+.rich-content [data-media-layout="right"] { clear: right; float: right; margin: .5rem 0 1rem 1.5rem; }
+.rich-content [data-media-layout="row"] { box-sizing: border-box; display: inline-block; margin: .5rem 0 1rem; padding: .375rem; vertical-align: top; }
 .rich-content,.editor-prose { text-align: center; }
 .rich-content > :not([data-media-layout="row"]),.editor-prose > :not([data-media-layout="row"]) { text-align: left; }
 .rich-content h1,.rich-content h2,.rich-content h3,.editor-prose h1,.editor-prose h2,.editor-prose h3 { clear: both; }

@@ -1,17 +1,17 @@
-import "server-only";
-
+import { env } from "$env/dynamic/private";
 import type { CareerApplication, CareerPosition } from "./types";
 
 type AppsScriptPosition = Partial<CareerPosition> & { slug: string; niceToHave?: string[] };
+let positionsCache: { expires: number; value: Promise<CareerPosition[]> } | undefined;
 
 function getUrl() {
-  const url = process.env.GOOGLE_APPS_SCRIPT_URL?.trim();
+  const url = env.GOOGLE_APPS_SCRIPT_URL?.trim();
   if (!url) throw new Error("Google Apps Script careers URL is not configured");
   return url;
 }
 
 function getSecret() {
-  const secret = process.env.GOOGLE_APPS_SCRIPT_SECRET?.trim();
+  const secret = env.GOOGLE_APPS_SCRIPT_SECRET?.trim();
   if (!secret) throw new Error("Google Apps Script careers secret is not configured");
   return secret;
 }
@@ -36,8 +36,17 @@ function normalizePosition(value: AppsScriptPosition): CareerPosition {
 }
 
 export async function getPublishedPositions(): Promise<CareerPosition[]> {
+  if (positionsCache && positionsCache.expires > Date.now()) return positionsCache.value;
+  const value = loadPublishedPositions();
+  positionsCache = { expires: Date.now() + 300_000, value };
+  value.catch(() => { positionsCache = undefined; });
+  return value;
+}
+
+async function loadPublishedPositions(): Promise<CareerPosition[]> {
   const url = getUrl();
-  const response = await fetch(url, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8_000) });
+  // Apps Script can take longer to respond when its web app starts cold.
+  const response = await fetch(url, { signal: AbortSignal.timeout(20_000) });
   if (!response.ok) throw new Error(`Google Apps Script positions request failed (${response.status})`);
   const payload = (await response.json()) as { positions?: AppsScriptPosition[]; error?: string };
   if (payload.error || !Array.isArray(payload.positions)) throw new Error(payload.error || "Invalid positions response");
@@ -51,7 +60,6 @@ export async function appendApplication(application: CareerApplication) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ secret, application }),
-    cache: "no-store",
     signal: AbortSignal.timeout(8_000),
   });
   if (!response.ok) throw new Error(`Google Apps Script application request failed (${response.status})`);

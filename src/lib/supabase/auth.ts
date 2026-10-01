@@ -1,39 +1,33 @@
-import "server-only";
+import { redirect } from "@sveltejs/kit";
+import type { UserProfile } from "$lib/blog/types";
 
-import { cache } from "react";
-import { redirect } from "next/navigation";
-import { createClient } from "./server";
-import type { UserProfile } from "@/lib/blog/types";
-
-export const getCurrentUser = cache(async () => {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
+export async function getCurrentUser(locals: App.Locals) {
+  const { data, error } = await locals.supabase.auth.getUser();
   if (error) return null;
   return data.user;
-});
+}
 
-export const getCurrentProfile = cache(async (): Promise<UserProfile | null> => {
-  const user = await getCurrentUser();
+export async function getCurrentProfile(locals: App.Locals): Promise<UserProfile | null> {
+  const user = await getCurrentUser(locals);
   if (!user) return null;
-  const supabase = await createClient();
-  const { data } = await supabase
+  const { data } = await locals.supabase
     .from("profiles")
     .select("id, display_name, role")
     .eq("id", user.id)
     .single();
   return data as UserProfile | null;
-});
+}
 
-export async function requireUser(next = "/blog") {
-  const user = await getCurrentUser();
-  if (!user) redirect(`/login?next=${encodeURIComponent(next)}`);
+export async function requireUser(locals: App.Locals, next = "/blog") {
+  const user = await getCurrentUser(locals);
+  if (!user) redirect(303, `/login?next=${encodeURIComponent(next)}`);
   return user;
 }
 
-export async function requireAuthor() {
-  const profile = await getCurrentProfile();
+export async function requireAuthor(locals: App.Locals) {
+  const profile = await getCurrentProfile(locals);
   if (!profile || !["author", "admin"].includes(profile.role)) {
-    redirect("/blog");
+    redirect(303, "/blog");
   }
   return profile;
 }
