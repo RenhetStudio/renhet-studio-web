@@ -15,7 +15,10 @@
     <div class="careers-section-heading"><div><h2>Find your place.</h2></div><p>Roles appear here as soon as they are published. No perfect match? The open application is always open.</p></div>
     <div class="careers-roles">
       <article class="careers-open-card"><div><h3>Open application</h3><p>Show us what you make. Artists, developers, designers, audio people, producers, and delightful specialists are all welcome.</p></div><a href="?role=open-application#apply">Introduce yourself <span>↗</span></a></article>
-      {#each data.positions as position, index}
+      {#await data.positions}
+        <p class="careers-roles-status" role="status">Loading open roles…</p>
+      {:then positions}
+      {#each positions as position, index}
         <details class="careers-role">
           <summary><span class="careers-role-number">{String(index + 1).padStart(2, "0")}</span><span class="careers-role-title"><strong>{position.title}</strong><small>{position.department}</small></span><span class="careers-role-meta">{position.location} · {position.type}</span><span class="careers-role-toggle" aria-hidden="true">+</span></summary>
           <div class="careers-role-body"><p class="careers-role-summary">{position.summary}</p>
@@ -26,6 +29,7 @@
           </div>
         </details>
       {/each}
+      {/await}
     </div>
   </section>
   <section id="apply" class="careers-apply-section">
@@ -35,7 +39,7 @@
     {:else}
       <form method="POST" use:enhance class="careers-form">
         <div class="careers-form-grid">
-          <label class="careers-field careers-field-wide"><span>Applying for</span><select name="positionId" value={data.initialPosition} required><option value="open-application">Open application</option>{#each data.positions as position}<option value={position.slug}>{position.title}</option>{/each}</select>{#if form?.errors?.positionId}<span class="careers-field-error">{form.errors.positionId[0]}</span>{/if}</label>
+          <label class="careers-field careers-field-wide"><span>Applying for</span>{#await data.positions}<select name="positionId" required><option value="open-application">Open application</option></select>{:then positions}<select name="positionId" value={positions.some((position) => position.slug === data.requestedRole) ? data.requestedRole : "open-application"} required><option value="open-application">Open application</option>{#each positions as position}<option value={position.slug}>{position.title}</option>{/each}</select>{/await}{#if form?.errors?.positionId}<span class="careers-field-error">{form.errors.positionId[0]}</span>{/if}</label>
           <label class="careers-field"><span>Name</span><input name="name" autocomplete="name" required maxlength="120" />{#if form?.errors?.name}<span class="careers-field-error">{form.errors.name[0]}</span>{/if}</label>
           <label class="careers-field"><span>Email</span><input name="email" type="email" autocomplete="email" required maxlength="254" />{#if form?.errors?.email}<span class="careers-field-error">{form.errors.email[0]}</span>{/if}</label>
           <label class="careers-field careers-field-wide"><span>Location / time zone</span><input name="location" autocomplete="address-level2" required maxlength="120" placeholder="Berlin, CET" /></label>

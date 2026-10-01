@@ -20,6 +20,8 @@ export interface BlogPost {
   updated_at: string;
 }
 
+export type BlogPostSummary = Pick<BlogPost, "id" | "slug" | "title" | "excerpt" | "category" | "published_at" | "created_at" | "updated_at">;
+
 export interface BlogComment {
   id: string;
   post_id: string;

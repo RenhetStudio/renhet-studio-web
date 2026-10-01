@@ -10,7 +10,6 @@
 </script>
 
 <footer id="contact" class="relative overflow-hidden bg-[#4f5f70] px-5 py-24 text-[#fffdf3] sm:px-8 md:py-32 lg:px-10">
-  <div class="footer-ripple"></div>
   <div class="relative mx-auto grid max-w-[1500px] gap-10 lg:grid-cols-[0.68fr_0.32fr]">
     <div>
       <a href="/" aria-label="Renhet Studio home"><picture class="block w-full max-w-[360px]">

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { BlogPost } from "$lib/blog/types";
-  let { post, featured = false }: { post: BlogPost; featured?: boolean } = $props();
+  import type { BlogPostSummary } from "$lib/blog/types";
+  let { post, featured = false }: { post: BlogPostSummary; featured?: boolean } = $props();
   const publishedDate = $derived(post.published_at ?? post.created_at);
 </script>
 

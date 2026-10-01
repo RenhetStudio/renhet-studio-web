@@ -86,6 +86,28 @@ The server keeps a short-lived in-memory result to avoid repeating the same upst
 
 New and removed job listings can take up to five minutes to appear. Do not cache user-specific, authenticated, or write requests this way.
 
+### Stream slow data without delaying the page shell
+
+**Simple explanation**
+
+A page can become visible before a slow external service finishes. Return the service's promise from a SvelteKit server load function and render its pending and resolved states with a Svelte `{#await}` block.
+
+**How it works**
+
+SvelteKit sends the initial HTML with the pending state, then streams the resolved data to the browser. Catch expected upstream failures on the promise before returning it so the page can show a safe result. This needs client-side JavaScript to replace the pending content.
+
+**Why it matters**
+
+Caching makes repeat visits fast, but cannot remove the first cold request to an external service. Streaming keeps the navigation and useful parts of the page responsive during that request.
+
+**In this project**
+
+`src/routes/careers/+page.server.ts` returns the published-positions promise, and `src/routes/careers/+page.svelte` shows the hero and open-application form while role listings arrive.
+
+**Tradeoffs / pitfalls**
+
+The delayed section still depends on the upstream service. Keep its loading state clear, and avoid assuming that an option which has not arrived yet can be selected or submitted.
+
 ### Server rendering plus route-level CSR control reduces browser JavaScript
 
 **Simple explanation**
@@ -117,6 +139,8 @@ Public content does not need the visitor's login cookies, so it can be cached sa
 **In this project**
 
 `src/lib/blog/data.ts` uses a cookie-free Supabase client for published posts. Dashboard, profile, and comment queries retain the session-aware server client in `src/lib/supabase/server.ts`.
+
+List queries select only the fields their cards and feeds need. Rich post content is fetched only for an individual article. The anonymous blog index can use a shared response cache; requests carrying cookies still resolve the visitor's profile and stay private.
 
 **Tradeoffs / pitfalls**
 

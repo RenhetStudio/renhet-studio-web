@@ -1,6 +1,6 @@
 import { createClient as createSupabaseClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseEnv } from "$lib/supabase/env";
-import type { BlogComment, BlogPost } from "./types";
+import type { BlogComment, BlogPost, BlogPostSummary } from "./types";
 
 type PublishedPostsOptions = { category?: string; query?: string; limit?: number };
 type CacheEntry<T> = { expires: number; value: T };
@@ -29,7 +29,7 @@ export async function getPublishedPosts(options: PublishedPostsOptions = {}) {
     const supabase = createPublicClient();
     let request = supabase
       .from("posts")
-      .select("*")
+      .select("id, slug, title, excerpt, category, published_at, created_at, updated_at")
       .eq("status", "published")
       .lte("published_at", new Date().toISOString())
       .order("published_at", { ascending: false })
@@ -41,7 +41,7 @@ export async function getPublishedPosts(options: PublishedPostsOptions = {}) {
     }
     const { data, error } = await request;
     if (error) throw new Error(`Could not load posts: ${error.message}`);
-    return (data ?? []) as BlogPost[];
+    return (data ?? []) as BlogPostSummary[];
   });
 }
 
