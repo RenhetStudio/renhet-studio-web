@@ -1,10 +1,11 @@
 <script lang="ts">
   import { createClient } from "$lib/supabase/client";
+  import { safeReturnPath } from "$lib/supabase/redirect";
   let { nextPath }: { nextPath: string } = $props();
   let email = $state("");
   let message = $state("");
   let pending = $state(false);
-  const next = $derived(nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : "/blog");
+  const next = $derived(safeReturnPath(nextPath));
 
   async function magicLink(event: SubmitEvent) {
     event.preventDefault(); pending = true; message = "";

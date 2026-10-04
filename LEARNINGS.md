@@ -145,6 +145,8 @@ List queries select only the fields their cards and feeds need. Rich post conten
 **Tradeoffs / pitfalls**
 
 Only use this split where row-level security permits anonymous reads. Never cache a client created with request cookies, or personalized data could be shared between visitors.
+When cache keys include visitor-controlled search terms or slugs, cap the number of entries. A time-to-live alone does not remove keys that are never requested again.
+Let upstream read errors reject instead of turning them into an empty result; otherwise a brief outage can become a cached 404.
 
 ### Structured data describes the site to search engines
 
@@ -187,6 +189,20 @@ Images often dominate a page's transferred bytes. Optimizing them at build time 
 Generated variants increase build output and build work. Always provide accurate `sizes`, explicit dimensions where appropriate, and meaningful alternative text; otherwise the browser may download a larger variant than necessary or accessibility can regress. Static image files also avoid development server image middleware returning an incorrect MIME type.
 
 # Security
+
+### Validate return URLs by parsing them
+
+**Simple explanation**
+An address that starts with `/` is not always an internal path. Browsers can treat a slash followed by a backslash as an external URL.
+
+**How it works**
+Parse the requested return path against a fixed origin, then accept it only when the parsed origin still matches. Return the normalized path, query, and fragment so the redirect target cannot change interpretation later.
+
+**In this project**
+`src/lib/supabase/redirect.ts` checks the `next` parameter before the login page, login buttons, and auth callback use it.
+
+**Tradeoffs / pitfalls**
+Checking `startsWith("/")` and rejecting `//` alone misses backslash variants. Use one shared validator for every step in an authentication redirect flow.
 
 ### Framework-managed CSP and response security headers
 

@@ -6,6 +6,7 @@ type PublishedPostsOptions = { category?: string; query?: string; limit?: number
 type CacheEntry<T> = { expires: number; value: T };
 const publicCache = new Map<string, CacheEntry<unknown>>();
 const PUBLIC_CACHE_MS = 300_000;
+const PUBLIC_CACHE_MAX_ENTRIES = 200;
 
 function createPublicClient() {
   const { url, anonKey } = getSupabaseEnv();
@@ -16,6 +17,15 @@ async function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
   const entry = publicCache.get(key) as CacheEntry<T> | undefined;
   if (entry && entry.expires > Date.now()) return entry.value;
   const value = await load();
+  if (publicCache.size >= PUBLIC_CACHE_MAX_ENTRIES) {
+    for (const [cachedKey, cachedEntry] of publicCache) {
+      if (cachedEntry.expires <= Date.now()) publicCache.delete(cachedKey);
+    }
+    if (publicCache.size >= PUBLIC_CACHE_MAX_ENTRIES) {
+      const oldestKey = publicCache.keys().next().value;
+      if (oldestKey) publicCache.delete(oldestKey);
+    }
+  }
   publicCache.set(key, { expires: Date.now() + PUBLIC_CACHE_MS, value });
   return value;
 }
@@ -47,13 +57,14 @@ export async function getPublishedPosts(options: PublishedPostsOptions = {}) {
 
 export async function getPublishedPost(slug: string) {
   return cached(`post:${slug}`, async () => {
-    const { data } = await createPublicClient()
+    const { data, error } = await createPublicClient()
       .from("posts")
       .select("*")
       .eq("slug", slug)
       .eq("status", "published")
       .lte("published_at", new Date().toISOString())
       .maybeSingle();
+    if (error) throw new Error(`Could not load post: ${error.message}`);
     return data as BlogPost | null;
   });
 }
