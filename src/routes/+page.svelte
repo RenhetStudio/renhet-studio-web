@@ -8,7 +8,6 @@
     { name: "Todd", role: "Game Designer & Narrative Designer", country: "USA", href: "https://nat20.mal.plus/technical-portfolio/" },
     { name: "Maurice", role: "UI/UX Designer", country: "USA", href: "https://www.linkedin.com/in/mauricebirchard/" },
     { name: "Daniël", role: "Music Composer", country: "The Netherlands", href: "https://daniel-otten.bandcamp.com/" },
-    { name: "Ben", role: "Sound Designer", country: "UK", href: "https://benaaronaudio.com/" },
     { name: "Anton", role: "3D Artist", country: "Finland" },
     { name: "Ole", role: "Concept Artist", country: "The Netherlands" },
     { name: "Freya", role: "Marketer & Writer", country: "UK", href: "https://www.linkedin.com/in/freya-clinton-06383134a/" },
