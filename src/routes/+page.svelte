@@ -3,15 +3,16 @@
   import SiteHeader from "$lib/components/SiteHeader.svelte";
 
   const team = [
-    { name: "Miguel", role: "Team Lead / Programmer", country: "Spain", href: "https://www.bitemdev.com/" },
+    { name: "Miguel", role: "Team Lead & Programmer", country: "Spain", href: "https://www.bitemdev.com/" },
     { name: "Vaclav", role: "Producer", country: "Czech Republic", href: "https://www.linkedin.com/in/vaclavkorycanek/" },
-    { name: "Todd", role: "Game Designer & Narrative Designer", country: "USA", href: "https://nat20.mal.plus/technical-portfolio/" },
+    { name: "Todd", role: "Game Director & Narrative Designer", country: "USA", href: "https://nat20.mal.plus/technical-portfolio/" },
+    { name: "Burakcan", role: "Game Designer", country: "Turkey", href: "https://www.artstation.com/george_akil" },
     { name: "Maurice", role: "UI/UX Designer", country: "USA", href: "https://www.linkedin.com/in/mauricebirchard/" },
     { name: "Daniël", role: "Music Composer", country: "The Netherlands", href: "https://daniel-otten.bandcamp.com/" },
     { name: "Anton", role: "3D Artist", country: "Finland" },
     { name: "Ole", role: "Concept Artist", country: "The Netherlands" },
     { name: "Freya", role: "Marketer & Writer", country: "UK", href: "https://www.linkedin.com/in/freya-clinton-06383134a/" },
-    { name: "Luca", role: "Marketer & Content", country: "Italy", href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk" },
+    { name: "Luca", role: "Marketer", country: "Italy", href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk" },
   ];
 </script>
 
