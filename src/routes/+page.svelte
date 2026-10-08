@@ -7,6 +7,7 @@
     { name: "Vaclav", role: "Producer", country: "Czech Republic", href: "https://www.linkedin.com/in/vaclavkorycanek/" },
     { name: "Todd", role: "Game Director & Narrative Designer", country: "USA", href: "https://nat20.mal.plus/technical-portfolio/" },
     { name: "Burakcan", role: "Game Designer", country: "Turkey", href: "https://www.artstation.com/george_akil" },
+    { name: "Paulo", role: "Level Designer & Technical Artist", country: "Spain / Portugal" },
     { name: "Maurice", role: "UI/UX Designer", country: "USA", href: "https://www.linkedin.com/in/mauricebirchard/" },
     { name: "Daniël", role: "Music Composer", country: "The Netherlands", href: "https://daniel-otten.bandcamp.com/" },
     { name: "Anton", role: "3D Character Artist", country: "Finland" },
