@@ -10,6 +10,7 @@
     { name: "Paulo", role: "Level Designer & Technical Artist", country: "Spain / Portugal", href: "https://view.genially.com/69788574df8490ea6fd02246" },
     { name: "Maurice", role: "UI/UX Designer", country: "USA", href: "https://www.linkedin.com/in/mauricebirchard/" },
     { name: "Daniël", role: "Music Composer", country: "The Netherlands", href: "https://daniel-otten.bandcamp.com/" },
+    { name: "Denys", role: "Sound Designer", country: "Ukraine", href: "https://drive.google.com/drive/folders/1eBPnpS1N5JXDlTUpv92ci_UVk8KwPmSo" },
     { name: "Anton", role: "3D Artist", country: "Finland" },
     { name: "Naomi", role: "3D Animator", country: "Australia", href: "https://www.artstation.com/naoface" },
     { name: "Ole", role: "Concept Artist", country: "The Netherlands" },
