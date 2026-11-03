@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { scale } from "svelte/transition";
   import type { UserProfile } from "$lib/blog/types";
   import { sound } from "$lib/audio/soundEffects";
   import IconSound from "$lib/components/icons/IconSound.svelte";
@@ -31,7 +32,7 @@
 
 <nav class="nav-shell fixed inset-x-0 top-4 z-50 px-4" aria-label="Primary navigation">
   <div
-    class="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 border-[#eef0e9]/80 bg-[#344253]/92 px-4 text-[#fffdf3] shadow-[0_12px_40px_rgba(50,62,75,0.18)] backdrop-blur-xl sm:px-6"
+    class="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 border-[#eef0e9]/80 bg-[#627383]/92 px-4 text-[#fffdf3] shadow-[0_12px_40px_rgba(50,62,75,0.18)] backdrop-blur-xl sm:px-6"
   >
     <!-- Logo -->
     <a
@@ -81,12 +82,20 @@
       <!-- Mute/Sound Toggle -->
       <button
         type="button"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#fffdf3]/30 bg-[#fffdf3]/10 text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/25"
+        class="sound-toggle inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#fffdf3]/30 bg-[#fffdf3]/10 text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/25"
         onclick={toggleSound}
         aria-label={isMuted ? "Enable sound effects" : "Mute sound effects"}
         title={isMuted ? "Sound is muted (click to enable)" : "Sound is active (click to mute)"}
       >
-        <IconSound muted={isMuted} size={16} />
+        {#key isMuted}
+          <span
+            in:scale={{ duration: 220, start: 0.5 }}
+            out:scale={{ duration: 150, start: 0.5 }}
+            class="inline-flex"
+          >
+            <IconSound muted={isMuted} size={16} />
+          </span>
+        {/key}
       </button>
 
       <!-- Mobile navigation links -->
