@@ -137,9 +137,9 @@
       </div>
 
       <!-- Studio Wave Separator: extends to the right over Beelze Pub -->
-      <!-- Anchored with 4px physical offset and 8px vector overlap to permanently eliminate hairline cracks -->
+      <!-- Anchored with 4px physical offset, 8px vector overlap, and -top-20/-bottom-20 bleed to completely cover top and bottom seams -->
       <div
-        class="pointer-events-none absolute top-0 bottom-0 left-[calc(100%-4px)] z-20 hidden w-28 overflow-visible lg:block"
+        class="pointer-events-none absolute -top-20 -bottom-20 left-[calc(100%-4px)] z-20 hidden w-32 overflow-visible lg:block"
         aria-hidden="true"
       >
         <div class="h-full w-full">
@@ -286,9 +286,9 @@
       </div>
 
       <!-- Beelze Pub Wave Separator: extends to the left over Studio -->
-      <!-- Anchored with 4px physical offset and 8px vector overlap to permanently eliminate hairline cracks -->
+      <!-- Anchored with 4px physical offset, 8px vector overlap, and -top-20/-bottom-20 bleed to completely cover top and bottom seams -->
       <div
-        class="pointer-events-none absolute top-0 bottom-0 right-[calc(100%-4px)] z-20 hidden w-28 overflow-visible lg:block"
+        class="pointer-events-none absolute -top-20 -bottom-20 right-[calc(100%-4px)] z-20 hidden w-32 overflow-visible lg:block"
         aria-hidden="true"
       >
         <div class="h-full w-full">
