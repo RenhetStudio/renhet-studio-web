@@ -1,7 +1,6 @@
 <script lang="ts">
   import { sound } from "$lib/audio/soundEffects";
   import IconExternal from "$lib/components/icons/IconExternal.svelte";
-  import IconSparkle from "$lib/components/icons/IconSparkle.svelte";
 
   interface CrewMember {
     name: string;
@@ -32,20 +31,10 @@
 <section id="crew" class="relative px-5 py-20 sm:px-8 md:py-28 lg:px-12" aria-labelledby="crew-title">
   <div class="mx-auto max-w-6xl">
     <!-- Header -->
-    <div class="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-      <div>
-        <div class="inline-flex items-center gap-2 rounded-full border border-[#d6d5ca] bg-[#fffdf3] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#4f5f70]">
-          <IconSparkle size={13} class="text-[#8fb8d8]" />
-          <span>The Team</span>
-        </div>
-        <h2 id="crew-title" class="mt-3 text-3xl font-black tracking-tight text-[#344253] sm:text-4xl md:text-5xl">
-          The crew.
-        </h2>
-      </div>
-
-      <p class="max-w-md text-sm font-semibold text-[#627383] sm:text-base">
-        Fourteen makers collaborating remotely across 11 countries to build detailed indie worlds.
-      </p>
+    <div class="mb-12">
+      <h2 id="crew-title" class="text-3xl font-black tracking-tight text-[#344253] sm:text-4xl md:text-5xl">
+        The crew.
+      </h2>
     </div>
 
     <!-- Craft Badge Board -->
