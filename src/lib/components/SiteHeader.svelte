@@ -52,9 +52,9 @@
 
 <nav class="nav-shell fixed inset-x-0 top-4 z-50 px-4" aria-label="Primary navigation">
   <div
-    class="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full transition-all duration-300 ease-out {isHeroInView
-      ? 'border border-[#fffdf3]/20 bg-[#627383]/45 px-3 shadow-none backdrop-blur-md sm:px-5'
-      : 'border-2 border-[#eef0e9]/80 bg-[#627383]/92 px-4 shadow-[0_12px_40px_rgba(50,62,75,0.18)] backdrop-blur-xl sm:px-6'} text-[#fffdf3]"
+    class="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] transition-all duration-300 ease-out sm:px-6 {isHeroInView
+      ? 'border-transparent bg-[#627383]/45 shadow-none backdrop-blur-md'
+      : 'border-[#eef0e9]/80 bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.18)] backdrop-blur-xl'}"
   >
     <!-- Logo with smooth morph between compact symbol and full wordmark -->
     <a
