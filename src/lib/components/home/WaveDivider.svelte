@@ -1,18 +1,13 @@
 <script lang="ts">
   let {
-    topColor = "#8fb8d8",
-    bottomColor = "#f6f1e8",
-    height = 96,
+    class: className = "",
   }: {
-    topColor?: string;
-    bottomColor?: string;
-    height?: number;
+    class?: string;
   } = $props();
 </script>
 
 <div
-  class="relative w-full overflow-hidden leading-none"
-  style="height: {height}px; background-color: {topColor};"
+  class="relative h-24 w-full overflow-hidden leading-none bg-[#8fb8d8] {className}"
   aria-hidden="true"
 >
   <!-- Layer 1: Slow back wave -->
@@ -45,7 +40,7 @@
     </svg>
   </div>
 
-  <!-- Layer 3: Foreground wave solid fill matching page paper -->
+  <!-- Layer 3: Foreground wave solid fill matching page paper (#f6f1e8) -->
   <div class="wave-layer wave-layer-front">
     <svg
       viewBox="0 0 2400 120"
@@ -54,7 +49,7 @@
     >
       <path
         d="M0,50 C320,15 640,85 960,50 C1280,15 1600,85 1920,50 C2240,15 2400,75 2400,50 L2400,120 L0,120 Z"
-        fill={bottomColor}
+        fill="#f6f1e8"
       />
     </svg>
   </div>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import "@fontsource-variable/outfit";
   import "../app/globals.css";
+  import CustomCursor from "$lib/components/CustomCursor.svelte";
   import type { Snippet } from "svelte";
   let { children }: { children: Snippet } = $props();
 </script>
@@ -12,4 +13,5 @@
   <meta name="keywords" content="indie game studio, independent games, Beelze Pub, cozy games, game development" />
 </svelte:head>
 
+<CustomCursor />
 {@render children()}

@@ -8,24 +8,24 @@
     role: string;
     country: string;
     href?: string;
-    rotation: number;
+    rotClass: string;
   }
 
   const team: CrewMember[] = [
-    { name: "Miguel", role: "Founder, Producer & Programmer", country: "Spain", href: "https://www.bitemdev.com/", rotation: -0.7 },
-    { name: "Vaclav", role: "Publishing Advisor", country: "Czech Republic", href: "https://www.linkedin.com/in/vaclavkorycanek/", rotation: 0.6 },
-    { name: "Todd", role: "Narrative Designer", country: "USA", href: "https://nat20.mal.plus/technical-portfolio/", rotation: -0.5 },
-    { name: "Pablo", role: "QA & Gameplay Polish Specialist", country: "Spain", href: "https://www.pablogozalvez.com/", rotation: 0.8 },
-    { name: "Burakcan", role: "Game Designer", country: "Turkey", href: "https://www.artstation.com/george_akil", rotation: -0.6 },
-    { name: "Paulo", role: "Game Designer & Technical Artist", country: "Spain / Portugal", href: "https://view.genially.com/69788574df8490ea6fd02246", rotation: 0.5 },
-    { name: "Maurice", role: "UI/UX Designer", country: "USA", href: "https://www.linkedin.com/in/mauricebirchard/", rotation: -0.8 },
-    { name: "Daniël", role: "Music Composer", country: "The Netherlands", href: "https://daniel-otten.bandcamp.com/", rotation: 0.4 },
-    { name: "Denys", role: "Sound Designer", country: "Ukraine", href: "https://drive.google.com/drive/folders/1eBPnpS1N5JXDlTUpv92ci_UVk8KwPmSo", rotation: -0.5 },
-    { name: "Anton", role: "3D Artist", country: "Finland", rotation: 0.7 },
-    { name: "Naomi", role: "3D Animator", country: "Australia", href: "https://www.artstation.com/naoface", rotation: -0.65 },
-    { name: "Ole", role: "Concept Artist", country: "The Netherlands", rotation: 0.55 },
-    { name: "Freya", role: "Marketer & Writer", country: "UK", href: "https://www.linkedin.com/in/freya-clinton-06383134a/", rotation: -0.45 },
-    { name: "Luca", role: "Marketer", country: "Italy", href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk", rotation: 0.65 },
+    { name: "Miguel", role: "Founder, Producer & Programmer", country: "Spain", href: "https://www.bitemdev.com/", rotClass: "-rotate-[0.75deg]" },
+    { name: "Vaclav", role: "Publishing Advisor", country: "Czech Republic", href: "https://www.linkedin.com/in/vaclavkorycanek/", rotClass: "rotate-[0.6deg]" },
+    { name: "Todd", role: "Narrative Designer", country: "USA", href: "https://nat20.mal.plus/technical-portfolio/", rotClass: "-rotate-[0.5deg]" },
+    { name: "Pablo", role: "QA & Gameplay Polish Specialist", country: "Spain", href: "https://www.pablogozalvez.com/", rotClass: "rotate-[0.8deg]" },
+    { name: "Burakcan", role: "Game Designer", country: "Turkey", href: "https://www.artstation.com/george_akil", rotClass: "-rotate-[0.6deg]" },
+    { name: "Paulo", role: "Game Designer & Technical Artist", country: "Spain / Portugal", href: "https://view.genially.com/69788574df8490ea6fd02246", rotClass: "rotate-[0.5deg]" },
+    { name: "Maurice", role: "UI/UX Designer", country: "USA", href: "https://www.linkedin.com/in/mauricebirchard/", rotClass: "-rotate-[0.8deg]" },
+    { name: "Daniël", role: "Music Composer", country: "The Netherlands", href: "https://daniel-otten.bandcamp.com/", rotClass: "rotate-[0.4deg]" },
+    { name: "Denys", role: "Sound Designer", country: "Ukraine", href: "https://drive.google.com/drive/folders/1eBPnpS1N5JXDlTUpv92ci_UVk8KwPmSo", rotClass: "-rotate-[0.5deg]" },
+    { name: "Anton", role: "3D Artist", country: "Finland", rotClass: "rotate-[0.7deg]" },
+    { name: "Naomi", role: "3D Animator", country: "Australia", href: "https://www.artstation.com/naoface", rotClass: "-rotate-[0.65deg]" },
+    { name: "Ole", role: "Concept Artist", country: "The Netherlands", rotClass: "rotate-[0.55deg]" },
+    { name: "Freya", role: "Marketer & Writer", country: "UK", href: "https://www.linkedin.com/in/freya-clinton-06383134a/", rotClass: "-rotate-[0.45deg]" },
+    { name: "Luca", role: "Marketer", country: "Italy", href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk", rotClass: "rotate-[0.65deg]" },
   ];
 </script>
 
@@ -56,8 +56,7 @@
             href={member.href}
             target="_blank"
             rel="noreferrer"
-            class="crew-badge group relative flex flex-col justify-between rounded-2xl border-2 border-[#d6d5ca] bg-[#fffdf3] p-5 shadow-sm transition-all duration-300 hover:border-[#8fb8d8] hover:bg-[#b8d4f0]/20 hover:shadow-md"
-            style="--badge-rot: {member.rotation}deg;"
+            class="group relative flex flex-col justify-between rounded-2xl border-2 border-[#d6d5ca] bg-[#fffdf3] p-5 shadow-sm transition-all duration-300 hover:rotate-0 hover:-translate-y-1 hover:scale-[1.02] hover:border-[#8fb8d8] hover:bg-[#b8d4f0]/20 hover:shadow-md {member.rotClass}"
             onmouseenter={() => sound.playHover(480 + (i % 7) * 40)}
             onclick={() => sound.playPop(600)}
           >
@@ -87,8 +86,7 @@
         {:else}
           <!-- svelte-ignore a11y_no_static_element_interactions -->
           <div
-            class="crew-badge relative flex flex-col justify-between rounded-2xl border-2 border-[#d6d5ca] bg-[#fffdf3] p-5 shadow-sm transition-all duration-300 hover:border-[#8fb8d8] hover:bg-[#b8d4f0]/15"
-            style="--badge-rot: {member.rotation}deg;"
+            class="relative flex flex-col justify-between rounded-2xl border-2 border-[#d6d5ca] bg-[#fffdf3] p-5 shadow-sm transition-all duration-300 hover:rotate-0 hover:-translate-y-1 hover:scale-[1.02] hover:border-[#8fb8d8] hover:bg-[#b8d4f0]/15 {member.rotClass}"
             onmouseenter={() => sound.playHover(480 + (i % 7) * 40)}
           >
             <div>
@@ -113,16 +111,8 @@
 </section>
 
 <style>
-  .crew-badge {
-    transform: rotate(var(--badge-rot, 0deg));
-  }
-
-  .crew-badge:hover {
-    transform: rotate(0deg) translateY(-3px) scale(1.02);
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .crew-badge {
+    :global(.crew-board > *) {
       transform: none !important;
     }
   }

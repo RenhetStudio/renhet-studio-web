@@ -85,8 +85,8 @@ class SoundSystem {
 
       osc.start(now);
       osc.stop(now + 0.025);
-    } catch {
-      // Audio gracefully fails if autoplay blocked
+    } catch (err) {
+      void err;
     }
   }
 
@@ -115,7 +115,9 @@ class SoundSystem {
 
       osc.start(now);
       osc.stop(now + 0.018);
-    } catch {}
+    } catch (err) {
+      void err;
+    }
   }
 
   /**
@@ -143,7 +145,9 @@ class SoundSystem {
 
       osc.start(now);
       osc.stop(now + 0.13);
-    } catch {}
+    } catch (err) {
+      void err;
+    }
   }
 }
 

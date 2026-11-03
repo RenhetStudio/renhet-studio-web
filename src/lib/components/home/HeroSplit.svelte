@@ -7,16 +7,39 @@
   import IconSparkle from "$lib/components/icons/IconSparkle.svelte";
 
   let activePanel = $state<"studio" | "game" | null>(null);
-  let mouseX = $state(0);
-  let mouseY = $state(0);
-  let scrollY = $state(0);
   let isReducedMotion = $state(false);
+
+  let studioBgEl = $state<HTMLDivElement | null>(null);
+  let studioCopyEl = $state<HTMLDivElement | null>(null);
+  let gameBgEl = $state<HTMLDivElement | null>(null);
+  let gameCopyEl = $state<HTMLDivElement | null>(null);
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let scrollY = 0;
+
+  const updateTransforms = () => {
+    if (isReducedMotion) return;
+    if (studioBgEl) {
+      studioBgEl.style.transform = `translate3d(${mouseX * -0.6}px, ${(mouseY - scrollY * 0.15) * -0.6}px, 0)`;
+    }
+    if (studioCopyEl) {
+      studioCopyEl.style.transform = `translate3d(${mouseX * 0.4}px, ${(mouseY - scrollY * 0.1) * 0.4}px, 0)`;
+    }
+    if (gameBgEl) {
+      gameBgEl.style.transform = `translate3d(${mouseX * -0.5}px, ${(mouseY - scrollY * 0.12) * -0.5}px, 0)`;
+    }
+    if (gameCopyEl) {
+      gameCopyEl.style.transform = `translate3d(${mouseX * 0.3}px, ${(mouseY - scrollY * 0.08) * 0.3}px, 0)`;
+    }
+  };
 
   onMount(() => {
     isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const onScroll = () => {
       scrollY = window.scrollY;
+      updateTransforms();
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -30,8 +53,9 @@
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX = x * 18;
-    mouseY = y * 18;
+    mouseX = x * 16;
+    mouseY = y * 16;
+    updateTransforms();
   };
 
   const handlePanelEnter = (panel: "studio" | "game") => {
@@ -72,11 +96,9 @@
     >
       <!-- Parallax ambient bubble accents -->
       <div
+        bind:this={studioBgEl}
         class="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
-        style={!isReducedMotion
-          ? `transform: translate3d(${mouseX * -0.6}px, ${(mouseY - scrollY * 0.15) * -0.6}px, 0);`
-          : ""}
       >
         <div
           class="absolute -left-12 top-24 h-56 w-56 rounded-full bg-[#b8d4f0]/25 blur-2xl"
@@ -87,10 +109,8 @@
       </div>
 
       <div
+        bind:this={studioCopyEl}
         class="relative z-10 mx-auto w-full max-w-xl transition-transform duration-500 ease-out"
-        style={!isReducedMotion
-          ? `transform: translate3d(${mouseX * 0.4}px, ${(mouseY - scrollY * 0.1) * 0.4}px, 0);`
-          : ""}
       >
         <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-[#fffdf3]/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#fffdf3]">
           <IconSparkle size={13} class="text-[#fffdf3]" />
@@ -141,11 +161,9 @@
     >
       <!-- Parallax ambient cocktail glow -->
       <div
+        bind:this={gameBgEl}
         class="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
-        style={!isReducedMotion
-          ? `transform: translate3d(${mouseX * -0.5}px, ${(mouseY - scrollY * 0.12) * -0.5}px, 0);`
-          : ""}
       >
         <div
           class="absolute right-0 top-1/4 h-72 w-72 rounded-full bg-[#8fb8d8]/20 blur-3xl"
@@ -156,10 +174,8 @@
       </div>
 
       <div
+        bind:this={gameCopyEl}
         class="relative z-10 mx-auto w-full max-w-xl transition-transform duration-500 ease-out"
-        style={!isReducedMotion
-          ? `transform: translate3d(${mouseX * 0.3}px, ${(mouseY - scrollY * 0.08) * 0.3}px, 0);`
-          : ""}
       >
         <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-[#8fb8d8]/25 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#b8d4f0]">
           <span class="inline-block h-2 w-2 rounded-full bg-[#b8d4f0]"></span>
