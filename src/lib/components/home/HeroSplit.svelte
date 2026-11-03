@@ -127,33 +127,21 @@
     <!-- Solid full-bleed 100% height, zero vertical gaps, -mr-[2px] overlap to prevent subpixel seam crack -->
     <a
       href="#crew"
-      class="panel-studio group relative flex flex-col justify-center bg-[#8fb8d8] px-6 py-28 text-[#fffdf3] no-underline sm:px-10 md:py-36 lg:px-16 -mr-[2px] {activePanel ===
+      class="panel-studio group relative flex flex-col items-center justify-start bg-[#8fb8d8] px-6 pt-28 pb-16 text-[#fffdf3] no-underline sm:px-10 sm:pt-36 lg:px-16 lg:pt-40 -mr-[2px] {activePanel ===
       'game'
         ? 'z-10'
         : 'z-20'}"
       onmouseenter={() => handlePanelEnter("studio")}
       onmouseleave={handlePanelLeave}
     >
-      <!-- Studio Watermark Background — coherent with Beelze Pub -->
+      <!-- Studio Ambient Background Accents -->
       <div
         bind:this={studioBgEl}
-        class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden"
+        class="pointer-events-none absolute inset-0 z-0 overflow-hidden"
         aria-hidden="true"
       >
-        <img
-          src="/renhet-logo-white.png"
-          alt=""
-          width="520"
-          height="260"
-          class="w-[85%] max-w-lg object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
-          'studio'
-            ? 'opacity-35 scale-105'
-            : activePanel === 'game'
-              ? 'opacity-15 scale-95'
-              : 'opacity-25 scale-100'} filter drop-shadow-[0_8px_32px_rgba(255,253,243,0.18)]"
-        />
-        <div class="absolute -left-12 top-24 h-64 w-64 rounded-full bg-[#b8d4f0]/20 blur-3xl"></div>
-        <div class="absolute bottom-20 right-10 h-44 w-44 rounded-full bg-[#fffdf3]/10 blur-xl"></div>
+        <div class="absolute -left-12 top-24 h-72 w-72 rounded-full bg-[#b8d4f0]/25 blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 h-64 w-64 rounded-full bg-[#fffdf3]/15 blur-2xl"></div>
       </div>
 
       <!-- Studio Wave Separator: extends to the right over Beelze Pub -->
@@ -231,23 +219,44 @@
         </svg>
       </div>
 
-      <!-- Studio Content Block (Synchronized layout & rhythm with Beelze Pub) -->
+      <!-- Studio Content Block (Centered, higher up, with prominent inline logo) -->
       <div
         bind:this={studioCopyEl}
-        class="relative z-30 mx-auto w-full max-w-xl transition-all duration-500 ease-out {activePanel ===
+        class="relative z-30 mx-auto flex w-full max-w-xl flex-col items-center text-center transition-all duration-500 ease-out {activePanel ===
         'studio'
-          ? 'scale-[1.01] translate-x-1 opacity-100'
+          ? 'scale-[1.02] opacity-100'
           : activePanel === 'game'
             ? 'opacity-65'
             : 'opacity-100'}"
       >
+        <!-- Inline Renhet Studio Brand Logo -->
+        <picture class="inline-block transition-transform duration-300 group-hover:scale-105">
+          <source
+            type="image/avif"
+            srcset="/optimized/renhet-logo-white-360.avif 360w, /optimized/renhet-logo-white-720.avif 720w"
+            sizes="(min-width: 640px) 260px, 180px"
+          />
+          <source
+            type="image/webp"
+            srcset="/optimized/renhet-logo-white-360.webp 360w, /optimized/renhet-logo-white-720.webp 720w"
+            sizes="(min-width: 640px) 260px, 180px"
+          />
+          <img
+            src="/renhet-logo-white.png"
+            width="360"
+            height="181"
+            alt="Renhet Studio"
+            class="h-16 w-auto object-contain drop-shadow-[0_4px_24px_rgba(255,253,243,0.22)] sm:h-20 lg:h-22"
+          />
+        </picture>
+
         <h1
-          class="text-balance text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
+          class="text-shadow-studio mt-6 text-balance text-center text-3xl font-black leading-[1.02] tracking-tight text-[#fffdf3] sm:text-4xl md:text-5xl lg:text-6xl"
         >
           Friendly detailed worlds filled with passion.
         </h1>
 
-        <p class="mt-4 max-w-xs text-base font-semibold leading-relaxed text-[#fffdf3]/90 sm:max-w-sm sm:text-lg">
+        <p class="text-shadow-studio-subtle mt-4 mx-auto max-w-md text-center text-base font-semibold leading-relaxed text-[#fffdf3]/90 sm:text-lg">
           A tiny indie game studio making warm, handmade things.
         </p>
       </div>
@@ -257,17 +266,17 @@
     <!-- Solid full-bleed 100% height, zero vertical gaps -->
     <a
       href="#game"
-      class="panel-game group relative flex flex-col justify-center bg-[#344253] px-6 py-28 text-[#fffdf3] no-underline sm:px-10 md:py-36 lg:px-16 {activePanel ===
+      class="panel-game group relative flex flex-col items-center justify-start bg-[#344253] px-6 pt-28 pb-16 text-[#fffdf3] no-underline sm:px-10 sm:pt-36 lg:px-16 lg:pt-40 {activePanel ===
       'game'
         ? 'z-20'
         : 'z-10'}"
       onmouseenter={() => handlePanelEnter("game")}
       onmouseleave={handlePanelLeave}
     >
-      <!-- Beelze Pub Watermark Background — identical treatment to Studio -->
+      <!-- Beelze Pub Watermark Background — atmospheric backdrop framing the tavern -->
       <div
         bind:this={gameBgEl}
-        class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden"
+        class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden pt-16 sm:pt-24"
         aria-hidden="true"
       >
         <img
@@ -275,12 +284,12 @@
           alt=""
           width="520"
           height="260"
-          class="w-[85%] max-w-lg object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
+          class="w-[80%] max-w-md object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
           'game'
-            ? 'opacity-35 scale-105'
+            ? 'opacity-30 scale-105'
             : activePanel === 'studio'
               ? 'opacity-15 scale-95'
-              : 'opacity-25 scale-100'} filter drop-shadow-[0_8px_32px_rgba(0,0,0,0.35)]"
+              : 'opacity-22 scale-100'} filter drop-shadow-[0_8px_32px_rgba(0,0,0,0.35)]"
         />
         <div class="absolute right-0 top-1/4 h-80 w-80 rounded-full bg-[#8fb8d8]/15 blur-3xl"></div>
       </div>
@@ -351,23 +360,23 @@
         />
       </div>
 
-      <!-- Beelze Pub Content Block (Synchronized layout & rhythm with Studio) -->
+      <!-- Beelze Pub Content Block (Centered, higher up, perfectly synchronized with Studio) -->
       <div
         bind:this={gameCopyEl}
-        class="relative z-30 mx-auto w-full max-w-xl transition-all duration-500 ease-out {activePanel ===
+        class="relative z-30 mx-auto flex w-full max-w-xl flex-col items-center text-center transition-all duration-500 ease-out {activePanel ===
         'game'
-          ? 'scale-[1.01] -translate-x-1 opacity-100'
+          ? 'scale-[1.02] opacity-100'
           : activePanel === 'studio'
             ? 'opacity-65'
             : 'opacity-100'}"
       >
         <h2
-          class="text-balance text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
+          class="text-shadow-pub text-balance text-center text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
         >
           Beelze Pub
         </h2>
 
-        <p class="mt-4 max-w-xs text-base font-semibold leading-relaxed text-[#d6d5ca] sm:max-w-sm sm:text-lg">
+        <p class="text-shadow-pub-subtle mt-4 mx-auto max-w-md text-center text-base font-semibold leading-relaxed text-[#d6d5ca] sm:text-lg">
           Mix drinks. Serve the underworld. Survive the weekend.
         </p>
       </div>
@@ -387,6 +396,28 @@
 
   .wave-path-seam {
     transition: d 750ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .text-shadow-studio {
+    text-shadow:
+      0 2px 14px rgba(35, 52, 70, 0.35),
+      0 1px 3px rgba(35, 52, 70, 0.22);
+  }
+
+  .text-shadow-studio-subtle {
+    text-shadow: 0 1px 8px rgba(35, 52, 70, 0.25);
+  }
+
+  .text-shadow-pub {
+    text-shadow:
+      0 3px 18px rgba(10, 15, 22, 0.65),
+      0 1px 3px rgba(10, 15, 22, 0.45);
+  }
+
+  .text-shadow-pub-subtle {
+    text-shadow:
+      0 1px 10px rgba(10, 15, 22, 0.55),
+      0 1px 2px rgba(10, 15, 22, 0.35);
   }
 
   @media (prefers-reduced-motion: reduce) {
