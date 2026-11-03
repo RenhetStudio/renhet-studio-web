@@ -54,7 +54,7 @@
 <section id="game" class="px-5 py-20 sm:px-8 md:py-28 lg:px-12" aria-labelledby="game-title">
   <div class="mx-auto max-w-6xl">
     <!-- Title row with direct Itch.io link -->
-    <div class="mb-8 flex items-baseline justify-between gap-6 sm:mb-10">
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4 sm:mb-10">
       <h2 id="game-title" class="text-3xl font-black tracking-tight text-[#344253] sm:text-4xl md:text-5xl">
         Beelze Pub
       </h2>
@@ -63,11 +63,12 @@
         href="https://renhetstudio.itch.io/beelze-pub"
         target="_blank"
         rel="noreferrer"
-        class="group inline-flex shrink-0 items-center gap-2 text-sm font-black text-[#4f5f70] underline-offset-4 hover:underline sm:text-base"
+        class="group inline-flex shrink-0 items-center gap-2.5 rounded-full bg-[#344253] px-5 py-2.5 text-sm font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(52,66,83,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4f5f70] hover:shadow-[0_8px_24px_rgba(52,66,83,0.28)] active:translate-y-0 active:scale-[0.98] sm:px-6 sm:py-3 sm:text-base"
+        aria-label="Play Beelze Pub free on Itch.io (opens in new tab)"
       >
-        <IconItch size={18} />
+        <IconItch size={18} class="transition-transform duration-200 group-hover:scale-110" />
         <span>Play free on Itch.io</span>
-        <IconExternal size={13} class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        <IconExternal size={14} class="opacity-80 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
       </a>
     </div>
 
