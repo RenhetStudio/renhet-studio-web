@@ -1,24 +1,23 @@
 /**
  * Procedural Audio Synthesis via Web Audio API.
- * Ultra-lightweight (~0KB assets), zero network requests, whisper-soft cozy sound design.
+ * Only triggers on click events with organic random micro-pitch variation.
+ * Hover sounds and extra bells have been completely eliminated.
  */
 
 class SoundSystem {
   private ctx: AudioContext | null = null;
   public isMuted: boolean = false;
-  private isUnlocked: boolean = false;
   private listeners: Set<(muted: boolean) => void> = new Set();
+  private lastClickTime: number = 0;
 
   init(): void {
     if (typeof window === "undefined") return;
 
     const stored = localStorage.getItem("renhet_audio_muted");
-    // User requested sound active from first click/interaction by default
     this.isMuted = stored === "true";
 
     const unlock = () => {
       this.ensureContext();
-      this.isUnlocked = true;
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("keydown", unlock);
     };
@@ -54,17 +53,25 @@ class SoundSystem {
     }
     if (!this.isMuted) {
       this.ensureContext();
-      this.playPop(560);
+      this.playClick();
     }
     this.listeners.forEach((cb) => cb(this.isMuted));
     return this.isMuted;
   }
 
   /**
-   * Whisper-soft organic drop/pop (e.g. for card hover, badge tap)
+   * Randomized tactile click sound.
+   * Pitch and decay duration vary slightly on every single click
+   * to produce an organic, physical, non-repetitive micro-pop.
    */
-  playPop(freq = 520): void {
+  playClick(): void {
     if (this.isMuted) return;
+
+    // Debounce rapid double-fires (e.g. pointerdown + click within 50ms)
+    const nowMs = Date.now();
+    if (nowMs - this.lastClickTime < 40) return;
+    this.lastClickTime = nowMs;
+
     const ctx = this.ensureContext();
     if (!ctx) return;
 
@@ -73,81 +80,43 @@ class SoundSystem {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + 0.022);
+      // Pitch variation: randomized base around 480Hz ± 60Hz
+      const randomFreq = 480 + (Math.random() - 0.5) * 120;
+      // Duration variation: ~18ms to ~26ms
+      const randomDuration = 0.018 + Math.random() * 0.008;
+      // Gain variation: gentle cozy volume
+      const randomGain = 0.038 + (Math.random() - 0.5) * 0.01;
 
-      gain.gain.setValueAtTime(0.045, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(randomFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(randomFreq * 0.55, now + randomDuration);
+
+      gain.gain.setValueAtTime(randomGain, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + randomDuration);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
 
       osc.start(now);
-      osc.stop(now + 0.025);
+      osc.stop(now + randomDuration + 0.005);
     } catch (err) {
       void err;
     }
   }
 
   /**
-   * Subtle micro-tick on hovering interactive elements
+   * Aliases kept for compatibility, routing exclusively to randomized click.
    */
-  playHover(freq = 440): void {
-    if (this.isMuted) return;
-    const ctx = this.ensureContext();
-    if (!ctx) return;
-
-    try {
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.7, now + 0.015);
-
-      gain.gain.setValueAtTime(0.025, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.018);
-    } catch (err) {
-      void err;
-    }
+  playPop(): void {
+    this.playClick();
   }
 
-  /**
-   * Pleasant soft bell for primary action clicks (e.g. Itch.io play button)
-   */
+  playHover(): void {
+    // Intentionally disabled: user requested no hover sounds.
+  }
+
   playDing(): void {
-    if (this.isMuted) return;
-    const ctx = this.ensureContext();
-    if (!ctx) return;
-
-    try {
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(660, now);
-      osc.frequency.exponentialRampToValueAtTime(880, now + 0.06);
-
-      gain.gain.setValueAtTime(0.05, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.13);
-    } catch (err) {
-      void err;
-    }
+    this.playClick();
   }
 }
 
