@@ -2,9 +2,7 @@
   import SiteHeader from "$lib/components/SiteHeader.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import HeroSplit from "$lib/components/home/HeroSplit.svelte";
-  import WaveDivider from "$lib/components/home/WaveDivider.svelte";
   import GameSpotlight from "$lib/components/home/GameSpotlight.svelte";
-  import StudioCraft from "$lib/components/home/StudioCraft.svelte";
   import TheCrew from "$lib/components/home/TheCrew.svelte";
 </script>
 
@@ -44,21 +42,15 @@
   <!-- Floating Navigation Bar -->
   <SiteHeader />
 
-  <!-- Interactive Split Hero (Half Sunk Games inspired) -->
+  <!-- Interactive Split Hero (includes integrated bottom wave transition to paper) -->
   <HeroSplit />
 
-  <!-- Animated Fluid Wave Transition -->
-  <WaveDivider />
-
-  <!-- Beelze Pub Showcase (Little Bandit inspired) -->
+  <!-- Beelze Pub Showcase -->
   <GameSpotlight />
 
-  <!-- Handcrafted Studio Ethos -->
-  <StudioCraft />
-
-  <!-- The Crew (Propuesta B: Craft Badges with Micro-rotations) -->
+  <!-- The Crew -->
   <TheCrew />
 
-  <!-- Community & Footer -->
+  <!-- Community & Footer (includes integrated inverted wave transition from paper) -->
   <SiteFooter />
 </main>
