@@ -17,16 +17,16 @@
   const updateTransforms = () => {
     if (isReducedMotion) return;
     if (studioBgEl) {
-      studioBgEl.style.transform = `translate3d(${mouseX * -0.6}px, ${(mouseY - scrollY * 0.15) * -0.6}px, 0)`;
+      studioBgEl.style.transform = `translate3d(${mouseX * -0.5}px, ${(mouseY - scrollY * 0.15) * -0.5}px, 0)`;
     }
     if (studioCopyEl) {
-      studioCopyEl.style.transform = `translate3d(${mouseX * 0.4}px, ${(mouseY - scrollY * 0.1) * 0.4}px, 0)`;
+      studioCopyEl.style.transform = `translate3d(${mouseX * 0.35}px, ${(mouseY - scrollY * 0.1) * 0.35}px, 0)`;
     }
     if (gameBgEl) {
       gameBgEl.style.transform = `translate3d(${mouseX * -0.5}px, ${(mouseY - scrollY * 0.12) * -0.5}px, 0)`;
     }
     if (gameCopyEl) {
-      gameCopyEl.style.transform = `translate3d(${mouseX * 0.3}px, ${(mouseY - scrollY * 0.08) * 0.3}px, 0)`;
+      gameCopyEl.style.transform = `translate3d(${mouseX * 0.35}px, ${(mouseY - scrollY * 0.08) * 0.35}px, 0)`;
     }
   };
 
@@ -72,108 +72,105 @@
   onmousemove={onMouseMove}
 >
   <div
-    class="hero-split-container grid min-h-[94vh] w-full grid-cols-1 pb-16 lg:grid-cols-2 lg:pb-0 {activePanel ===
+    class="hero-split-container relative grid min-h-[94vh] w-full grid-cols-1 lg:grid-cols-2 {activePanel ===
     'studio'
-      ? 'lg:grid-cols-[1.22fr_0.78fr]'
+      ? 'lg:grid-cols-[1.36fr_0.64fr]'
       : activePanel === 'game'
-        ? 'lg:grid-cols-[0.78fr_1.22fr]'
+        ? 'lg:grid-cols-[0.64fr_1.36fr]'
         : 'lg:grid-cols-[1fr_1fr]'}"
   >
     <!-- LEFT PANEL: The Studio — entire panel links to #crew -->
     <a
       href="#crew"
-      class="panel-studio group relative flex flex-col justify-center bg-[#8fb8d8] px-6 py-28 text-[#fffdf3] no-underline sm:px-10 md:py-36 lg:px-16 {activePanel ===
+      class="panel-studio group relative flex flex-col justify-center bg-[#8fb8d8] px-6 py-28 text-[#fffdf3] no-underline transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-10 md:py-36 lg:px-16 {activePanel ===
       'game'
-        ? 'opacity-85'
-        : 'opacity-100'}"
+        ? 'opacity-60 scale-[0.99]'
+        : activePanel === 'studio'
+          ? 'opacity-100 scale-[1.005]'
+          : 'opacity-100'}"
       onmouseenter={() => handlePanelEnter("studio")}
       onmouseleave={handlePanelLeave}
     >
-      <!-- Parallax ambient layer -->
+      <!-- Studio Watermark Background — coherent with Beelze Pub -->
       <div
         bind:this={studioBgEl}
-        class="pointer-events-none absolute inset-0 overflow-hidden"
+        class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
         aria-hidden="true"
       >
-        <div
-          class="absolute -left-12 top-24 h-64 w-64 rounded-full bg-[#b8d4f0]/25 blur-3xl"
-        ></div>
-        <div
-          class="absolute bottom-20 right-10 h-44 w-44 rounded-full bg-[#fffdf3]/15 blur-xl"
-        ></div>
+        <img
+          src="/renhet-logo-white.png"
+          alt=""
+          width="520"
+          height="260"
+          class="w-[85%] max-w-lg object-contain opacity-25 filter drop-shadow-[0_8px_32px_rgba(255,253,243,0.18)]"
+        />
+        <div class="absolute -left-12 top-24 h-64 w-64 rounded-full bg-[#b8d4f0]/20 blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 h-44 w-44 rounded-full bg-[#fffdf3]/10 blur-xl"></div>
       </div>
 
-      <!-- Desktop Vertical Organic Seam Divider -->
+      <!-- Desktop Organic Seam Separator (Vertical fluid wave along the boundary) -->
       <div
-        class="pointer-events-none absolute -right-3.5 top-0 bottom-0 z-20 hidden w-7 overflow-hidden lg:block"
+        class="pointer-events-none absolute -right-5 top-0 bottom-0 z-20 hidden w-10 overflow-hidden lg:block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
+        'studio'
+          ? 'scale-x-125'
+          : activePanel === 'game'
+            ? 'scale-x-75'
+            : 'scale-x-100'}"
         aria-hidden="true"
       >
         <svg
-          viewBox="0 0 28 1000"
+          viewBox="0 0 40 1000"
           preserveAspectRatio="none"
           class="seam-wave h-full w-full"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M0,0 Q24,125 8,250 T20,500 T8,750 T18,1000 L0,1000 Z"
+            d="M 0,0 C 35,160 10,320 28,480 C 46,640 12,800 30,920 C 38,970 32,1000 0,1000 Z"
             fill="#8fb8d8"
+          />
+          <path
+            d="M 0,0 C 35,160 10,320 28,480 C 46,640 12,800 30,920 C 38,970 32,1000 0,1000"
+            fill="none"
+            stroke="#b8d4f0"
+            stroke-width="1.5"
+            stroke-opacity="0.45"
           />
         </svg>
       </div>
 
-      <!-- Mobile Horizontal Seam Divider -->
+      <!-- Mobile Horizontal Seam Separator -->
       <div
-        class="pointer-events-none absolute -bottom-3 left-0 right-0 z-20 block h-6 w-full overflow-hidden lg:hidden"
+        class="pointer-events-none absolute -bottom-4 left-0 right-0 z-20 block h-8 w-full overflow-hidden lg:hidden"
         aria-hidden="true"
       >
         <svg
-          viewBox="0 0 600 24"
+          viewBox="0 0 600 32"
           preserveAspectRatio="none"
           class="h-full w-full"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M0,0 Q150,22 300,10 T600,18 L600,0 L0,0 Z"
+            d="M 0,0 C 150,28 300,12 450,24 C 520,29 580,26 600,0 L 600,0 L 0,0 Z"
             fill="#8fb8d8"
           />
         </svg>
       </div>
 
+      <!-- Studio Content Block (Synchronized layout & rhythm with Beelze Pub) -->
       <div
         bind:this={studioCopyEl}
-        class="relative z-10 mx-auto w-full max-w-xl"
+        class="relative z-20 mx-auto w-full max-w-xl transition-all duration-500 ease-out {activePanel ===
+        'studio'
+          ? 'scale-[1.02]'
+          : ''}"
       >
-        <!-- Hero Large Brand Logo -->
-        <div class="hero-logo-box mb-6 sm:mb-8">
-          <picture class="block w-full max-w-[220px] sm:max-w-[270px] md:max-w-[320px]">
-            <source
-              type="image/avif"
-              srcset="/optimized/renhet-logo-white-360.avif 360w, /optimized/renhet-logo-white-720.avif 720w"
-              sizes="(max-width: 640px) 220px, 320px"
-            />
-            <source
-              type="image/webp"
-              srcset="/optimized/renhet-logo-white-360.webp 360w, /optimized/renhet-logo-white-720.webp 720w"
-              sizes="(max-width: 640px) 220px, 320px"
-            />
-            <img
-              src="/renhet-logo-white.png"
-              width="320"
-              height="161"
-              alt="Renhet Studio"
-              fetchpriority="high"
-              class="h-auto w-full object-contain filter drop-shadow-[0_4px_16px_rgba(50,62,75,0.18)]"
-            />
-          </picture>
-        </div>
-
         <h1
           class="text-balance text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
         >
           Friendly detailed worlds filled with passion.
         </h1>
 
-        <p class="mt-6 max-w-lg text-lg font-semibold leading-relaxed text-[#fffdf3]/90 sm:text-xl">
+        <p class="mt-4 max-w-xs text-base font-semibold leading-relaxed text-[#fffdf3]/90 sm:max-w-sm sm:text-lg">
           A tiny indie game studio making warm, handmade things.
         </p>
       </div>
@@ -182,14 +179,16 @@
     <!-- RIGHT PANEL: Beelze Pub — entire panel links to #game -->
     <a
       href="#game"
-      class="panel-game group relative flex flex-col justify-center overflow-hidden bg-[#344253] px-6 py-28 text-[#fffdf3] no-underline sm:px-10 md:py-36 lg:px-16 {activePanel ===
+      class="panel-game group relative flex flex-col justify-center overflow-hidden bg-[#344253] px-6 py-28 text-[#fffdf3] no-underline transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-10 md:py-36 lg:px-16 {activePanel ===
       'studio'
-        ? 'opacity-85'
-        : 'opacity-100'}"
+        ? 'opacity-60 scale-[0.99]'
+        : activePanel === 'game'
+          ? 'opacity-100 scale-[1.005]'
+          : 'opacity-100'}"
       onmouseenter={() => handlePanelEnter("game")}
       onmouseleave={handlePanelLeave}
     >
-      <!-- Beelze Pub logo watermark background with increased visibility -->
+      <!-- Beelze Pub Watermark Background — identical treatment to Studio -->
       <div
         bind:this={gameBgEl}
         class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
@@ -205,27 +204,31 @@
         <div class="absolute right-0 top-1/4 h-80 w-80 rounded-full bg-[#8fb8d8]/15 blur-3xl"></div>
       </div>
 
-      <!-- Skelly GIF — anchored flush to the bottom-0, large and prominent -->
+      <!-- Skelly GIF — firmly anchored to the true bottom edge, submerged into wave base so cut is never visible -->
       <div
-        class="pointer-events-none absolute bottom-0 right-2 z-20 sm:right-6 md:right-10 lg:right-14"
+        class="pointer-events-none absolute -bottom-5 right-2 z-20 sm:-bottom-7 sm:right-6 md:right-10 lg:-bottom-9 lg:right-14"
         aria-hidden="true"
       >
         <img
           src="/beelze-pub/skelly-anim.gif"
           alt="Skelly serving drinks in Beelze Pub"
-          width="380"
-          height="380"
-          class="skelly-anim h-[250px] w-auto object-contain drop-shadow-[0_-12px_36px_rgba(143,184,216,0.35)] sm:h-[330px] md:h-[380px] lg:h-[420px]"
+          width="706"
+          height="211"
+          class="block h-[260px] w-auto max-w-none object-contain object-bottom align-bottom drop-shadow-[0_-14px_36px_rgba(143,184,216,0.35)] sm:h-[340px] md:h-[400px] lg:h-[460px]"
           loading="eager"
         />
       </div>
 
+      <!-- Beelze Pub Content Block (Synchronized layout & rhythm with Studio) -->
       <div
         bind:this={gameCopyEl}
-        class="relative z-20 mx-auto w-full max-w-xl"
+        class="relative z-20 mx-auto w-full max-w-xl transition-all duration-500 ease-out {activePanel ===
+        'game'
+          ? 'scale-[1.02]'
+          : ''}"
       >
         <h2
-          class="text-balance text-3xl font-black leading-[0.95] tracking-tight text-[#fffdf3] sm:text-4xl md:text-5xl lg:text-6xl"
+          class="text-balance text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
         >
           Beelze Pub
         </h2>
@@ -245,27 +248,20 @@
 
 <style>
   .hero-split-container {
-    transition: grid-template-columns 650ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .panel-studio,
-  .panel-game {
-    transition:
-      opacity 450ms ease,
-      padding 650ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: grid-template-columns 750ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .seam-wave {
-    animation: seam-undulate 8s ease-in-out infinite alternate;
+    animation: seam-breathe 7s ease-in-out infinite alternate;
     transform-origin: center;
   }
 
-  @keyframes seam-undulate {
+  @keyframes seam-breathe {
     0% {
-      transform: scaleX(0.9) skewY(-0.8deg);
+      transform: scaleY(0.98) skewY(-0.6deg);
     }
     100% {
-      transform: scaleX(1.15) skewY(0.8deg);
+      transform: scaleY(1.02) skewY(0.6deg);
     }
   }
 
