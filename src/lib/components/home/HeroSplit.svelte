@@ -215,10 +215,10 @@
       <div
         class="hero-text-block relative z-30 mx-auto flex w-[90%] max-w-sm flex-col items-center text-center sm:max-w-md lg:w-[440px] lg:max-w-none shrink-0 {activePanel ===
         'studio'
-          ? 'scale-100 lg:scale-[1.03] opacity-100 blur-0'
+          ? 'is-active'
           : activePanel === 'game'
-            ? 'scale-100 lg:scale-[0.7] lg:opacity-35 lg:blur-[1.2px]'
-            : 'scale-100 opacity-100 blur-0'}"
+            ? 'is-inactive'
+            : ''}"
       >
         <!-- Inline Renhet Studio Brand Logo -->
         <picture class="inline-block transition-transform duration-300 group-hover:scale-105">
@@ -355,10 +355,10 @@
       <div
         class="hero-text-block relative z-30 mx-auto flex w-[90%] max-w-sm flex-col items-center text-center sm:max-w-md lg:w-[440px] lg:max-w-none shrink-0 {activePanel ===
         'game'
-          ? 'scale-100 lg:scale-[1.03] opacity-100 blur-0'
+          ? 'is-active'
           : activePanel === 'studio'
-            ? 'scale-100 lg:scale-[0.7] lg:opacity-35 lg:blur-[1.2px]'
-            : 'scale-100 opacity-100 blur-0'}"
+            ? 'is-inactive'
+            : ''}"
       >
         <h2
           class="text-shadow-pub text-balance text-center text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
@@ -389,12 +389,30 @@
   }
 
   .hero-text-block {
-    transition:
-      transform 750ms cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 600ms ease,
-      filter 600ms ease;
-    will-change: transform, opacity, filter;
+    scale: 1;
+    opacity: 1;
+    filter: blur(0);
     transform-origin: center top;
+    transition:
+      scale 750ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 750ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 650ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: scale, transform, opacity, filter;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-text-block.is-active {
+      scale: 1.03;
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    .hero-text-block.is-inactive {
+      scale: 0.8;
+      opacity: 0.45;
+      filter: blur(0.8px);
+    }
   }
 
   .text-shadow-studio {
