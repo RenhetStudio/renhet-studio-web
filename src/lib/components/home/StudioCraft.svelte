@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { sound } from "$lib/audio/soundEffects";
   import IconSparkle from "$lib/components/icons/IconSparkle.svelte";
 </script>
 
@@ -35,10 +34,8 @@
 
       <!-- Tactile Studio Stamp (Handcrafted accent) -->
       <div class="flex justify-center md:justify-end">
-        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           class="badge-stamp relative flex h-48 w-48 rotate-[-1.5deg] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[#8fb8d8] bg-[#f6f1e8] p-4 text-center shadow-sm transition-transform duration-300 hover:rotate-0 hover:scale-105"
-          onmouseenter={() => sound.playHover(480)}
         >
           <img
             src="/renhet-symbol-dark.png"
