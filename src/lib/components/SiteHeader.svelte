@@ -56,17 +56,17 @@
       ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md'
       : 'border-[#fffdf3] bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-xl'}"
   >
-    <!-- Logo with smooth morph between compact symbol and full wordmark -->
+    <!-- Logo with smooth morph between compact symbol and full wordmark (space reserved to prevent navbar layout shift) -->
     <a
       href="/"
-      class="relative flex h-9 items-center gap-2 overflow-hidden transition-transform duration-200 hover:scale-105"
+      class="relative inline-grid h-9 w-[72px] shrink-0 grid-cols-1 grid-rows-1 items-center justify-items-start transition-transform duration-200 hover:scale-105 sm:w-[80px]"
       aria-label="Renhet Studio home"
     >
       <!-- Small icon version: shown when hero is in view -->
       <picture
-        class="transition-all duration-300 ease-out {isHeroInView
+        class="col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {isHeroInView
           ? 'opacity-100 scale-100'
-          : 'pointer-events-none absolute opacity-0 scale-75 -translate-x-3'}"
+          : 'pointer-events-none opacity-0 scale-75 -translate-x-2'}"
       >
         <source
           type="image/avif"
@@ -89,9 +89,9 @@
 
       <!-- Large wordmark version: shown when hero exits view -->
       <picture
-        class="transition-all duration-300 ease-out {!isHeroInView
+        class="col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {!isHeroInView
           ? 'opacity-100 scale-100'
-          : 'pointer-events-none absolute opacity-0 scale-90 translate-x-3'}"
+          : 'pointer-events-none opacity-0 scale-90 translate-x-2'}"
       >
         <source
           type="image/avif"
