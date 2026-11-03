@@ -204,9 +204,9 @@
         <div class="absolute right-0 top-1/4 h-80 w-80 rounded-full bg-[#8fb8d8]/15 blur-3xl"></div>
       </div>
 
-      <!-- Skelly GIF — firmly anchored to the true bottom edge, submerged into wave base so cut is never visible -->
+      <!-- Skelly GIF — anchored to the bottom and centered horizontally in ITS section -->
       <div
-        class="pointer-events-none absolute -bottom-5 right-2 z-20 sm:-bottom-7 sm:right-6 md:right-10 lg:-bottom-9 lg:right-14"
+        class="pointer-events-none absolute -bottom-5 left-1/2 z-20 -translate-x-1/2 sm:-bottom-7 lg:-bottom-9"
         aria-hidden="true"
       >
         <img
