@@ -92,6 +92,8 @@
   /* Centering applied purely via CSS — no inline transform that JS could override */
   .cursor-dot,
   .cursor-ring {
+    top: 0;
+    left: 0;
     transform: translate(-50%, -50%);
   }
 </style>
