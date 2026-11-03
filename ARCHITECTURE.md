@@ -17,27 +17,28 @@
 ```
 src/
 ├── routes/
-│   ├── +layout.svelte               # Shell global (Fuentes Paperlogy, configuración de audio, meta)
+│   ├── +layout.svelte               # Shell global (Fuentes Paperlogy, SoundProvider, CustomCursor, meta)
 │   └── +page.svelte                 # Orquestador de la Home Page rediseñada
 │
 ├── lib/
 │   ├── components/
-│   │   ├── SiteHeader.svelte        # Barra flotante con mute toggle y navegación
-│   │   ├── SiteFooter.svelte        # Footer responsive con enlaces y redes
-│   │   ├── CustomCursor.svelte      # Seguidor elástico sutil con respuesta magnética
+│   │   ├── SoundProvider.svelte     # Proveedor global de audio (captura clics interactivos con modulación aleatoria)
+│   │   ├── SiteHeader.svelte        # Barra flotante con mute toggle, transición de discreta a sólida y morphing de logo
+│   │   ├── SiteFooter.svelte        # Footer responsive con ola invertida, logo ampliado y redes
+│   │   ├── CustomCursor.svelte      # Seguidor elástico sutil con centrado estático geométrico
 │   │   ├── icons/                   # Iconografía SVG vectorial reutilizable (cero Unicode/emojis)
 │   │   │   ├── IconArrow.svelte     # Flechas direccionales vectoriales configurables
 │   │   │   ├── IconExternal.svelte  # Icono de enlace externo minimalista
 │   │   │   ├── IconSound.svelte     # Icono de audio activo / silenciado
 │   │   │   └── IconItch.svelte      # Logotipo vectorial de Itch.io
 │   │   └── home/
-│   │       ├── HeroSplit.svelte     # Split hero interactivo (Estudio vs Beelze Pub)
-│   │       ├── WaveDivider.svelte   # Transición SVG de ondas fluidas multicapa
-│   │       ├── GameSpotlight.svelte # Escaparate de Beelze Pub con Skelly animado
-│   │       └── TheCrew.svelte       # Sección del equipo (Tablón de sellos artesanales con rotación)
+│   │       ├── HeroSplit.svelte     # Split hero interactivo con costura de onda orgánica y logo grande
+│   │       ├── WaveDivider.svelte   # Transición SVG de ondas seamless y modo invertido
+│   │       ├── GameSpotlight.svelte # Carrusel con scroll automático y barra de progreso temporal
+│   │       └── TheCrew.svelte       # Sección del equipo (Tablón de sellos artesanales sin sobrecarga de iconos)
 │   │
 │   ├── audio/
-│   │   └── soundEffects.ts          # Módulo Web Audio API (micro-click, hover pop suave, mute state)
+│   │   └── soundEffects.ts          # Módulo Web Audio API (micro-click procedural aleatorizado, mute state)
 │   │
 │   └── utils/
 │       ├── motion.ts                # Utilidades matemáticas (lerp, spring damping)
@@ -45,14 +46,18 @@ src/
 │
 └── static/
     ├── fonts/                       # Fuentes Paperlogy en formato .woff2
-    └── beelze-pub/                  # Activos locales de Beelze Pub (incluyendo Skelly animado)
+    ├── beelze-pub/                  # Activos locales de Beelze Pub (incluyendo Skelly animado)
+    └── renhet-symbol-white.png      # Isotipo blanco para la cabecera reactiva
 ```
 
 ---
 
-## 3. Arquitectura del Sistema de Audio (`soundEffects.ts`)
+## 3. Arquitectura del Sistema de Audio Centralizado (`SoundProvider.svelte` + `soundEffects.ts`)
 
-Para evitar peticiones HTTP pesadas de archivos de sonido y garantizar inmediatez:
+En concordancia con el principio de código limpio y sin repetición:
+* **Cero manejadores locales:** Ningún botón o enlace declara `onclick={() => sound.playPop()}` ni `onmouseenter={() => sound.playHover()}`.
+* **Captura Global en `<SoundProvider />`:** Un único event listener `click` en fase de captura identifica si el clic proviene de un elemento interactivo (`a, button, [role='button'], [role='tab'], input, select, textarea, .badge-stamp`).
+* **Micro-Variación Aleatoria Orgánica:** Cada clic sintetiza una onda senoidal con una frecuencia base modulada al azar (`480Hz ± 60Hz`), duración entre 18ms y 26ms y ganancia sutil, de modo que cada interacción suena ligeramente distinta, física y natural.
 ```typescript
 class SoundManager {
   private ctx: AudioContext | null = null;

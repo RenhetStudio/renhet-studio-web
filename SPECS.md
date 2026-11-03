@@ -63,69 +63,56 @@ Para garantizar que la web respire autenticidad, artesanía y alma indie real, s
 
 ## 5. Arquitectura de Secciones de la Home Page
 
-### 5.1. Barra de Navegación Flotante (`SiteHeader`)
-* **Diseño:** Píldora de navegación compacta, fija y con desenfoque de fondo sutil.
-* **Estructura de Navegación (Inglés, sin relleno):**
-  * Logotipo de Renhet Studio (usando los recursos PNG optimizados del proyecto).
-  * Enlaces mixtos:
-    * Scroll suave a secciones internas de la Home: `Beelze Pub`, `The Crew`.
-    * Enlaces a páginas externas: `Blog`, `Careers`.
+### 5.1. Barra de Navegación Flotante Reactiva (`SiteHeader`)
+* **Diseño Dinámico según Posición de Scroll:**
+  * **Con el Hero a la vista:** La navbar adopta un acabado discreto, semi-translúcido (`bg-[#627383]/45`, borde tenue, sin sombra) y muestra la versión compacta del isotipo (`renhet-symbol-white.png`), cediendo todo el protagonismo al gran logotipo central del Hero.
+  * **Al scrollear pasando el Hero:** La navbar se solidifica (`bg-[#627383]/92`, sombra elevada, desenfoque de fondo profundo) y el isotipo se transforma de manera fluida (mediante una transición de escala y desplazamiento) en el logotipo completo con texto (`renhet-logo-white.png`), manteniéndolo visible durante el resto de la navegación.
 * **Control de Audio:**
-  * El audio se inicializa automáticamente en la primera interacción o clic del usuario (cumpliendo con la política de AudioContext de los navegadores).
-  * Dispone de un botón con icono SVG accesible en la cabecera para silenciar/activar el sonido en cualquier momento, persistiendo la preferencia en `localStorage`.
+  * Dispone de un botón con icono SVG accesible en la cabecera con micro-animación de escala para silenciar/activar el sonido en cualquier momento, persistiendo la preferencia en `localStorage`.
 
 ### 5.2. Hero Split Interactivo ("The Pond & The Pub")
 * **Inspiración:** Half Sunk Games, adaptado con física sutil y relajada (*cozy pond*).
+* **Costura Orgánica entre Paneles (Seam Divider):** En lugar de un corte digital recto, la separación entre el panel del estudio (`#8fb8d8`) y el pub (`#344253`) se articula mediante un divisor de onda vertical orgánico animado, que ondea suavemente y acompaña la expansión de las columnas al pasar el ratón. En móvil, se adapta a un divisor horizontal suave.
 * **Panel Izquierdo (El Estudio):**
   * Toda el área del panel funciona como enlace interactivo hacia `#crew`. Sin botones de estilo SaaS ni píldoras.
+  * **Logotipo Principal a Gran Escala:** Se exhibe el logotipo de *Renhet Studio* en gran formato (`renhet-logo-white.png`) presidiendo la sección.
   * Titular: *"Friendly detailed worlds filled with passion."*
   * Manifiesto breve y cercano: *"A tiny indie game studio making warm, handmade things."*
-  * Atmósfera serena de estanque con tonos `#8fb8d8` y detalles visuales sutiles.
 * **Panel Derecho (El Juego — Beelze Pub):**
   * Toda el área del panel funciona como enlace interactivo hacia `#game`. Sin botones invasivos ni píldoras.
   * Titular: *"Beelze Pub"* y subtítulo mínimo: *"Mix drinks. Serve the underworld. Survive the weekend."*
-  * Marca de agua sutil del logotipo de *Beelze Pub* en el fondo.
-  * **Elemento estrella interactivo:** GIF animado de Skelly (`skelly-anim.gif`) con gran protagonismo visual, amplio y desbordado orgánicamente sobre la sección, sin cajas ni bordes que lo encierren.
+  * Marca de agua del logotipo de *Beelze Pub* en el fondo con opacidad del 25% y sombra atmosférica.
+  * **Elemento estrella interactivo:** GIF animado de Skelly (`skelly-anim.gif`) a gran escala (hasta 420px de altura), fijado a ras del fondo (`bottom-0`) para evitar cualquier corte o salto visual.
 * **Interacción de Expansión (Hover Expansion):**
   * Reposo: 50% / 50%.
   * Al pasar el ratón suavemente sobre un lado: Se expande a un 62% / 38% mediante transición elástica y calmada (física *spring* suave, sin brusquedad).
-  * Versión móvil: Distribución vertical fluida y natural adaptada a toques táctiles.
-* **Scroll Parallax:**
-  * Desfase suave de capas de fondo y elementos en primer plano con desacople de movimiento (velocidades relativas de 0.15x a 0.35x para evitar mareos).
 
 ### 5.3. Divisor de Ondas Animadas Seamless (`WaveDivider`)
 * Transición vectorizada de 3 capas SVG entre el hero y el fondo `#f6f1e8` del cuerpo, y efecto de ola invertida en la cabecera del footer (`#4f5f70`).
 * **Bucle 100% Seamless:** Cada capa SVG contiene dos períodos matemáticamente continuos (`viewBox="0 0 200 100"`) animados exactamente en un `-50%`, garantizando un ciclo infinito sin saltos, costuras ni enganches.
 * **Contenedor Transparente:** Cero fondos o capas superpuestas arbitrarias que corten la visibilidad de los paneles traseros.
-* Totalmente deshabilitado si `prefers-reduced-motion: reduce` está activo.
 
-### 5.4. Escaparate de Beelze Pub (`GameSpotlight`)
+### 5.4. Escaparate de Beelze Pub (`GameSpotlight`) — Carrusel con Barra de Progreso
 * **Inspiración:** Little Bandit (ultra minimalista, directo al juego, delimitado por el título y no por una tarjeta contenedora).
-* **Composición Libre de Tarjetas:** La sección no se encierra en una caja; se presenta con titular limpio a la izquierda y enlace a Itch.io a la derecha, captura a pantalla completa con pestañas mínimas de subrayado, y un texto ultra reducido y conciso.
-* **Activos integrados:**
-  * Capturas reales del juego en formatos `.avif` y `.webp` optimizados.
-  * Enlace y ficha técnica limpia hacia Itch.io con componente SVG.
+* **Carrusel con Avance Automático y Barra de Progreso:**
+  * Rotación automática fluida entre 3 capturas del juego (coctelería, clientes del inframundo y arte principal).
+  * Cada pestaña cuenta con una barra de progreso que indica visualmente el tiempo restante (5 segundos) antes de pasar a la siguiente diapositiva.
+  * Al colocar el cursor sobre el carrusel, el avance se pausa automáticamente para permitir apreciar la imagen con calma.
+  * Botones de navegación anterior/siguiente integrados y accesibles.
+  * En modo de movimiento reducido, el avance automático se congela.
 
 ### 5.5. Sección "The Crew" (Tablón Artesanal de Sellos / Badges con Micro-Rotaciones)
 * **Concepto:** Presentación de los 14 miembros del equipo mediante un tablón orgánico de placas tipográficas ("sellos" de artesano), única excepción justificada a la regla de cero tarjetas.
-* **Estructura y Composición:**
-  * Titular limpio: *"The crew."* sin píldoras decorativas ni subtítulos genéricos de relleno.
-  * Distribución asimétrica con micro-rotaciones sutiles (aleatoriedad orgánica entre `-0.8°` y `+0.8°`) simulando fichas colocadas a mano en un taller.
-* **Interacciones y Micro-Física:**
-  * Al pasar el ratón (hover), la placa se endereza elásticamente a `0°`, se eleva de forma suave y adquiere un resalte sutil en azul cielo `#b8d4f0`.
-  * Si el miembro tiene enlace a su portfolio/perfil, se muestra un icono SVG limpio de enlace exterior y se emite un micro-pop de sonido sintetizado suave (si el audio está activo).
+* **Sin Sobrecarga de Iconos:** Se han eliminado los iconos repetitivos de enlace externo en cada tarjeta; la interacción es limpia, orgánica e identificada mediante el texto interactivo del portfolio y la elevación suave.
 
-### 5.6. Micro-Interacciones Sonoras y Puntero Dinámico
-* **Sonido (Web Audio API):**
-  * Micro-pulsos sintetizados ultra suaves (frecuencia cálida ~400-600Hz con decaimiento rápido de 15ms), simulando un sutil "tap" o "gota de agua" al interactuar con botones clave.
-  * Transición animada (escala elástica) en el botón de mute/desmute de la barra de navegación.
-  * Estado de mute guardado en `localStorage`.
-* **Puntero Dinámico (Custom Cursor):**
-  * Puntero sutil centrado geométricamente mediante CSS estático `transform: translate(-50%, -50%)`, eliminando cualquier desalineación o desfase al enfocar enlaces y botones interactivos.
-  * Desactivado en pantallas táctiles (`pointer: coarse`) o con movimiento reducido.
+### 5.6. Sistema Centralizado de Micro-Interacciones Sonoras (`SoundProvider.svelte`)
+* **Lógica Centralizada:** Ningún componente individual inyecta manejadores `onclick` o `onmouseenter` para sonido. La gestión del audio reside exclusivamente en el componente `<SoundProvider />` montado en el layout raíz.
+* **Solo al Hacer Clic:** Se han eliminado absolutamente todos los sonidos al pasar el ratón (hover) o campanas decorativas.
+* **Variación Aleatoria Orgánica:** En cada clic, la frecuencia (~480Hz ± 60Hz), la duración y la ganancia se modulan ligeramente de forma aleatoria, emulando la acústica física de un golpe táctil natural que nunca se repite idéntico.
 
 ### 5.7. Pie de Página (`SiteFooter`)
 * **Color de Fondo Restaurado:** `#4f5f70` (azul pizarra original de Renhet).
+* **Logotipo Ampliado:** El logotipo del estudio en el footer cuenta con dimensiones ampliadas (`max-w-[400px]`) otorgando peso y autoridad visual al cierre.
 * **Divisor de Ola Invertida:** Integrado en la parte superior del footer, generando una orilla fluida desde el papel `#f6f1e8` hacia el `#4f5f70`.
-* **Botones Sólidos de Identidad:** Píldoras en crema sólido (`#fffdf3`) con texto `#4f5f70` e icono SVG direccional, eliminando cualquier glassmorphism translúcido.
-* **Sin Párrafos de Relleno:** Titular expresivo en Paperlogy Black *"Follow the adventures."* y accesos directos claros.
+* **Copyright Centrado:** El texto de derechos reservados se encuentra centrado horizontalmente al pie de página.
+* **Sin Enlaces Redundantes:** Eliminada la lista de texto redundante ("Careers • Blog • Beelze Pub").
