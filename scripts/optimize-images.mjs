@@ -7,6 +7,9 @@ const images = [
   { source: "public/renhet-logo-white.png", name: "renhet-logo-white", widths: [88, 176, 360, 720] },
   { source: "public/renhet-logo-dark.png", name: "renhet-logo-dark", widths: [208, 416] },
   { source: "public/beelze-pub/logo.png", name: "beelze-pub-logo", widths: [420, 556] },
+  { source: "public/beelze-pub/beelze-pub-keyart.png", name: "beelze-pub-keyart", widths: [480, 800, 1200] },
+  { source: "public/beelze-pub/screen-cocktails.jpg", name: "screen-cocktails", widths: [480, 800] },
+  { source: "public/beelze-pub/screen-dialogue.jpg", name: "screen-dialogue", widths: [480, 800] },
 ];
 
 await mkdir(output, { recursive: true });

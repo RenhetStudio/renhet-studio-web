@@ -1,6 +1,60 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/Paperlogy-4Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/Paperlogy-6SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/Paperlogy-7Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/Paperlogy-8ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/Paperlogy-9Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Paperlogy", "Outfit Variable", "Outfit", system-ui, -apple-system, sans-serif;
+  --font-display: "Paperlogy", system-ui, -apple-system, sans-serif;
+  --color-paper: #f6f1e8;
+  --color-cream: #fffdf3;
+  --color-pond: #8fb8d8;
+  --color-sky: #b8d4f0;
+  --color-ink: #4f5f70;
+  --color-dark: #344253;
+  --color-border: #d6d5ca;
+}
+
+
 :root {
+  font-family: var(--font-sans);
   color-scheme: light;
   background: #f6f1e8;
 }
@@ -10,6 +64,7 @@ html {
 }
 
 body {
+  font-family: var(--font-sans);
   margin: 0;
   overflow-x: hidden;
   background: #f6f1e8;
