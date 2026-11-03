@@ -6,27 +6,32 @@
   let isReducedMotion = $state(false);
 
   // 1. Studio wave contours (viewBox 0 0 100 1000, attached to Studio right edge, extends right into Pub)
+  // Neutral: prominent flowing wave (~46px crests)
   const sNeutral =
-    "M -2,0 C 26,70 34,160 22,250 C 12,340 36,430 25,520 C 14,610 30,700 18,790 C 8,870 22,940 0,1000";
+    "M -2,0 C 36,70 46,160 30,250 C 16,340 48,430 34,520 C 18,610 42,700 26,790 C 12,870 30,940 0,1000";
+  // Active: deep surge into tavern (~92px crests)
   const sActive =
-    "M -2,0 C 65,70 82,160 62,250 C 42,340 92,430 76,520 C 52,610 78,700 56,790 C 34,870 55,940 0,1000";
+    "M -2,0 C 72,70 92,160 70,250 C 46,340 98,430 84,520 C 58,610 88,700 66,790 C 40,870 65,940 0,1000";
+  // Retracted: pulled flush into Studio border (0px)
   const sRetracted =
     "M -2,0 C 0,70 0,160 0,250 C 0,340 0,430 0,520 C 0,610 0,700 0,790 C 0,870 0,940 0,1000";
 
+  const sSubNeutral =
+    "M -2,0 C 46,70 58,160 40,250 C 24,340 60,430 44,520 C 26,610 52,700 34,790 C 16,870 40,940 0,1000";
   const sSubActive =
-    "M -2,0 C 78,70 98,160 76,250 C 54,340 100,430 90,520 C 66,610 92,700 70,790 C 44,870 68,940 0,1000";
+    "M -2,0 C 85,70 100,160 82,250 C 60,340 100,430 96,520 C 72,610 98,700 78,790 C 50,870 78,940 0,1000";
   const sSubRetracted =
     "M -2,0 C 0,70 0,160 0,250 C 0,340 0,430 0,520 C 0,610 0,700 0,790 C 0,870 0,940 0,1000";
 
   // 2. Game wave contours (viewBox 0 0 100 1000, attached to Pub left edge, extends left into Studio)
   // Exact symmetrical mirror: x' = 100 - x
   const gActive =
-    "M 102,0 C 35,70 18,160 38,250 C 58,340 8,430 24,520 C 48,610 22,700 44,790 C 66,870 45,940 100,1000";
+    "M 102,0 C 28,70 8,160 30,250 C 54,340 2,430 16,520 C 42,610 12,700 34,790 C 60,870 35,940 100,1000";
   const gRetracted =
     "M 102,0 C 100,70 100,160 100,250 C 100,340 100,430 100,520 C 100,610 100,700 100,790 C 100,870 100,940 100,1000";
 
   const gSubActive =
-    "M 102,0 C 22,70 2,160 24,250 C 46,340 0,430 10,520 C 34,610 8,700 30,790 C 56,870 32,940 100,1000";
+    "M 102,0 C 15,70 0,160 18,250 C 40,340 0,430 4,520 C 28,610 2,700 22,790 C 50,870 22,940 100,1000";
   const gSubRetracted =
     "M 102,0 C 100,70 100,160 100,250 C 100,340 100,430 100,520 C 100,610 100,700 100,790 C 100,870 100,940 100,1000";
 
@@ -34,7 +39,7 @@
     activePanel === "studio" ? sActive : activePanel === "game" ? sRetracted : sNeutral
   );
   let activeStudioSubContour = $derived(
-    activePanel === "studio" ? sSubActive : sSubRetracted
+    activePanel === "studio" ? sSubActive : activePanel === "game" ? sSubRetracted : sSubNeutral
   );
 
   let activeGameContour = $derived(
@@ -119,14 +124,13 @@
         : 'lg:grid-cols-[1fr_1fr]'}"
   >
     <!-- LEFT PANEL: The Studio — entire panel links to #crew -->
+    <!-- Solid full-bleed 100% height, zero vertical gaps -->
     <a
       href="#crew"
-      class="panel-studio group relative flex flex-col justify-center bg-[#8fb8d8] px-6 py-28 text-[#fffdf3] no-underline transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-10 md:py-36 lg:px-16 {activePanel ===
+      class="panel-studio group relative flex flex-col justify-center bg-[#8fb8d8] px-6 py-28 text-[#fffdf3] no-underline sm:px-10 md:py-36 lg:px-16 {activePanel ===
       'game'
-        ? 'opacity-55 scale-[0.99] z-10'
-        : activePanel === 'studio'
-          ? 'opacity-100 scale-[1.008] z-20'
-          : 'opacity-100 z-10'}"
+        ? 'z-10'
+        : 'z-20'}"
       onmouseenter={() => handlePanelEnter("studio")}
       onmouseleave={handlePanelLeave}
     >
@@ -153,12 +157,9 @@
       </div>
 
       <!-- Studio Wave Separator: extends to the right over Beelze Pub -->
-      <!-- Clean organic wave only, ZERO background overlays or cut lines -->
+      <!-- Pure vector path morphing with 100% solid matching #8fb8d8, ZERO color cuts or opacity transitions -->
       <div
-        class="pointer-events-none absolute top-0 bottom-0 left-[calc(100%-1px)] z-20 hidden w-28 overflow-visible lg:block transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
-        'game'
-          ? 'opacity-0'
-          : 'opacity-100'}"
+        class="pointer-events-none absolute top-0 bottom-0 left-[calc(100%-1px)] z-20 hidden w-28 overflow-visible lg:block"
         aria-hidden="true"
       >
         <div class="seam-wave-wrapper h-full w-full">
@@ -168,12 +169,12 @@
             class="h-full w-full overflow-visible"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <!-- Layer 1: Sub-surface accent wave when Studio active (sky blue) -->
+            <!-- Layer 1: Sub-surface accent wave (sky blue) -->
             <path
               d="{activeStudioSubContour} L -2,1000 Z"
               fill="#b8d4f0"
-              class="transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-              opacity={activePanel === "studio" ? 0.42 : 0}
+              opacity="0.4"
+              class="wave-path-seam"
             />
 
             <!-- Layer 2: Main Studio pond wave (#8fb8d8) -->
@@ -235,10 +236,10 @@
         bind:this={studioCopyEl}
         class="relative z-30 mx-auto w-full max-w-xl transition-all duration-500 ease-out {activePanel ===
         'studio'
-          ? 'scale-[1.01] translate-x-1'
+          ? 'scale-[1.01] translate-x-1 opacity-100'
           : activePanel === 'game'
-            ? 'opacity-70 scale-[0.99]'
-            : ''}"
+            ? 'opacity-65'
+            : 'opacity-100'}"
       >
         <h1
           class="text-balance text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
@@ -253,14 +254,13 @@
     </a>
 
     <!-- RIGHT PANEL: Beelze Pub — entire panel links to #game -->
+    <!-- Solid full-bleed 100% height, zero vertical gaps -->
     <a
       href="#game"
-      class="panel-game group relative flex flex-col justify-center bg-[#344253] px-6 py-28 text-[#fffdf3] no-underline transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-10 md:py-36 lg:px-16 {activePanel ===
-      'studio'
-        ? 'opacity-55 scale-[0.99] z-10'
-        : activePanel === 'game'
-          ? 'opacity-100 scale-[1.008] z-20'
-          : 'opacity-100 z-10'}"
+      class="panel-game group relative flex flex-col justify-center bg-[#344253] px-6 py-28 text-[#fffdf3] no-underline sm:px-10 md:py-36 lg:px-16 {activePanel ===
+      'game'
+        ? 'z-20'
+        : 'z-10'}"
       onmouseenter={() => handlePanelEnter("game")}
       onmouseleave={handlePanelLeave}
     >
@@ -286,12 +286,9 @@
       </div>
 
       <!-- Beelze Pub Wave Separator: extends to the left over Studio -->
-      <!-- Clean organic inverted wave only, ZERO background overlays or cut lines -->
+      <!-- Pure vector path morphing with 100% solid matching #344253, ZERO color cuts or opacity transitions -->
       <div
-        class="pointer-events-none absolute top-0 bottom-0 right-[calc(100%-1px)] z-20 hidden w-28 overflow-visible lg:block transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
-        'game'
-          ? 'opacity-100'
-          : 'opacity-0'}"
+        class="pointer-events-none absolute top-0 bottom-0 right-[calc(100%-1px)] z-20 hidden w-28 overflow-visible lg:block"
         aria-hidden="true"
       >
         <div class="seam-wave-wrapper h-full w-full">
@@ -305,8 +302,8 @@
             <path
               d="{activeGameSubContour} L 102,1000 Z"
               fill="#4f5f70"
-              class="transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-              opacity={activePanel === "game" ? 0.45 : 0}
+              opacity="0.45"
+              class="wave-path-seam"
             />
 
             <!-- Layer 2: Main Beelze Pub dark wave (#344253) -->
@@ -335,10 +332,10 @@
       <div
         class="pointer-events-none absolute -bottom-5 left-1/2 z-25 -translate-x-1/2 sm:-bottom-7 lg:-bottom-9 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
         'game'
-          ? 'scale-105'
+          ? 'scale-105 opacity-100'
           : activePanel === 'studio'
             ? 'scale-95 opacity-75'
-            : 'scale-100'}"
+            : 'scale-100 opacity-100'}"
         aria-hidden="true"
       >
         <img
@@ -359,10 +356,10 @@
         bind:this={gameCopyEl}
         class="relative z-30 mx-auto w-full max-w-xl transition-all duration-500 ease-out {activePanel ===
         'game'
-          ? 'scale-[1.01] -translate-x-1'
+          ? 'scale-[1.01] -translate-x-1 opacity-100'
           : activePanel === 'studio'
-            ? 'opacity-70 scale-[0.99]'
-            : ''}"
+            ? 'opacity-65'
+            : 'opacity-100'}"
       >
         <h2
           class="text-balance text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
@@ -411,8 +408,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .hero-split-container,
-    .panel-studio,
-    .panel-game,
     .wave-path-seam,
     .seam-wave-wrapper {
       transition: none !important;

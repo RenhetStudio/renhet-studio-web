@@ -53,8 +53,8 @@
 <nav class="nav-shell fixed inset-x-0 top-4 z-50 px-4" aria-label="Primary navigation">
   <div
     class="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] transition-all duration-300 ease-out sm:px-6 {isHeroInView
-      ? 'border-transparent bg-[#627383]/45 shadow-none backdrop-blur-md'
-      : 'border-[#eef0e9]/80 bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.18)] backdrop-blur-xl'}"
+      ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md'
+      : 'border-[#fffdf3] bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-xl'}"
   >
     <!-- Logo with smooth morph between compact symbol and full wordmark -->
     <a
