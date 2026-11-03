@@ -50,9 +50,7 @@
   );
 
   let studioBgEl = $state<HTMLDivElement | null>(null);
-  let studioCopyEl = $state<HTMLDivElement | null>(null);
   let gameBgEl = $state<HTMLDivElement | null>(null);
-  let gameCopyEl = $state<HTMLDivElement | null>(null);
 
   let mouseX = 0;
   let mouseY = 0;
@@ -63,14 +61,8 @@
     if (studioBgEl) {
       studioBgEl.style.transform = `translate3d(${mouseX * -0.5}px, ${(mouseY - scrollY * 0.15) * -0.5}px, 0)`;
     }
-    if (studioCopyEl) {
-      studioCopyEl.style.transform = `translate3d(${mouseX * 0.35}px, ${(mouseY - scrollY * 0.1) * 0.35}px, 0)`;
-    }
     if (gameBgEl) {
       gameBgEl.style.transform = `translate3d(${mouseX * -0.5}px, ${(mouseY - scrollY * 0.12) * -0.5}px, 0)`;
-    }
-    if (gameCopyEl) {
-      gameCopyEl.style.transform = `translate3d(${mouseX * 0.35}px, ${(mouseY - scrollY * 0.08) * 0.35}px, 0)`;
     }
   };
 
@@ -219,15 +211,14 @@
         </svg>
       </div>
 
-      <!-- Studio Content Block (Centered, higher up, with prominent inline logo) -->
+      <!-- Studio Content Block (Centered, locked measure so text NEVER wraps, camera depth-of-field focus) -->
       <div
-        bind:this={studioCopyEl}
-        class="relative z-30 mx-auto flex w-full max-w-xl flex-col items-center text-center transition-all duration-500 ease-out {activePanel ===
+        class="hero-text-block relative z-30 mx-auto flex w-[90%] max-w-sm flex-col items-center text-center sm:max-w-md lg:w-[440px] lg:max-w-none shrink-0 {activePanel ===
         'studio'
-          ? 'scale-[1.02] opacity-100'
+          ? 'scale-100 lg:scale-[1.03] opacity-100 blur-0'
           : activePanel === 'game'
-            ? 'opacity-65'
-            : 'opacity-100'}"
+            ? 'scale-100 lg:scale-[0.7] lg:opacity-35 lg:blur-[1.2px]'
+            : 'scale-100 opacity-100 blur-0'}"
       >
         <!-- Inline Renhet Studio Brand Logo -->
         <picture class="inline-block transition-transform duration-300 group-hover:scale-105">
@@ -360,15 +351,14 @@
         />
       </div>
 
-      <!-- Beelze Pub Content Block (Centered, higher up, perfectly synchronized with Studio) -->
+      <!-- Beelze Pub Content Block (Centered, locked measure so text NEVER wraps, camera depth-of-field focus) -->
       <div
-        bind:this={gameCopyEl}
-        class="relative z-30 mx-auto flex w-full max-w-xl flex-col items-center text-center transition-all duration-500 ease-out {activePanel ===
+        class="hero-text-block relative z-30 mx-auto flex w-[90%] max-w-sm flex-col items-center text-center sm:max-w-md lg:w-[440px] lg:max-w-none shrink-0 {activePanel ===
         'game'
-          ? 'scale-[1.02] opacity-100'
+          ? 'scale-100 lg:scale-[1.03] opacity-100 blur-0'
           : activePanel === 'studio'
-            ? 'opacity-65'
-            : 'opacity-100'}"
+            ? 'scale-100 lg:scale-[0.7] lg:opacity-35 lg:blur-[1.2px]'
+            : 'scale-100 opacity-100 blur-0'}"
       >
         <h2
           class="text-shadow-pub text-balance text-center text-4xl font-black leading-[0.92] tracking-tight text-[#fffdf3] sm:text-5xl md:text-6xl lg:text-7xl"
@@ -398,6 +388,15 @@
     transition: d 750ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  .hero-text-block {
+    transition:
+      transform 750ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 600ms ease,
+      filter 600ms ease;
+    will-change: transform, opacity, filter;
+    transform-origin: center top;
+  }
+
   .text-shadow-studio {
     text-shadow:
       0 2px 14px rgba(35, 52, 70, 0.35),
@@ -422,8 +421,10 @@
 
   @media (prefers-reduced-motion: reduce) {
     .hero-split-container,
-    .wave-path-seam {
+    .wave-path-seam,
+    .hero-text-block {
       transition: none !important;
+      animation: none !important;
     }
   }
 </style>
