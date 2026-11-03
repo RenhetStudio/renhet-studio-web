@@ -49,10 +49,11 @@ De acuerdo con las instrucciones recibidas, **ningún cambio en el código fuent
 
 ## Fase 4: Escaparate de Beelze Pub (`GameSpotlight`)
 * **Tareas:**
-  1. Construcción de `GameSpotlight.svelte` inspirado en la compacidad de *Little Bandit*.
-  2. Integración de la galería de capturas de la taberna, detalles de gameplay y botón hacia Itch.io con feedback de sonido suave.
-  3. Tarjeta/sello de la filosofía artesanal de Renhet (sin caer en la fórmula de 3 tarjetas de SaaS).
-* [ ] **HITO DE APROBACIÓN 4:** Revisión del escaparate del juego.
+  1. Construcción de `GameSpotlight.svelte` inspirado en la compacidad y pureza de *Little Bandit*.
+  2. Implementación de la regla "Cero Tarjetas": sección abierta delimitada por su titular e interlineado, sin contenedores de tarjeta artificiales.
+  3. Captura editorial a pantalla completa con pestañas mínimas de subrayado e icono SVG de Itch.io.
+  4. Reducción estricta de textos a una única frase directa y descriptiva (cero párrafos de relleno).
+* [x] **Completado e integrado.**
 
 ---
 
@@ -60,18 +61,20 @@ De acuerdo con las instrucciones recibidas, **ningún cambio en el código fuent
 * **Tareas:**
   1. Construcción de `TheCrew.svelte` según la **Propuesta B** (tablón orgánico de placas tipográficas artesanales con micro-rotaciones sutiles entre -0.8° y +0.8°).
   2. Integración de los 14 miembros del equipo con roles, procedencia y enlaces a portfolio con iconos SVG vectoriales.
-  3. Micro-interacción elástica al pasar el cursor (la placa se endereza a 0°, se resalta en `#b8d4f0` y emite un micro-pop suave si el sonido está habilitado).
-* [ ] **HITO DE APROBACIÓN 5:** Validación de la sección del equipo.
+  3. Eliminación de píldoras decorativas ("The Team") y subtítulos genéricos de relleno.
+  4. Micro-interacción elástica al pasar el cursor (la placa se endereza a 0°, se resalta en `#b8d4f0` y emite un micro-pop suave si el sonido está habilitado).
+* [x] **Completado e integrado.**
 
 ---
 
 ## Fase 6: Navegación, Pie de Página, Accesibilidad y Pulido
 * **Tareas:**
-  1. Actualización de `SiteHeader.svelte` con el control de sonido accesible y navegación compacta.
-  2. Pulido de `SiteFooter.svelte` ("Follow the adventures") y enlaces a redes.
-  3. Activación del cursor dinámico elástico (solo en escritorio con ratón).
-  4. Auditoría de accesibilidad WCAG AA, responsive y rendimiento en Lighthouse (>95).
-* [ ] **HITO DE APROBACIÓN 6:** Aprobación final completa de la Home Page.
+  1. Actualización de `SiteHeader.svelte` restaurando el color original `#627383/92`, con transición animada (`scale`) al cambiar entre mute y sonido.
+  2. Pulido de `SiteFooter.svelte` restaurando el color original `#4f5f70`, botones sólidos en crema (`#fffdf3`) y transición de ola invertida en la cabecera.
+  3. Corrección geométrica del puntero dinámico (`CustomCursor.svelte`) para un centrado perfecto sin desfase.
+  4. Eliminación de fondos y overlays azules que corten secciones en `WaveDivider.svelte`, con ciclo de onda 100% continuo.
+  5. Auditoría de tipos (`svelte-check`), linter (`eslint`) y build de producción.
+* [x] **Completado y verificado.**
 
 ---
 

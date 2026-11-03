@@ -142,3 +142,31 @@ Los 4 recursos proporcionados por el usuario se descargarán y alojarán localme
 4. `beelze-pub-screen-2.jpg` (Captura de pantalla de personajes y diálogos).
 
 Las imágenes estáticas se procesarán con el script `scripts/optimize-images.mjs` para servir variantes ligeras `.avif` y `.webp` mediante etiquetas `<picture>`.
+
+---
+
+## 7. Patrón de Diseño "No Cards" y Composición Editorial
+
+En concordancia con las directrices visuales del estudio:
+* **Delimitación por Jerarquía Tipográfica y Espacio:** Las secciones no están encapsuladas en contenedores de tarjeta con bordes ni fondos diferenciados (como suele verse en sitios SaaS convencionales). La estructura se sostiene a través del contraste de tipografías (Paperlogy Black para H2s), espaciado vertical rítmico (`py-20 sm:py-28`) y fluidez de lienzo.
+* **Excepción Única (*The Crew*):** Los 14 sellos o placas artesanales del equipo son el único elemento con micro-caja justificada, simulando fichas tangibles de un taller de artesano, enriquecidas con micro-rotaciones asimétricas orgánicas.
+
+---
+
+## 8. Geometría y Matemáticas de las Ondas Seamless (`WaveDivider.svelte`)
+
+Para erradicar cualquier corte visible, desfase o "overlay azul" que corte las secciones de fondo:
+1. **Contenedor 100% Transparente:** La raíz de `WaveDivider` no posee color de fondo. Permite que el fondo de la sección sobre la que se asienta (Hero Split o Footer) permanezca visible en las zonas no cubiertas por las crestas.
+2. **Curvatura de 2 Períodos Idénticos:** En un `viewBox="0 0 200 100"`, el SVG contiene dos ondas periódicas exactamente iguales (Periodo 1: x=0..100, Periodo 2: x=100..200) con continuidad $C^1$ en puntos de inflexión y extremos.
+3. **Desplazamiento del 50%:** La animación CSS traslada el SVG exactamente un `-50%` (`translate3d(-50%, 0, 0)`). Al llegar al final del ciclo, el inicio del segundo período coincide al milímetro con el primer período, generando un bucle infinito imperceptible y libre de saltos a 60fps.
+4. **Soporte Invertido (`inverted={true}`):** Mediante `transform: scaleY(-1)` se invierte verticalmente la onda para crear la orilla superior del footer (`#4f5f70`), haciendo que el lienzo de papel (`#f6f1e8`) curve suavemente hacia el fondo oscuro del pie de página.
+
+---
+
+## 9. Arquitectura del Puntero Dinámico (`CustomCursor.svelte`)
+
+Para resolver problemas comunes de desalineación o desfase al enfocar botones:
+* **Separación de Coordenadas y Centrado Geométrico:**
+  * Las posiciones dinámicas calculadas por JS/LERP se aplican exclusivamente mediante `style.left` y `style.top`.
+  * El centrado se encomienda de manera estricta y permanente al CSS estático `.cursor-dot, .cursor-ring { top: 0; left: 0; transform: translate(-50%, -50%); }`.
+  * De esta forma, las mutaciones de tamaño (`h-7 w-7` a `h-11 w-11`) se expanden de forma simétrica desde el punto exacto del puntero nativo, sin provocar tirones ni desalineaciones en el eje.
