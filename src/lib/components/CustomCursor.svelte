@@ -9,7 +9,6 @@
   let isHidden = $state(true);
 
   onMount(() => {
-    // Only activate for devices with mouse/fine pointer and without reduced motion
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -30,12 +29,12 @@
 
       if (isHidden) isHidden = false;
 
-      // Update leading dot position immediately via CSSOM transform
+      // Use left/top (centered via CSS transform: translate(-50%,-50%)) — no inline style conflicts
       if (dotEl) {
-        dotEl.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+        dotEl.style.left = `${targetX}px`;
+        dotEl.style.top = `${targetY}px`;
       }
 
-      // Check if hovering clickable element
       const target = e.target as HTMLElement | null;
       isHovered = !!target?.closest("a, button, [role='button'], input, [role='tab'], .badge-stamp");
     };
@@ -47,13 +46,13 @@
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     document.addEventListener("mouseleave", onMouseLeave);
 
-    // Smooth trailing physics via lerp
     let animId: number;
     const tick = () => {
       ringX += (targetX - ringX) * 0.18;
       ringY += (targetY - ringY) * 0.18;
       if (ringEl) {
-        ringEl.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+        ringEl.style.left = `${ringX}px`;
+        ringEl.style.top = `${ringY}px`;
       }
       animId = requestAnimationFrame(tick);
     };
@@ -68,23 +67,31 @@
 </script>
 
 {#if isPointerActive}
-  <!-- Leading small dot -->
+  <!-- Leading small dot: centered via .cursor-dot CSS class -->
   <div
     bind:this={dotEl}
-    class="pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#4f5f70] transition-opacity duration-200 {isHidden
+    class="cursor-dot pointer-events-none fixed z-[9999] h-2 w-2 rounded-full bg-[#4f5f70] transition-opacity duration-200 {isHidden
       ? 'opacity-0'
       : 'opacity-80'}"
     aria-hidden="true"
   ></div>
 
-  <!-- Trailing reactive ring -->
+  <!-- Trailing reactive ring: centered via .cursor-ring CSS class -->
   <div
     bind:this={ringEl}
-    class="pointer-events-none fixed left-0 top-0 z-[9998] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#4f5f70]/40 transition-all duration-200 ease-out {isHidden
+    class="cursor-ring pointer-events-none fixed z-[9998] rounded-full border border-[#4f5f70]/40 transition-[width,height,opacity,background-color] duration-200 ease-out {isHidden
       ? 'opacity-0'
       : 'opacity-100'} {isHovered
-      ? 'h-11 w-11 border-[#4f5f70] bg-[#b8d4f0]/25 scale-110'
+      ? 'h-11 w-11 border-[#4f5f70] bg-[#b8d4f0]/25'
       : 'h-7 w-7 bg-transparent'}"
     aria-hidden="true"
   ></div>
 {/if}
+
+<style>
+  /* Centering applied purely via CSS — no inline transform that JS could override */
+  .cursor-dot,
+  .cursor-ring {
+    transform: translate(-50%, -50%);
+  }
+</style>
