@@ -2,7 +2,6 @@
   let {
     direction = "right",
     size = 18,
-    strokeWidth = 2.2,
     class: className = "",
   }: {
     direction?: "right" | "left" | "up" | "down" | "up-right";
@@ -29,14 +28,12 @@
   width={size}
   height={size}
   viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width={strokeWidth}
-  stroke-linecap="round"
-  stroke-linejoin="round"
+  fill="currentColor"
   class="inline-block transition-transform duration-200 {rotation} {className}"
   aria-hidden="true"
 >
-  <path d="M5 12h14" />
-  <path d="m12 5 7 7-7 7" />
+  <!-- Tactile chunky filled arrow with rounded joints -->
+  <path
+    d="M13.09 3.22a1.5 1.5 0 0 1 2.12 0l7 7a1.5 1.5 0 0 1 0 2.12l-7 7a1.5 1.5 0 0 1-2.12-2.12L17.38 13.5H4a1.5 1.5 0 0 1 0-3h13.38l-4.29-4.16a1.5 1.5 0 0 1 0-2.12Z"
+  />
 </svg>

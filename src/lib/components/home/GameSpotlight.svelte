@@ -1,197 +1,77 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import IconItch from "$lib/components/icons/IconItch.svelte";
   import IconExternal from "$lib/components/icons/IconExternal.svelte";
-  import IconArrow from "$lib/components/icons/IconArrow.svelte";
-
-  let activeSlide = $state(0);
-  let isReducedMotion = $state(false);
-
-  const slides = [
-    {
-      title: "Mix drinks & recipes",
-      description: "Shake, stir, and blend cursed ingredients to order.",
-      avif: "/optimized/screen-cocktails-800.avif",
-      webp: "/optimized/screen-cocktails-800.webp",
-      fallback: "/beelze-pub/screen-cocktails.jpg",
-      alt: "Drink mixing gameplay in Beelze Pub",
-    },
-    {
-      title: "Underworld patrons",
-      description: "Chat with demons, imps, and lost souls at the bar counter.",
-      avif: "/optimized/screen-dialogue-800.avif",
-      webp: "/optimized/screen-dialogue-800.webp",
-      fallback: "/beelze-pub/screen-dialogue.jpg",
-      alt: "Dialogue scene with underworld regulars in Beelze Pub",
-    },
-    {
-      title: "The tavern after dark",
-      description: "Survive the weekend rush behind the counter of Beelze Pub.",
-      avif: "/optimized/beelze-pub-keyart-800.avif",
-      webp: "/optimized/beelze-pub-keyart-800.webp",
-      fallback: "/beelze-pub/beelze-pub-keyart.png",
-      alt: "Beelze Pub key artwork showing tavern atmosphere",
-    },
-  ];
-
-  const nextSlide = () => {
-    activeSlide = (activeSlide + 1) % slides.length;
-  };
-
-  const prevSlide = () => {
-    activeSlide = (activeSlide - 1 + slides.length) % slides.length;
-  };
-
-  const setSlide = (index: number) => {
-    activeSlide = index;
-  };
-
-  onMount(() => {
-    isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
 </script>
 
-<section id="game" class="px-5 py-20 sm:px-8 md:py-28 lg:px-12" aria-labelledby="game-title">
-  <div class="mx-auto max-w-6xl">
-    <!-- Title row with direct Itch.io link -->
-    <div class="mb-8 flex flex-wrap items-center justify-between gap-4 sm:mb-10">
-      <h2 id="game-title" class="text-3xl font-black tracking-tight text-[#344253] sm:text-4xl md:text-5xl">
-        Beelze Pub
+<section id="game" class="px-5 py-24 sm:px-8 md:py-32 lg:px-10" aria-labelledby="game-title">
+  <div class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[0.55fr_0.45fr] lg:items-center">
+    <!-- Left Column: Copy & CTAs -->
+    <div>
+      <h2
+        id="game-title"
+        class="max-w-xl text-[clamp(2.6rem,6vw,6rem)] font-black leading-[0.92] tracking-normal text-[#4f5f70]"
+      >
+        Our first game<br />is out now.
       </h2>
 
+      <p class="mt-6 max-w-xl text-lg font-bold leading-8 text-[#627383] sm:text-xl">
+        Mix drinks, serve customers, and keep the business running as Skelly, a laid-back skeletender filling in at Beelze Pub for the weekend.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <!-- Button to dedicated game page -->
+        <a
+          href="/games/beelze-pub"
+          class="group inline-flex items-center gap-2 rounded-full bg-[#4f5f70] px-6 py-3.5 text-base font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(79,95,112,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#344253] hover:shadow-[0_8px_24px_rgba(52,66,83,0.25)] active:translate-y-0"
+        >
+          <span>About the game</span>
+          <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
+
+        <!-- Small Play free on Itch.io button -->
+        <a
+          href="https://renhetstudio.itch.io/beelze-pub"
+          target="_blank"
+          rel="noreferrer"
+          class="group inline-flex items-center gap-2 rounded-full border-2 border-[#4f5f70]/30 bg-[#fffdf3] px-5 py-3 text-sm font-black text-[#4f5f70] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#4f5f70] hover:bg-[#f6f1e8] active:translate-y-0"
+          aria-label="Play Beelze Pub free on Itch.io (opens in new tab)"
+        >
+          <IconItch size={16} />
+          <span>Play free on Itch.io</span>
+          <IconExternal size={14} class="opacity-80 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Column: Floating Logo -->
+    <div class="flex min-h-[360px] items-center justify-center sm:min-h-[420px]">
       <a
-        href="https://renhetstudio.itch.io/beelze-pub"
-        target="_blank"
-        rel="noreferrer"
-        class="group inline-flex shrink-0 items-center gap-2.5 rounded-full bg-[#344253] px-5 py-2.5 text-sm font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(52,66,83,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4f5f70] hover:shadow-[0_8px_24px_rgba(52,66,83,0.28)] active:translate-y-0 active:scale-[0.98] sm:px-6 sm:py-3 sm:text-base"
-        aria-label="Play Beelze Pub free on Itch.io (opens in new tab)"
+        href="/games/beelze-pub"
+        class="block transition-transform duration-300 hover:scale-105"
+        aria-label="Explore Beelze Pub game page"
       >
-        <IconItch size={18} class="transition-transform duration-200 group-hover:scale-110" />
-        <span>Play free on Itch.io</span>
-        <IconExternal size={14} class="opacity-80 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+        <picture class="block w-full max-w-[420px]">
+          <source
+            type="image/avif"
+            srcset="/optimized/beelze-pub-logo-420.avif 420w, /optimized/beelze-pub-logo-556.avif 556w"
+            sizes="(max-width: 460px) 100vw, 420px"
+          />
+          <source
+            type="image/webp"
+            srcset="/optimized/beelze-pub-logo-420.webp 420w, /optimized/beelze-pub-logo-556.webp 556w"
+            sizes="(max-width: 460px) 100vw, 420px"
+          />
+          <img
+            src="/beelze-pub/logo.png"
+            width="420"
+            height="422"
+            alt="Beelze Pub logo"
+            loading="lazy"
+            decoding="async"
+            class="game-logo-float h-auto w-full max-w-[420px] object-contain drop-shadow-[0_24px_28px_rgba(79,95,112,0.18)]"
+          />
+        </picture>
       </a>
     </div>
-
-    <!-- Carousel Container -->
-    <div class="carousel-root relative">
-      <!-- Main Visual Viewport -->
-      <div class="relative aspect-video w-full overflow-hidden rounded-2xl bg-[#344253] shadow-sm">
-        {#each slides as slide, i}
-          <div
-            class="absolute inset-0 transition-opacity duration-500 ease-in-out {activeSlide === i
-              ? 'opacity-100 z-10'
-              : 'opacity-0 z-0 pointer-events-none'}"
-          >
-            <picture class="block h-full w-full">
-              <source type="image/avif" srcset={slide.avif} />
-              <source type="image/webp" srcset={slide.webp} />
-              <img
-                src={slide.fallback}
-                alt={slide.alt}
-                class="h-full w-full object-cover"
-                loading={i === 0 ? "eager" : "lazy"}
-              />
-            </picture>
-          </div>
-        {/each}
-
-        <!-- Prev / Next Navigation Controls -->
-        <div class="absolute inset-y-0 left-3 right-3 z-20 flex items-center justify-between pointer-events-none">
-          <button
-            type="button"
-            class="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#344253]/60 text-[#fffdf3] backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-[#344253]/90 sm:h-12 sm:w-12"
-            onclick={prevSlide}
-            aria-label="Previous screenshot"
-          >
-            <IconArrow direction="left" size={18} />
-          </button>
-
-          <button
-            type="button"
-            class="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#344253]/60 text-[#fffdf3] backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-[#344253]/90 sm:h-12 sm:w-12"
-            onclick={nextSlide}
-            aria-label="Next screenshot"
-          >
-            <IconArrow direction="right" size={18} />
-          </button>
-        </div>
-      </div>
-
-      <!-- Carousel Progress Tabs -->
-      <div
-        class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3"
-        role="tablist"
-        aria-label="Game screenshot carousel tabs"
-      >
-        {#each slides as slide, i}
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeSlide === i}
-            class="group flex flex-col text-left transition-opacity {activeSlide === i
-              ? 'opacity-100'
-              : 'opacity-70 hover:opacity-90'}"
-            onclick={() => setSlide(i)}
-          >
-            <!-- Progress Bar Track -->
-            <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#d6d5ca]/70">
-              {#if activeSlide === i}
-                {#key activeSlide}
-                  <div
-                    class="h-full rounded-full bg-[#4f5f70] {isReducedMotion
-                      ? 'w-full'
-                      : 'progress-bar-fill'}"
-                    onanimationend={nextSlide}
-                  ></div>
-                {/key}
-              {:else}
-                <div class="h-full w-0 bg-transparent"></div>
-              {/if}
-            </div>
-
-            <!-- Tab Title and Subtitle -->
-            <div class="mt-3">
-              <span class="block text-sm font-black text-[#344253] sm:text-base">
-                {slide.title}
-              </span>
-              <span class="mt-0.5 block text-xs font-semibold leading-relaxed text-[#627383]">
-                {slide.description}
-              </span>
-            </div>
-          </button>
-        {/each}
-      </div>
-    </div>
-
-    <!-- Minimal premise copy -->
-    <p class="mt-8 max-w-lg text-base font-semibold leading-relaxed text-[#627383]">
-      Play as Skelly, a laid-back skeletender filling in for the weekend. Mix cursed cocktails, balance orders, and survive the underworld rush.
-    </p>
   </div>
 </section>
-
-<style>
-  @keyframes fill-progress {
-    from {
-      width: 0%;
-    }
-    to {
-      width: 100%;
-    }
-  }
-
-  .progress-bar-fill {
-    animation: fill-progress 5s linear forwards;
-  }
-
-  .carousel-root:hover .progress-bar-fill {
-    animation-play-state: paused;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .progress-bar-fill {
-      animation: none !important;
-      width: 100% !important;
-    }
-  }
-</style>

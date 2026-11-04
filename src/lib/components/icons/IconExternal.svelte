@@ -1,7 +1,6 @@
 <script lang="ts">
   let {
     size = 14,
-    strokeWidth = 2.2,
     class: className = "",
   }: {
     size?: number;
@@ -15,15 +14,15 @@
   width={size}
   height={size}
   viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width={strokeWidth}
-  stroke-linecap="round"
-  stroke-linejoin="round"
+  fill="currentColor"
   class="inline-block {className}"
   aria-hidden="true"
 >
-  <path d="M15 3h6v6" />
-  <path d="M10 14 21 3" />
-  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+  <!-- Tactile filled external link: bold solid arrow + solid rounded tray -->
+  <path
+    d="M13.5 3a1.5 1.5 0 0 0 0 3H16l-7.29 7.29a1.5 1.5 0 1 0 2.12 2.12L18 8.12V10.5a1.5 1.5 0 0 0 3 0V4.5A1.5 1.5 0 0 0 19.5 3h-6Z"
+  />
+  <path
+    d="M5 6a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-4.5a1.5 1.5 0 0 0-3 0v4a0.5 0.5 0 0 1-0.5 0.5H5.5a0.5 0.5 0 0 1-0.5-0.5V9.5a0.5 0.5 0 0 1 0.5-0.5h4a1.5 1.5 0 0 0 0-3H5Z"
+  />
 </svg>

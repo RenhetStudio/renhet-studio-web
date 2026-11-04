@@ -2,7 +2,7 @@
   let {
     muted = false,
     size = 18,
-    strokeWidth = 2,
+    strokeWidth = 2.2,
     class: className = "",
   }: {
     muted?: boolean;
@@ -25,7 +25,7 @@
   class="inline-block transition-transform duration-200 {className}"
   aria-hidden="true"
 >
-  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
   {#if muted}
     <line x1="22" y1="9" x2="16" y2="15" />
     <line x1="16" y1="9" x2="22" y2="15" />
