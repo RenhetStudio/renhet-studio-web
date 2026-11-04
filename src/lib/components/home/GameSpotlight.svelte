@@ -3,7 +3,7 @@
   import IconExternal from "$lib/components/icons/IconExternal.svelte";
 </script>
 
-<section id="game" class="px-5 py-24 sm:px-8 md:py-32 lg:px-10" aria-labelledby="game-title">
+<section id="game" class="px-5 py-14 sm:px-8 sm:py-16 md:py-20 lg:px-10" aria-labelledby="game-title">
   <div class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[0.55fr_0.45fr] lg:items-center">
     <!-- Left Column: Copy & CTAs -->
     <div>

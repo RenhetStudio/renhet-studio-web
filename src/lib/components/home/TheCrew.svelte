@@ -88,10 +88,10 @@
   };
 </script>
 
-<section id="crew" class="px-5 py-20 sm:px-8 md:py-28 lg:px-10" aria-labelledby="crew-title">
+<section id="crew" class="px-5 py-14 sm:px-8 sm:py-16 md:py-20 lg:px-10" aria-labelledby="crew-title">
   <div class="mx-auto max-w-[1440px]">
     <!-- Header: Dominant title + Secondary introduction -->
-    <div class="mb-12 sm:mb-16">
+    <div class="mb-10 sm:mb-12">
       <h2
         id="crew-title"
         class="text-[clamp(3.5rem,8vw,7.5rem)] font-black leading-[0.88] tracking-tight text-[#4f5f70]"
@@ -246,7 +246,7 @@
     </div>
 
     <!-- Bottom Hairline & Micro-Guide (Desktop only; completely removed on mobile) -->
-    <div class="hidden items-center gap-3 border-t border-[#d6d5ca] pt-5 mt-14 sm:mt-20 text-xs font-medium text-[#718191] md:flex">
+    <div class="hidden items-center gap-3 border-t border-[#d6d5ca] pt-4 mt-12 sm:mt-14 text-xs font-medium text-[#718191] md:flex">
       <svg class="h-4 w-4 shrink-0 stroke-[1.8] text-[#718191]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <rect x="6" y="3" width="12" height="18" rx="6" />
         <path d="M12 7v4" />

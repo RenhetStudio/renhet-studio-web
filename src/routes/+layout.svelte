@@ -3,6 +3,7 @@
   import "../app/globals.css";
   import CustomCursor from "$lib/components/CustomCursor.svelte";
   import SoundProvider from "$lib/components/SoundProvider.svelte";
+  import ScrollToTop from "$lib/components/ScrollToTop.svelte";
   import type { Snippet } from "svelte";
   let { children }: { children: Snippet } = $props();
 </script>
@@ -17,3 +18,4 @@
 <SoundProvider />
 <CustomCursor />
 {@render children()}
+<ScrollToTop />
