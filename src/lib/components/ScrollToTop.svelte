@@ -1,12 +1,10 @@
 <script lang="ts">
   import IconArrowUp from "$lib/components/icons/IconArrowUp.svelte";
-  import { sound } from "$lib/audio/soundEffects";
 
   let scrollY = $state(0);
   let isVisible = $derived(scrollY > 400);
 
   const scrollToTop = () => {
-    sound.playClick();
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -24,13 +22,13 @@
   <button
     type="button"
     onclick={scrollToTop}
-    class="group flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-2 border-[#fffdf3] bg-[#4f5f70] text-[#fffdf3] shadow-[0_10px_30px_rgba(30,42,54,0.35)] ring-1 ring-[#fffdf3]/50 backdrop-blur-md transition-all duration-300 hover:bg-[#3d4b58] hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(30,42,54,0.45)] hover:ring-[#fffdf3]/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fffdf3] active:translate-y-0 active:scale-95"
+    class="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#4f5f70]/95 text-[#fffdf3] shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#fffdf3] hover:text-[#4f5f70] hover:border-[#fffdf3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fffdf3] active:translate-y-0 active:scale-95"
     aria-label="Scroll back to top"
     title="Scroll to top"
   >
     <IconArrowUp
-      size={18}
-      class="text-[#fffdf3] transition-transform duration-200 group-hover:-translate-y-0.5"
+      size={16}
+      class="transition-transform duration-200 group-hover:-translate-y-0.5"
     />
   </button>
 </div>

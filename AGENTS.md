@@ -49,6 +49,7 @@ This repository is the official website for **Renhet Studio**, built with **Svel
 ### 3.4. Procedural Audio
 * All interactive click sounds use synthesized Web Audio API procedural sound in `src/lib/audio/soundEffects.ts`.
 * Click-only interaction; no hover sounds. Random frequency jitter (`480Hz ± 60Hz`) ensures natural acoustics.
+* **Zero local click handlers for sound:** **NEVER** inject `onclick={() => sound.playClick()}` into components, buttons, or links. Audio click delegation is completely centralized in `<SoundProvider />` mounted in `src/routes/+layout.svelte` via a window capture-phase listener. Adding manual handlers causes duplicate audio execution.
 
 ---
 

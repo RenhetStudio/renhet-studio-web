@@ -76,7 +76,6 @@
   };
 
   const toggleMobileMenu = () => {
-    sound.playClick();
     isMobileMenuOpen = !isMobileMenuOpen;
   };
 </script>
@@ -296,7 +295,6 @@
           <a
             href={item.href}
             onclick={() => {
-              sound.playClick();
               isMobileMenuOpen = false;
             }}
             class="group flex items-center justify-between rounded-2xl px-4 py-3 text-base font-bold text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/15 active:scale-[0.99] active:bg-[#fffdf3]/20"
@@ -318,7 +316,6 @@
           <a
             href="/blog/dashboard"
             onclick={() => {
-              sound.playClick();
               isMobileMenuOpen = false;
             }}
             class="group flex items-center justify-between rounded-2xl bg-[#fffdf3] px-4 py-2.5 text-sm font-black text-[#344253] transition-all duration-200 hover:bg-[#b8d4f0]"
@@ -333,7 +330,6 @@
             <a
               href="/account"
               onclick={() => {
-                sound.playClick();
                 isMobileMenuOpen = false;
               }}
               class="text-xs font-bold text-[#fffdf3]/80 hover:text-[#fffdf3]"
