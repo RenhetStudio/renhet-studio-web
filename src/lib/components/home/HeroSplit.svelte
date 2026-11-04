@@ -104,6 +104,7 @@
 
 <section
   id="hero"
+  data-hero
   class="relative isolate w-full overflow-hidden bg-[#344253]"
   aria-label="Welcome to Renhet Studio"
   onmousemove={onMouseMove}

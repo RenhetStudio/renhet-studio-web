@@ -1,29 +1,43 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fly, fade } from "svelte/transition";
+  import { page } from "$app/state";
   import type { UserProfile } from "$lib/blog/types";
   import { sound } from "$lib/audio/soundEffects";
 
   let { profile = null }: { profile?: UserProfile | null } = $props();
 
   let isMuted = $state(false);
-  let isHeroInView = $state(true);
+  let isHeroInView = $state(
+    typeof document !== "undefined" ? Boolean(document.querySelector("[data-hero]")) : false
+  );
   let isMobileMenuOpen = $state(false);
+
+  const checkHeroVisibility = () => {
+    // Only elements tagged with `data-hero` activate the hero navbar effect.
+    // Any page without `data-hero` (e.g. /games/beelze-pub) immediately stays in the solid style.
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    if (!hero) {
+      isHeroInView = false;
+      return;
+    }
+
+    const rect = hero.getBoundingClientRect();
+    // Navbar sits at top: 16px with ~64px height -> bottom edge is ~80px.
+    // Switch to solid style exactly when the hero exits past the navbar.
+    isHeroInView = rect.bottom > 80;
+  };
+
+  $effect(() => {
+    // Re-evaluate whenever the route changes
+    void page.url.pathname;
+    checkHeroVisibility();
+  });
 
   onMount(() => {
     const unsub = sound.subscribe((muted) => {
       isMuted = muted;
     });
-
-    const checkHeroVisibility = () => {
-      const hero = document.getElementById("hero");
-      if (hero) {
-        const rect = hero.getBoundingClientRect();
-        isHeroInView = rect.bottom > 160;
-      } else {
-        isHeroInView = window.scrollY < 400;
-      }
-    };
 
     const onResize = () => {
       checkHeroVisibility();
@@ -44,9 +58,8 @@
   });
 
   const navigation = [
-    { label: "Beelze Pub", href: "/#game" },
-    { label: "The Crew", href: "/#crew" },
-    { label: "Blog", href: "/blog" },
+    { label: "Beelze Pub", href: "/games/beelze-pub" },
+    { label: "Renhet Between Builds", href: "/blog" },
     { label: "Careers", href: "/careers" },
   ];
 
@@ -148,7 +161,7 @@
     <div class="hidden items-center gap-1 md:flex md:absolute md:left-1/2 md:-translate-x-1/2">
       {#each navigation as item}
         <a
-          class="rounded-full px-3.5 py-2 text-sm font-bold text-[#fffdf3]/90 transition-all duration-200 hover:bg-[#fffdf3]/15 hover:text-[#fffdf3]"
+          class="whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-bold text-[#fffdf3]/90 transition-all duration-200 hover:bg-[#fffdf3]/15 hover:text-[#fffdf3]"
           href={item.href}
         >
           {item.label}

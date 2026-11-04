@@ -10,7 +10,7 @@
 
 <main class="careers-site">
   <SiteHeader />
-  <header class="careers-hero"><div class="careers-hero-copy"><h1>Make warm worlds with a tiny, international crew.</h1><p>We care about thoughtful craft, kind collaboration, and games full of personality. If that sounds like your kind of place, say hello.</p></div></header>
+  <header class="careers-hero" data-hero><div class="careers-hero-copy"><h1>Make warm worlds with a tiny, international crew.</h1><p>We care about thoughtful craft, kind collaboration, and games full of personality. If that sounds like your kind of place, say hello.</p></div></header>
   <section id="openings" class="careers-openings">
     <div class="careers-section-heading"><div><h2>Find your place.</h2></div><p>Roles appear here as soon as they are published. No perfect match? The open application is always open.</p></div>
     <div class="careers-roles">
