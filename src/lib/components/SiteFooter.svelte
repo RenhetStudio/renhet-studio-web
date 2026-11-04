@@ -1,12 +1,14 @@
 <script lang="ts">
   import WaveDivider from "$lib/components/home/WaveDivider.svelte";
   import IconArrowUpRight from "$lib/components/icons/IconArrowUpRight.svelte";
+  import IconArrowUp from "$lib/components/icons/IconArrowUp.svelte";
   import IconX from "$lib/components/icons/IconX.svelte";
   import IconInstagram from "$lib/components/icons/IconInstagram.svelte";
   import IconReddit from "$lib/components/icons/IconReddit.svelte";
   import IconTikTok from "$lib/components/icons/IconTikTok.svelte";
   import IconItch from "$lib/components/icons/IconItch.svelte";
   import FooterDecoSplash from "$lib/components/footer/FooterDecoSplash.svelte";
+  import { scrollDockState } from "./scrollDock.svelte";
 
   const socialLinks = [
     {
@@ -58,6 +60,17 @@
     observer.observe(footerRef);
     return () => observer.disconnect();
   });
+
+  const scrollToTop = () => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    window.scrollTo({
+      top: 0,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  };
 </script>
 
 <footer
@@ -158,7 +171,7 @@
           </a>
         </div>
 
-        <!-- Row 2: Five circular social icons -->
+        <!-- Row 2: Five circular social icons + Docked Scroll to top button -->
         <div class="flex items-center gap-2 sm:gap-2.5">
           {#each socialLinks as link}
             <a
@@ -172,6 +185,32 @@
               <link.icon size={link.size} />
             </a>
           {/each}
+
+          <!-- Subtle divider separating external social links from utility scroll action -->
+          <div
+            class="mx-0.5 h-5 w-px shrink-0 bg-[#fffdf3]/25 transition-opacity duration-300 sm:mx-1 {scrollDockState.isDocked
+              ? 'opacity-100'
+              : 'opacity-0'}"
+            aria-hidden="true"
+          ></div>
+
+          <!-- Docked Scroll to top button (FLIP animated target) -->
+          <button
+            id="footer-scroll-to-top"
+            type="button"
+            onclick={scrollToTop}
+            aria-label="Scroll back to top"
+            title="Scroll to top"
+            tabindex={scrollDockState.isDocked ? 0 : -1}
+            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/35 bg-transparent text-[#fffdf3] transition-colors duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#4f5f70] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
+              ? 'opacity-100 pointer-events-auto'
+              : 'opacity-0 pointer-events-none'}"
+          >
+            <IconArrowUp
+              size={16}
+              class="transition-transform duration-200 group-hover:-translate-y-0.5"
+            />
+          </button>
         </div>
       </div>
     </div>
