@@ -188,6 +188,34 @@ Images often dominate a page's transferred bytes. Optimizing them at build time 
 
 Generated variants increase build output and build work. Always provide accurate `sizes`, explicit dimensions where appropriate, and meaningful alternative text; otherwise the browser may download a larger variant than necessary or accessibility can regress. Static image files also avoid development server image middleware returning an incorrect MIME type.
 
+### Unified hero detection with data-hero and CSS Scroll-Driven Animations
+
+**Simple explanation**
+
+Floating navigation bars should adapt to whether a page has a hero section without hardcoding lists of route paths, and they should load immediately in their correct visual state without flashes or unwanted transition animations.
+
+**How it works**
+
+Instead of checking specific URL paths or maintaining route sets, any page featuring a hero section tags its hero container with the `data-hero` attribute.
+
+1. **At the CSS level:** The navigation pill uses CSS Scroll-Driven Animations (`animation-timeline: scroll()`) scoped with `:root:has([data-hero])`. Because the browser's style and layout engine evaluates `:has([data-hero])` directly on the SSR HTML before first paint:
+   - On initial load at `scrollY = 0`, it paints the transparent hero navbar immediately without an entry transition.
+   - On page reload deep into the page (`scrollY > 70vh`), the compositor evaluates 100% scroll progress and paints the solid navbar immediately.
+   - Pages without `data-hero` match `:root:not(:has([data-hero]))`, statically rendering the solid navbar and full wordmark logo without enabling scroll timelines.
+2. **At the JavaScript level:** Client-side visibility checks use `document.querySelector<HTMLElement>("[data-hero]")`. When `rect.bottom > 80` changes, Svelte drives the discrete 300ms morph animation between the compact symbol and the full wordmark logo.
+
+**Why it matters**
+
+Hardcoding route lists (such as `Set(["/", "/blog", "/careers"])`) is brittle and requires manual updates whenever routes or hero sections change. Relying strictly on client hydration to toggle navbar states causes visual flashes or jarring transitions on initial load, while using cookies or server load functions to sync scroll position introduces unnecessary network and server overhead.
+
+**In this project**
+
+`src/lib/components/SiteHeader.svelte` detects `[data-hero]` dynamically. Hero sections in `src/lib/components/home/HeroSplit.svelte`, `src/routes/blog/+page.svelte`, and `src/routes/careers/+page.svelte` are marked with `data-hero`. Non-hero pages like `src/routes/games/beelze-pub/+page.svelte` and `src/routes/account/+page.svelte` omit it.
+
+**Tradeoffs / pitfalls**
+
+CSS `:has()` and `animation-timeline: scroll()` are supported in modern evergreen browsers. For older browsers without scroll-driven animation support, `@supports not (animation-timeline: scroll())` falls back to standard CSS transitions toggled by JavaScript state. The logo morphing animation retains a discrete 300ms CSS transition rather than scrubbing continuously along scroll progress to preserve its snappy, deliberate feel.
+
 # Security
 
 ### Validate return URLs by parsing them
