@@ -1,6 +1,7 @@
 <script lang="ts">
   import IconItch from "$lib/components/icons/IconItch.svelte";
   import IconExternal from "$lib/components/icons/IconExternal.svelte";
+  import IconArrow from "$lib/components/icons/IconArrow.svelte";
 </script>
 
 <section id="game" class="px-5 py-14 sm:px-8 sm:py-16 md:py-20 lg:px-10" aria-labelledby="game-title">
@@ -25,7 +26,7 @@
           class="group inline-flex items-center gap-2 rounded-full bg-[#4f5f70] px-6 py-3.5 text-base font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(79,95,112,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#344253] hover:shadow-[0_8px_24px_rgba(52,66,83,0.25)] active:translate-y-0"
         >
           <span>About the game</span>
-          <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          <IconArrow direction="right" size={16} class="transition-transform duration-200 group-hover:translate-x-1" />
         </a>
 
         <!-- Small Play free on Itch.io button -->

@@ -37,39 +37,6 @@
     },
   ];
 
-  const features = [
-    {
-      title: "Play as Skelly",
-      desc: "A skeleton bartender who is somehow one of the more stable people on the beach.",
-      tag: "Character",
-    },
-    {
-      title: "Emotional Mixology",
-      desc: "Mix unique drinks using ingredients that balance different personality and emotional traits.",
-      tag: "Mechanic",
-    },
-    {
-      title: "Phone Recipe Book",
-      desc: "Discover and unlock new recipes that are saved in your phone's recipe book.",
-      tag: "Discovery",
-    },
-    {
-      title: "Observation & Taste",
-      desc: "Learn your customers through observation, experimentation, and listening to reactions.",
-      tag: "Gameplay",
-    },
-    {
-      title: "Beach-Hut Atmosphere",
-      desc: "A relaxing beach-hut setting with a memorable cast of regular characters.",
-      tag: "Vibe",
-    },
-    {
-      title: "Multiple Outcomes",
-      desc: "Endings and story resolutions shift based on the drinks you serve and beliefs you reinforce.",
-      tag: "Narrative",
-    },
-  ];
-
   const nextSlide = () => {
     activeSlide = (activeSlide + 1) % slides.length;
   };
@@ -88,7 +55,7 @@
 </script>
 
 <svelte:head>
-  <title>Beelze Pub — Debut Game | Renhet Studio</title>
+  <title>Beelze Pub | Renhet Studio</title>
   <meta
     name="description"
     content="Play Beelze Pub free on Itch.io. Mix drinks, balance customer emotions, and keep the beach-hut bar running as Skelly in Renhet Studio's debut cocktail sim."
@@ -112,15 +79,27 @@
   <!-- Hero Section -->
   <header class="relative px-5 pb-16 pt-32 sm:px-8 sm:pt-40 md:pb-24 lg:px-12">
     <div class="mx-auto max-w-6xl">
-      <!-- Back Navigation & Eyebrow Badge -->
+      <!-- Breadcrumbs & Eyebrow Badge -->
       <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <a
-          href="/"
-          class="group inline-flex items-center gap-2 rounded-full border border-[#d6d5ca] bg-[#fffdf3] px-4 py-1.5 text-xs font-bold text-[#4f5f70] transition-all duration-200 hover:border-[#4f5f70] hover:bg-[#fffdf3]"
-        >
-          <span class="transition-transform duration-200 group-hover:-translate-x-0.5">←</span>
-          <span>Back to Home</span>
-        </a>
+        <nav aria-label="Breadcrumb">
+          <ol class="inline-flex items-center gap-2 rounded-full border border-[#d6d5ca] bg-[#fffdf3] px-4 py-1.5 text-xs font-bold text-[#4f5f70] shadow-sm">
+            <li class="inline-flex items-center">
+              <a href="/" class="transition-colors hover:text-[#344253]">Home</a>
+            </li>
+            <li class="inline-flex items-center text-[#718191]/50" aria-hidden="true">
+              <IconArrow direction="right" size={10} />
+            </li>
+            <li class="inline-flex items-center">
+              <a href="/#game" class="transition-colors hover:text-[#344253]">Games</a>
+            </li>
+            <li class="inline-flex items-center text-[#718191]/50" aria-hidden="true">
+              <IconArrow direction="right" size={10} />
+            </li>
+            <li class="inline-flex items-center text-[#344253] font-black" aria-current="page">
+              Beelze Pub
+            </li>
+          </ol>
+        </nav>
 
         <div class="inline-flex items-center gap-2 rounded-full border border-[#d6d5ca] bg-[#fffdf3] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#627383]">
           <IconSparkle size={13} class="text-[#d88f8f]" />
@@ -361,76 +340,6 @@
     </div>
   </section>
 
-  <!-- Features Grid -->
-  <section class="border-t border-[#d6d5ca] bg-[#fffdf3] px-5 py-20 sm:px-8 md:py-28 lg:px-12" aria-labelledby="features-title">
-    <div class="mx-auto max-w-6xl">
-      <div class="mb-12 text-center">
-        <span class="text-xs font-black uppercase tracking-wider text-[#718191]">Everything included</span>
-        <h2 id="features-title" class="mt-2 text-3xl font-black tracking-tight text-[#344253] sm:text-4xl">
-          Features
-        </h2>
-      </div>
-
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {#each features as feat}
-          <div class="flex flex-col justify-between rounded-3xl border-2 border-[#d6d5ca] bg-[#f6f1e8] p-6 shadow-sm transition-transform duration-200 hover:-translate-y-1">
-            <div>
-              <span class="inline-block rounded-full bg-[#fffdf3] px-3 py-1 text-[11px] font-black uppercase tracking-wider text-[#4f5f70] border border-[#d6d5ca]">
-                {feat.tag}
-              </span>
-              <h3 class="mt-4 text-lg font-black text-[#344253]">
-                {feat.title}
-              </h3>
-              <p class="mt-2 text-sm font-semibold leading-relaxed text-[#627383]">
-                {feat.desc}
-              </p>
-            </div>
-          </div>
-        {/each}
-      </div>
-    </div>
-  </section>
-
-  <!-- Key Art Full Width Banner -->
-  <section class="px-5 py-16 sm:px-8 lg:px-12" aria-label="Key Artwork">
-    <div class="mx-auto max-w-6xl overflow-hidden rounded-3xl border-2 border-[#d6d5ca] bg-[#344253] shadow-md">
-      <picture class="block w-full">
-        <source type="image/avif" srcset="/optimized/beelze-pub-keyart-1200.avif 1200w, /optimized/beelze-pub-keyart-800.avif 800w" sizes="(max-width: 1200px) 100vw, 1200px" />
-        <source type="image/webp" srcset="/optimized/beelze-pub-keyart-1200.webp 1200w, /optimized/beelze-pub-keyart-800.webp 800w" sizes="(max-width: 1200px) 100vw, 1200px" />
-        <img
-          src="/beelze-pub/beelze-pub-keyart.png"
-          alt="Beelze Pub key artwork"
-          width="1200"
-          height="675"
-          class="h-auto w-full object-cover"
-          loading="lazy"
-        />
-      </picture>
-    </div>
-  </section>
-
-  <!-- Windows Disclaimer Notice -->
-  <section class="px-5 py-10 sm:px-8 lg:px-12" aria-label="Windows installation notes">
-    <div class="mx-auto max-w-4xl rounded-3xl border-2 border-[#d6d5ca] bg-[#fffdf3] p-6 shadow-sm sm:p-8">
-      <div class="flex items-start gap-4">
-        <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#8fb8d8]/30 text-sm font-black text-[#344253]">
-          ℹ
-        </div>
-        <div>
-          <h3 class="text-base font-black text-[#344253] sm:text-lg">
-            A quick note for Windows players
-          </h3>
-          <p class="mt-2 text-sm font-semibold leading-relaxed text-[#627383]">
-            When you run the game, Windows may show a <strong>"Windows protected your PC"</strong> warning. This happens because our executable isn't yet signed with a code-signing certificate, not because of anything malicious in the game itself. This is extremely common for indie titles. We can assure that our game is completely safe (and all mined bitcoins will be used for good deeds only!).
-          </p>
-          <p class="mt-2 text-xs font-bold text-[#718191]">
-            If you see that warning, click <strong>"More Info"</strong> and then <strong>"Run Anyway"</strong> to launch it.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Final Call to Action -->
   <section class="px-5 py-20 text-center sm:px-8 md:py-28 lg:px-12" aria-labelledby="cta-title">
     <div class="mx-auto max-w-3xl">
@@ -455,9 +364,10 @@
 
         <a
           href="/"
-          class="inline-flex items-center gap-2 rounded-full border-2 border-[#d6d5ca] bg-[#fffdf3] px-6 py-3.5 text-base font-bold text-[#4f5f70] transition-all duration-200 hover:border-[#4f5f70] hover:bg-[#f6f1e8]"
+          class="group inline-flex items-center gap-2.5 rounded-full border-2 border-[#d6d5ca] bg-[#fffdf3] px-6 py-3.5 text-base font-bold text-[#4f5f70] transition-all duration-200 hover:border-[#4f5f70] hover:bg-[#f6f1e8]"
         >
-          <span>← Back to Home</span>
+          <IconArrow direction="left" size={16} class="transition-transform duration-200 group-hover:-translate-x-1" />
+          <span>Back to Home</span>
         </a>
       </div>
     </div>

@@ -4,6 +4,7 @@
   import { page } from "$app/state";
   import type { UserProfile } from "$lib/blog/types";
   import { sound } from "$lib/audio/soundEffects";
+  import IconArrow from "$lib/components/icons/IconArrow.svelte";
 
   let { profile = null }: { profile?: UserProfile | null } = $props();
 
@@ -296,11 +297,11 @@
             class="group flex items-center justify-between rounded-2xl px-4 py-3 text-base font-bold text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/15 active:scale-[0.99] active:bg-[#fffdf3]/20"
           >
             <span>{item.label}</span>
-            <span
-              class="text-sm font-semibold text-[#fffdf3]/50 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#fffdf3]"
-            >
-              →
-            </span>
+            <IconArrow
+              direction="right"
+              size={14}
+              class="text-[#fffdf3]/50 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#fffdf3]"
+            />
           </a>
         {/each}
 
@@ -315,10 +316,10 @@
               sound.playClick();
               isMobileMenuOpen = false;
             }}
-            class="flex items-center justify-between rounded-2xl bg-[#fffdf3] px-4 py-2.5 text-sm font-black text-[#344253] transition-all duration-200 hover:bg-[#b8d4f0]"
+            class="group flex items-center justify-between rounded-2xl bg-[#fffdf3] px-4 py-2.5 text-sm font-black text-[#344253] transition-all duration-200 hover:bg-[#b8d4f0]"
           >
             <span>Author Dashboard</span>
-            <span>→</span>
+            <IconArrow direction="right" size={14} class="transition-transform duration-200 group-hover:translate-x-1" />
           </a>
         {/if}
 

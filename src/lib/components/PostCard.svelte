@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BlogPostSummary } from "$lib/blog/types";
+  import IconArrow from "$lib/components/icons/IconArrow.svelte";
   let { post, featured = false }: { post: BlogPostSummary; featured?: boolean } = $props();
   const publishedDate = $derived(post.published_at ?? post.created_at);
 </script>
@@ -12,6 +13,9 @@
     </div>
     <h2><a href={`/blog/${post.slug}`}>{post.title}</a></h2>
     {#if post.excerpt}<p>{post.excerpt}</p>{/if}
-    <a class="post-card-read" href={`/blog/${post.slug}`}>Read story <span aria-hidden="true">→</span></a>
+    <a class="post-card-read" href={`/blog/${post.slug}`}>
+      <span>Read story</span>
+      <IconArrow direction="right" size={13} class="transition-transform duration-200 group-hover:translate-x-1" />
+    </a>
   </div>
 </article>
