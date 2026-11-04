@@ -312,6 +312,33 @@ Without reserved space, swapping between an icon and a wordmark causes Cumulativ
 
 The hidden variant must apply `pointer-events-none` when faded out (`opacity-0`) so it cannot capture pointer events or hover states while invisible.
 
+### FLIP-animated docking of floating action buttons into inline layout
+
+**Simple explanation**
+
+A floating "Scroll to top" button fixed at the viewport corner can feel intrusive and cluttered when it overlaps footer content. Instead of abruptly disappearing or popping into the footer, it smoothly glides into an inline slot alongside the footer's button row as the user reaches the bottom.
+
+**How it works**
+
+Using the FLIP (First, Last, Invert, Play) technique paired with an `IntersectionObserver`:
+1. The footer reserves a placeholder slot (`h-10 w-10 sm:h-11 sm:w-11`) in its flex row, keeping it hidden (`opacity-0 pointer-events-none`) until docked so there is zero layout shift.
+2. When the footer button slot intersects the viewport, `getBoundingClientRect()` calculates the delta (`dx, dy`) between the floating button's current position and the destination footer slot.
+3. The floating button is hidden immediately (`opacity: 0; transition: none`) while the footer button is simultaneously transformed by `translate3d(dx, dy, 0)`.
+4. On the next animation frame, the footer button transitions smoothly to `translate3d(0, 0, 0)` with a hardware-accelerated cubic bezier (`cubic-bezier(0.22, 1, 0.36, 1)`).
+5. When scrolling up away from the footer, the reverse FLIP animation runs so the button uncouples and glides back to the floating viewport position.
+
+**Why it matters**
+
+Abruptly showing/hiding buttons creates visual stutter, while leaving a floating button stationary over a footer row leads to visual overlap with social icons. FLIP provides the physical illusion of a single continuous UI element docking into the page structure.
+
+**In this project**
+
+`src/lib/components/ScrollToTop.svelte`, `src/lib/components/SiteFooter.svelte`, and shared rune `src/lib/components/scrollDock.svelte.ts` coordinate the docking transition, syncing with SvelteKit client route navigation via `$app/state` (`page.url.pathname`).
+
+**Tradeoffs / pitfalls**
+
+If the source element fades out with a CSS transition while the target element moves, both elements will temporarily be visible simultaneously (creating a ghost clone). The handoff must be instantaneous. Additionally, verify `prefers-reduced-motion` to disable transforms for users who request minimal motion, and guard against route navigation by invalidating the observer when the page changes.
+
 # Security
 
 ### Validate return URLs by parsing them
