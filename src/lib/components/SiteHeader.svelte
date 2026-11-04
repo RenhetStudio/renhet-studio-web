@@ -2,35 +2,47 @@
   import { onMount } from "svelte";
   import { fly, fade } from "svelte/transition";
   import { page } from "$app/state";
+  import { afterNavigate } from "$app/navigation";
   import type { UserProfile } from "$lib/blog/types";
   import { sound } from "$lib/audio/soundEffects";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
 
-  let { profile = null }: { profile?: UserProfile | null } = $props();
+  let {
+    profile = null,
+    hasHero,
+  }: {
+    profile?: UserProfile | null;
+    hasHero?: boolean;
+  } = $props();
+
+  const HERO_ROUTES = new Set(["/", "/blog", "/careers"]);
+  const hasHeroRoute = $derived(hasHero !== undefined ? hasHero : HERO_ROUTES.has(page.url.pathname));
 
   let isMuted = $state(false);
-  let isHeroInView = $state(
-    typeof document !== "undefined" ? Boolean(document.querySelector("[data-hero]")) : false
-  );
+  let isHeroInView = $state(true);
   let isMobileMenuOpen = $state(false);
 
   const checkHeroVisibility = () => {
-    // Only elements tagged with `data-hero` activate the hero navbar effect.
-    // Any page without `data-hero` (e.g. /games/beelze-pub) immediately stays in the solid style.
-    const hero = document.querySelector<HTMLElement>("[data-hero]");
-    if (!hero) {
+    if (!hasHeroRoute) {
       isHeroInView = false;
       return;
     }
 
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    if (!hero) {
+      isHeroInView = typeof window !== "undefined" && window.scrollY <= 80;
+      return;
+    }
+
     const rect = hero.getBoundingClientRect();
-    // Navbar sits at top: 16px with ~64px height -> bottom edge is ~80px.
-    // Switch to solid style exactly when the hero exits past the navbar.
     isHeroInView = rect.bottom > 80;
   };
 
+  afterNavigate(() => {
+    checkHeroVisibility();
+  });
+
   $effect(() => {
-    // Re-evaluate whenever the route changes
     void page.url.pathname;
     checkHeroVisibility();
   });
@@ -48,6 +60,7 @@
     };
 
     checkHeroVisibility();
+
     window.addEventListener("scroll", checkHeroVisibility, { passive: true });
     window.addEventListener("resize", onResize, { passive: true });
 
@@ -96,8 +109,8 @@
 
 <nav class="nav-shell fixed inset-x-0 top-4 z-50 px-4" aria-label="Primary navigation">
   <div
-    class="relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] transition-all duration-300 ease-out sm:px-6 {isHeroInView
-      ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md'
+    class="relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] sm:px-6 {hasHeroRoute
+      ? `nav-pill-dynamic ${isHeroInView ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md' : 'border-[#fffdf3] bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-xl'}`
       : 'border-[#fffdf3] bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-xl'}"
   >
     <!-- Logo with smooth morph between compact symbol and full wordmark (space reserved to prevent navbar layout shift) -->
@@ -349,3 +362,37 @@
     </div>
   {/if}
 </nav>
+
+<style>
+  @supports (animation-timeline: scroll()) {
+    .nav-pill-dynamic {
+      animation: nav-pill-scroll linear both;
+      animation-timeline: scroll();
+      animation-range: 0px var(--hero-exit-distance, 70vh);
+    }
+
+    @keyframes nav-pill-scroll {
+      0%, 70% {
+        border-color: rgba(255, 253, 243, 0.35);
+        background-color: rgba(98, 115, 131, 0.45);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      100% {
+        border-color: #fffdf3;
+        background-color: rgba(98, 115, 131, 0.92);
+        box-shadow: 0 12px 40px rgba(50, 62, 75, 0.22), 0 0 0 1px rgba(255, 253, 243, 0.4);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+    }
+  }
+
+  /* Fallback for browsers without animation-timeline: scroll() */
+  @supports not (animation-timeline: scroll()) {
+    .nav-pill-dynamic {
+      transition: all 300ms ease-out;
+    }
+  }
+</style>
