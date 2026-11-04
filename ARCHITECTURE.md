@@ -8,7 +8,7 @@
 * **Audio y Micro-Interacciones:**
   * **Web Audio API sintetizada:** Micro-síntesis procedural mediante osciladores senoidales de caída ultrarrápida (~15ms, gain 0.08) sin necesidad de cargar ficheros `.mp3` ni añadir peso de red.
 * **Cursor Dinámico:** Seguidor elástico renderizado mediante transformaciones por hardware (`translate3d`), activo solo en entornos de puntero fino (`(hover: hover) and (pointer: fine)`).
-* **Gestión de Imágenes:** Almacenamiento local optimizado en `static/beelze-pub/` y procesamiento con `sharp` para formatos `.avif` y `.webp`.
+* **Gestión de Imágenes:** Almacenamiento local optimizado en `public/beelze-pub/` y procesamiento con `sharp` para formatos `.avif` y `.webp`.
 
 ---
 
@@ -17,24 +17,30 @@
 ```
 src/
 ├── routes/
-│   ├── +layout.svelte               # Shell global (Fuentes Paperlogy, SoundProvider, CustomCursor, meta)
-│   └── +page.svelte                 # Orquestador de la Home Page rediseñada
+│   ├── +layout.svelte               # Shell global (Fuentes Paperlogy, SoundProvider, CustomCursor, ScrollToTop, meta)
+│   ├── +page.svelte                 # Orquestador de la Home Page rediseñada
+│   ├── games/
+│   │   └── beelze-pub/+page.svelte  # Página dedicada de Beelze Pub (gameplay, carrusel con progreso, itch.io)
+│   ├── blog/                        # Blog editorial y artículos
+│   └── careers/                     # Página de empleo con integración Google Sheets
 │
 ├── lib/
 │   ├── components/
 │   │   ├── SoundProvider.svelte     # Proveedor global de audio (captura clics interactivos con modulación aleatoria)
-│   │   ├── SiteHeader.svelte        # Barra flotante con mute toggle, transición de discreta a sólida y morphing de logo
+│   │   ├── SiteHeader.svelte        # Barra flotante con mute toggle, CSS scroll timeline, detección [data-hero] y morphing de logo
 │   │   ├── SiteFooter.svelte        # Footer responsive con ola invertida, logo ampliado y redes
 │   │   ├── CustomCursor.svelte      # Seguidor elástico sutil con centrado estático geométrico
+│   │   ├── ScrollToTop.svelte       # Botón flotante para volver arriba con SVG vectorial accesible
 │   │   ├── icons/                   # Iconografía SVG vectorial reutilizable (cero Unicode/emojis)
 │   │   │   ├── IconArrow.svelte     # Flechas direccionales vectoriales configurables
+│   │   │   ├── IconArrowUp.svelte   # Flecha hacia arriba para el botón scroll-to-top
 │   │   │   ├── IconExternal.svelte  # Icono de enlace externo minimalista
 │   │   │   ├── IconSound.svelte     # Icono de audio activo / silenciado
 │   │   │   └── IconItch.svelte      # Logotipo vectorial de Itch.io
 │   │   └── home/
-│   │       ├── HeroSplit.svelte     # Split hero interactivo con costura de onda orgánica y logo grande
+│   │       ├── HeroSplit.svelte     # Split hero interactivo [data-hero] con costura de onda orgánica y logo grande
 │   │       ├── WaveDivider.svelte   # Transición SVG de ondas seamless y modo invertido
-│   │       ├── GameSpotlight.svelte # Carrusel con scroll automático y barra de progreso temporal
+│   │       ├── GameSpotlight.svelte # Escaparate editorial de Beelze Pub con enlace directo y píldora táctil
 │   │       └── TheCrew.svelte       # Sección del equipo (Tablón de sellos artesanales sin sobrecarga de iconos)
 │   │
 │   ├── audio/
@@ -58,6 +64,7 @@ En concordancia con el principio de código limpio y sin repetición:
 * **Cero manejadores locales:** Ningún botón o enlace declara `onclick={() => sound.playPop()}` ni `onmouseenter={() => sound.playHover()}`.
 * **Captura Global en `<SoundProvider />`:** Un único event listener `click` en fase de captura identifica si el clic proviene de un elemento interactivo (`a, button, [role='button'], [role='tab'], input, select, textarea, .badge-stamp`).
 * **Micro-Variación Aleatoria Orgánica:** Cada clic sintetiza una onda senoidal con una frecuencia base modulada al azar (`480Hz ± 60Hz`), duración entre 18ms y 26ms y ganancia sutil, de modo que cada interacción suena ligeramente distinta, física y natural.
+
 ```typescript
 class SoundManager {
   private ctx: AudioContext | null = null;
@@ -124,6 +131,7 @@ class SoundManager {
   * La transición se aplica mediante CSS `grid-template-columns` con curva cúbica suave (`cubic-bezier(0.2, 0.8, 0.2, 1)`), garantizando fluidez sin saltos.
 * En el panel derecho de Beelze Pub:
   * Se aloja el GIF optimizado de Skelly sirviendo copas, con micro-animación flotante y sombra de contacto que reacciona a la posición del cursor.
+* **Bleed Vertical:** Se utilizan márgenes negativos `-top-20` y `-bottom-20` para evitar cortes por redondeo de subpíxeles entre las secciones.
 
 ---
 
@@ -140,13 +148,13 @@ class SoundManager {
 
 ## 6. Pipeline de Activos de Beelze Pub
 
-Los 4 recursos proporcionados por el usuario se descargarán y alojarán localmente en `static/beelze-pub/`:
+Los 4 recursos proporcionados se alojan localmente en `public/beelze-pub/`:
 1. `skelly-anim.gif` (GIF animado de Skelly en movimiento).
 2. `beelze-pub-keyart.png` (Arte principal del juego).
-3. `beelze-pub-screen-1.jpg` (Captura de pantalla de la taberna y mezcla de bebidas).
-4. `beelze-pub-screen-2.jpg` (Captura de pantalla de personajes y diálogos).
+3. `screen-cocktails.jpg` (Captura de pantalla de la taberna y mezcla de bebidas).
+4. `screen-dialogue.jpg` (Captura de pantalla de personajes y diálogos).
 
-Las imágenes estáticas se procesarán con el script `scripts/optimize-images.mjs` para servir variantes ligeras `.avif` y `.webp` mediante etiquetas `<picture>`.
+Las imágenes estáticas se procesan con `scripts/optimize-images.mjs` para servir variantes ligeras `.avif` y `.webp` mediante etiquetas `<picture>`.
 
 ---
 
@@ -175,3 +183,15 @@ Para resolver problemas comunes de desalineación o desfase al enfocar botones:
   * Las posiciones dinámicas calculadas por JS/LERP se aplican exclusivamente mediante `style.left` y `style.top`.
   * El centrado se encomienda de manera estricta y permanente al CSS estático `.cursor-dot, .cursor-ring { top: 0; left: 0; transform: translate(-50%, -50%); }`.
   * De esta forma, las mutaciones de tamaño (`h-7 w-7` a `h-11 w-11`) se expanden de forma simétrica desde el punto exacto del puntero nativo, sin provocar tirones ni desalineaciones en el eje.
+
+---
+
+## 10. Detección de Hero con `[data-hero]` y Scroll-Driven Animations (`SiteHeader.svelte`)
+
+Para evitar parpadeos de estilo al cargar la página en el top o al recargar scrolleado:
+1. **Detección Unificada:** La navbar no depende de listas de rutas cableadas (`HERO_ROUTES`). Cualquier sección de hero está marcada semánticamente con el atributo `data-hero` (commit `b49a4d1`).
+2. **CSS Scroll Timeline:** Mediante `@supports (animation-timeline: scroll())`, el selector `:global(:root:has([data-hero])) .nav-pill-dynamic` vincula el estado visual de la pastilla al scrollbar nativo. El motor del navegador evalúa el timeline antes del primer pintado:
+   * Al cargar en `scrollY = 0`: Pinta inmediatamente el estado transparente.
+   * Al recargar con scroll: Pinta inmediatamente el estado sólido.
+3. **Páginas sin Hero:** El selector `:global(:root:not(:has([data-hero])))` fuerza de forma inmediata el estado sólido y el wordmark en páginas sin hero (`/games/beelze-pub`, `/account`).
+4. **Morphing de Logo:** El logotipo utiliza una celda de cuadrícula común con ancho reservado (`w-[72px] sm:w-[80px]`) para alternar suavemente entre el isotipo compacto y el logotipo completo sin Cumulative Layout Shift (CLS).

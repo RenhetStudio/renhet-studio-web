@@ -216,6 +216,100 @@ Hardcoding route lists (such as `Set(["/", "/blog", "/careers"])`) is brittle an
 
 CSS `:has()` and `animation-timeline: scroll()` are supported in modern evergreen browsers. For older browsers without scroll-driven animation support, `@supports not (animation-timeline: scroll())` falls back to standard CSS transitions toggled by JavaScript state. The logo morphing animation retains a discrete 300ms CSS transition rather than scrubbing continuously along scroll progress to preserve its snappy, deliberate feel.
 
+### Mathematical 2-period SVGs for seamless infinite wave dividers
+
+**Simple explanation**
+
+Infinite animated wave dividers should loop continuously without visual seam tears, stutters, or subpixel rounding cracks between stacked colored sections.
+
+**How it works**
+
+The wave path is defined inside an SVG `viewBox="0 0 200 100"` with exactly two mathematically identical repeating periods ($x = 0..100$ and $x = 100..200$) with $C^1$ continuity at inflection points. Hardware-accelerated CSS `transform: translate3d(-50%, 0, 0)` shifts the SVG by exactly one period. When the animation resets to `0%`, the visual geometry is identical, creating a seamless infinite loop.
+
+To prevent hairline cracks caused by subpixel rounding on retina/high-DPI screens or zoom changes, vertical bleed (`-top-20`, `-bottom-20`) extends the SVG bounding box to completely cover seam joints.
+
+**Why it matters**
+
+Single-period SVGs or percentage approximations cause jarring visual jumps on each animation cycle. Unpadded SVG containers leave 1px subpixel rendering gaps where the background peeks through between dark and light sections.
+
+**In this project**
+
+`src/lib/components/home/WaveDivider.svelte` provides seamless 3-layer wave dividers, with an inverted variant (`scaleY(-1)`) used as a shoreline transition in `src/lib/components/SiteFooter.svelte` and on hero bottoms in `/blog` and `/careers`.
+
+**Tradeoffs / pitfalls**
+
+Dynamic fill colors must respect strict CSP (`style-src-attr 'none'`); fill attributes should be set via JavaScript DOM properties or CSS variables rather than inline `style` strings. Animation should pause or respect `prefers-reduced-motion: reduce`.
+
+### Procedural Web Audio micro-synthesis for zero-latency UI sound
+
+**Simple explanation**
+
+Micro-interactions (such as tactile button clicks) should feel responsive and natural without downloading `.mp3` audio files, introducing network latency, or creating repetitive audio fatigue.
+
+**How it works**
+
+A centralized `SoundManager` singleton uses the native Web Audio API (`AudioContext`, `OscillatorNode`, `GainNode`) to synthesize short sine-wave drops (~18ms–25ms duration). On every click, the frequency is subtly randomized with Gaussian-like jitter (`480Hz ± 60Hz`). A single global capturing listener in `SoundProvider.svelte` detects interactive clicks (`a, button, [role='button'], input, .badge-stamp`) and triggers the micro-click.
+
+**Why it matters**
+
+Traditional audio files add bundle size, require network requests, can fail to load on poor connections, and sound robotic when played repeatedly at the exact same pitch. Procedural synthesis requires zero bandwidth, plays instantly, and organic pitch randomization mimics natural physical acoustics.
+
+**In this project**
+
+`src/lib/audio/soundEffects.ts` implements procedural synthesis and mute state persistence in `localStorage`. `src/lib/components/SoundProvider.svelte` mounts at the root layout (`src/routes/+layout.svelte`) and handles capture-phase delegation.
+
+**Tradeoffs / pitfalls**
+
+Modern browsers require a user gesture (`pointerdown` or `keydown`) before an `AudioContext` can leave the `suspended` state. The sound manager must listen for the first user interaction to resume the context. Never attach sounds to hover events; click-only interactions prevent overwhelming users.
+
+### Geometric centering vs coordinate positioning for elastic custom cursors
+
+**Simple explanation**
+
+Custom cursor rings that expand on interactive hover states must stay perfectly centered on the native cursor point without visual wobble, drift, or coordinate lag.
+
+**How it works**
+
+Separate coordinate calculation from geometric transformation:
+1. Dynamic JS/LERP updates apply exclusively to `style.left` and `style.top` in pixel values.
+2. The CSS definition uses static `transform: translate(-50%, -50%)` on the dot and ring elements.
+
+When CSS transitions change element diameter on hover (e.g. from `h-7 w-7` to `h-11 w-11`), the expansion radiates symmetrically from the exact anchor point rather than pushing down and right.
+
+**Why it matters**
+
+Combining dynamic translation coordinates inside the same `transform: translate(x, y)` string alongside scale or size changes causes subtle subpixel coordinate drift, making the cursor look misaligned when hovering buttons.
+
+**In this project**
+
+`src/lib/components/CustomCursor.svelte` tracks the pointer using `requestAnimationFrame` with linear interpolation (`lerp`), delegating centering strictly to static CSS.
+
+**Tradeoffs / pitfalls**
+
+Custom cursors must be disabled on touch or coarse-pointer devices (`@media (pointer: coarse)`) and must declare `pointer-events: none` on all cursor DOM elements to avoid intercepting clicks.
+
+### Layout shift prevention in morphing headers via space reservation
+
+**Simple explanation**
+
+When a floating header morphs between a compact symbol logo and a wider wordmark logo upon scrolling, the change in width will shove adjacent navigation links unless space is explicitly reserved.
+
+**How it works**
+
+The logo container `<a href="/">` uses a single CSS grid cell (`grid-cols-1 grid-rows-1`) with a fixed width (`w-[72px] sm:w-[80px]`) sized to fit the largest variant (the wordmark). Both the compact `<picture>` and full wordmark `<picture>` occupy `col-start-1 row-start-1`. When scrolling triggers the transition, both elements cross-fade and scale smoothly within the fixed bounding box without changing the outer container dimensions.
+
+**Why it matters**
+
+Without reserved space, swapping between an icon and a wordmark causes Cumulative Layout Shift (CLS) and abruptly shifts navigation links or centered desktop menus.
+
+**In this project**
+
+`src/lib/components/SiteHeader.svelte` uses this shared grid overlay for the symbol and wordmark logos, paired with `transition-all duration-300 ease-out`.
+
+**Tradeoffs / pitfalls**
+
+The hidden variant must apply `pointer-events-none` when faded out (`opacity-0`) so it cannot capture pointer events or hover states while invisible.
+
 # Security
 
 ### Validate return URLs by parsing them
