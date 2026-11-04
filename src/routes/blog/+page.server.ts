@@ -12,6 +12,14 @@ export const load: PageServerLoad = async ({ url, locals, cookies, setHeaders })
     Vary: "Cookie",
     ...(!hasCookies && { "Cache-Control": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400" }),
   });
-  const [posts, profile] = await Promise.all([getPublishedPosts({ category, query }), hasCookies ? getCurrentProfile(locals) : null]);
+  const [posts, profile] = await Promise.all([
+    getPublishedPosts({ category, query }).catch((error) => {
+      console.warn("Could not load published posts:", error instanceof Error ? error.message : error);
+      return [];
+    }),
+    hasCookies
+      ? getCurrentProfile(locals).catch(() => null)
+      : null,
+  ]);
   return { posts, profile, category, query };
 };

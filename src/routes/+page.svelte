@@ -45,11 +45,11 @@
   <!-- Interactive Split Hero (includes integrated bottom wave transition to paper) -->
   <HeroSplit />
 
-  <!-- Beelze Pub Showcase -->
-  <GameSpotlight />
-
   <!-- The Crew -->
   <TheCrew />
+
+  <!-- Beelze Pub Showcase -->
+  <GameSpotlight />
 
   <!-- Community & Footer (includes integrated inverted wave transition from paper) -->
   <SiteFooter />
