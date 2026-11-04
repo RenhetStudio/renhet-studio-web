@@ -7,34 +7,26 @@
   import { sound } from "$lib/audio/soundEffects";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
 
-  let {
-    profile = null,
-    hasHero,
-  }: {
-    profile?: UserProfile | null;
-    hasHero?: boolean;
-  } = $props();
-
-  const HERO_ROUTES = new Set(["/", "/blog", "/careers"]);
-  const hasHeroRoute = $derived(hasHero !== undefined ? hasHero : HERO_ROUTES.has(page.url.pathname));
+  let { profile = null }: { profile?: UserProfile | null } = $props();
 
   let isMuted = $state(false);
-  let isHeroInView = $state(true);
+  let isHeroInView = $state(
+    typeof document !== "undefined" ? Boolean(document.querySelector("[data-hero]")) : true
+  );
   let isMobileMenuOpen = $state(false);
 
   const checkHeroVisibility = () => {
-    if (!hasHeroRoute) {
+    // Only elements tagged with `data-hero` activate the hero navbar effect.
+    // Any page without `data-hero` (e.g. /games/beelze-pub) immediately stays in the solid style.
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    if (!hero) {
       isHeroInView = false;
       return;
     }
 
-    const hero = document.querySelector<HTMLElement>("[data-hero]");
-    if (!hero) {
-      isHeroInView = typeof window !== "undefined" && window.scrollY <= 80;
-      return;
-    }
-
     const rect = hero.getBoundingClientRect();
+    // Navbar sits at top: 16px with ~64px height -> bottom edge is ~80px.
+    // Switch to solid style exactly when the hero exits past the navbar.
     isHeroInView = rect.bottom > 80;
   };
 
@@ -109,8 +101,8 @@
 
 <nav class="nav-shell fixed inset-x-0 top-4 z-50 px-4" aria-label="Primary navigation">
   <div
-    class="relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] sm:px-6 {hasHeroRoute
-      ? `nav-pill-dynamic ${isHeroInView ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md' : 'border-[#fffdf3] bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-xl'}`
+    class="nav-pill-dynamic relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] sm:px-6 {isHeroInView
+      ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md'
       : 'border-[#fffdf3] bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-xl'}"
   >
     <!-- Logo with smooth morph between compact symbol and full wordmark (space reserved to prevent navbar layout shift) -->
@@ -122,7 +114,7 @@
     >
       <!-- Small icon version: shown when hero is in view -->
       <picture
-        class="col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {isHeroInView
+        class="nav-symbol-icon col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {isHeroInView
           ? 'opacity-100 scale-100'
           : 'pointer-events-none opacity-0 scale-75 -translate-x-2'}"
       >
@@ -147,7 +139,7 @@
 
       <!-- Large wordmark version: shown when hero exits view -->
       <picture
-        class="col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {!isHeroInView
+        class="nav-wordmark-logo col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {!isHeroInView
           ? 'opacity-100 scale-100'
           : 'pointer-events-none opacity-0 scale-90 translate-x-2'}"
       >
@@ -365,7 +357,7 @@
 
 <style>
   @supports (animation-timeline: scroll()) {
-    .nav-pill-dynamic {
+    :global(:root:has([data-hero])) .nav-pill-dynamic {
       animation: nav-pill-scroll linear both;
       animation-timeline: scroll();
       animation-range: 0px var(--hero-exit-distance, 70vh);
@@ -387,6 +379,24 @@
         -webkit-backdrop-filter: blur(24px);
       }
     }
+  }
+
+  :global(:root:not(:has([data-hero]))) .nav-pill-dynamic {
+    border-color: #fffdf3;
+    background-color: rgba(98, 115, 131, 0.92);
+    box-shadow: 0 12px 40px rgba(50, 62, 75, 0.22), 0 0 0 1px rgba(255, 253, 243, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  :global(:root:not(:has([data-hero]))) .nav-symbol-icon {
+    display: none !important;
+  }
+
+  :global(:root:not(:has([data-hero]))) .nav-wordmark-logo {
+    opacity: 1 !important;
+    transform: scale(1) translateX(0) !important;
+    pointer-events: auto !important;
   }
 
   /* Fallback for browsers without animation-timeline: scroll() */
