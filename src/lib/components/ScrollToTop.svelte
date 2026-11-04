@@ -204,7 +204,7 @@
   <button
     type="button"
     onclick={scrollToTop}
-    class="group flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#4f5f70]/95 text-[#fffdf3] shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#fffdf3] hover:text-[#4f5f70] hover:border-[#fffdf3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fffdf3] active:translate-y-0 active:scale-95"
+    class="group flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#fffdf3] hover:text-[#344253] hover:border-[#fffdf3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fffdf3] active:translate-y-0 active:scale-95"
     aria-label="Scroll back to top"
     title="Scroll to top"
   >

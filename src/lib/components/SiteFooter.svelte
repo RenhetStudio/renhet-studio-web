@@ -85,7 +85,7 @@
 
   <!-- Decorative sun/splash element emerging from bottom edge behind content (100% organic curves) -->
   <FooterDecoSplash
-    class="absolute -bottom-5 left-[50%] z-0 w-[240px] -translate-x-1/2 opacity-35 sm:left-[54%] sm:w-[280px] sm:opacity-50 lg:left-[48%] lg:translate-x-0 lg:w-[320px] xl:left-[50%] xl:w-[350px] lg:opacity-85"
+    class="absolute -bottom-6 left-[50%] z-0 w-[240px] -translate-x-1/2 opacity-35 sm:left-[50%] sm:w-[280px] sm:opacity-40 lg:left-[45%] lg:w-[320px] xl:left-[46%] xl:w-[360px] lg:opacity-55"
   />
 
   <div
@@ -145,10 +145,10 @@
       <!-- Zone 3: Links (Two rows: pills on top, circular icons below) -->
       <div class="relative z-10 flex flex-col gap-2.5 sm:gap-3 lg:shrink-0">
         <!-- Row 1: Careers and Blog pills -->
-        <div class="flex items-center gap-2.5 sm:gap-3">
+        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <a
             href="/careers"
-            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full border border-[#fffdf3]/35 bg-transparent px-5 sm:px-6 text-sm sm:text-base font-semibold text-[#fffdf3] transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[#fffdf3]/70 hover:bg-[#fffdf3]/12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3]"
+            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-5 sm:px-6 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
           >
             <span>Careers</span>
             <span
@@ -160,7 +160,7 @@
 
           <a
             href="/blog"
-            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full border border-[#fffdf3]/35 bg-transparent px-5 sm:px-6 text-sm sm:text-base font-semibold text-[#fffdf3] transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[#fffdf3]/70 hover:bg-[#fffdf3]/12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3]"
+            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-5 sm:px-6 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
           >
             <span>Blog</span>
             <span
@@ -172,7 +172,7 @@
         </div>
 
         <!-- Row 2: Five circular social icons + Docked Scroll to top button -->
-        <div class="flex items-center gap-2 sm:gap-2.5">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
           {#each socialLinks as link}
             <a
               href={link.href}
@@ -180,7 +180,7 @@
               rel="noopener noreferrer"
               aria-label="Renhet Studio on {link.label}"
               title={link.label}
-              class="flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/35 bg-transparent text-[#fffdf3] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#4f5f70] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
+              class="flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
             >
               <link.icon size={link.size} />
             </a>
@@ -188,7 +188,7 @@
 
           <!-- Subtle divider separating external social links from utility scroll action -->
           <div
-            class="mx-0.5 h-5 w-px shrink-0 bg-[#fffdf3]/25 transition-opacity duration-300 sm:mx-1 {scrollDockState.isDocked
+            class="mx-0.5 h-5 w-px shrink-0 bg-[#fffdf3]/35 transition-opacity duration-300 sm:mx-1 {scrollDockState.isDocked
               ? 'opacity-100'
               : 'opacity-0'}"
             aria-hidden="true"
@@ -202,7 +202,7 @@
             aria-label="Scroll back to top"
             title="Scroll to top"
             tabindex={scrollDockState.isDocked ? 0 : -1}
-            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/35 bg-transparent text-[#fffdf3] transition-colors duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#4f5f70] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
+            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
               ? 'opacity-100 pointer-events-auto'
               : 'opacity-0 pointer-events-none'}"
           >
