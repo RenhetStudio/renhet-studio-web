@@ -108,23 +108,30 @@ Caching makes repeat visits fast, but cannot remove the first cold request to an
 
 The delayed section still depends on the upstream service. Keep its loading state clear, and avoid assuming that an option which has not arrived yet can be selected or submitted.
 
-### Server rendering plus route-level CSR control reduces browser JavaScript
+### Preserving client hydration on pages with interactive shell components
 
 **Simple explanation**
 
-An interactive effect does not require an entire page to be a Client Component. Static pages can stay server-rendered and use CSS for simple visual motion.
+Never disable Client-Side Rendering (`export const csr = false`) on routes that include interactive navigation or audio shells like `SiteHeader` or `SoundProvider`. Doing so prevents Svelte Runes and client event listeners from executing, breaking scroll-triggered state, sound toggles, and mobile menus.
 
 **How it works**
 
-SvelteKit can render a route entirely on the server and set `csr = false`, so the browser receives complete HTML and CSS without a hydration runtime. CSS keyframe animations still run normally, and `prefers-reduced-motion` can disable them for users who request less motion.
+SvelteKit allows setting `export const csr = false` in `+page.ts` to output inert static HTML without emitting hydration script bundles. While CSS-only animations (like native Scroll-Driven Animations on the navbar background) continue to run via the browser compositor, any state driven by JavaScript (such as `isHeroInView` driving the logo morph between compact symbol and full wordmark, window scroll listeners, or procedural audio click delegation) remains frozen in its initial SSR state.
+
+**Why it matters**
+
+If `csr = false` is set on a page (such as `/blog`), the page renders visually, but:
+1. The logo never morphs from the symbol to the wordmark when scrolling out of the hero because `isHeroInView` cannot update.
+2. The sound mute button and mobile hamburger toggle cannot respond to user clicks.
+3. The `ScrollToTop` docking button cannot measure scroll distance or animate.
 
 **In this project**
 
-The home page, blog index, and public post page use server-rendered Svelte with route-level CSR disabled. Their introductory animations remain CSS-only in `src/app/globals.css`.
+Routes across the application (`/`, `/games/beelze-pub`, `/blog`, `/careers`) use standard SvelteKit SSR with client hydration enabled (`export const prerender = false`). This ensures that the global interactive shell (`SiteHeader`, `SoundProvider`, `ScrollToTop`) remains fully functional while SSR delivers instant first paints.
 
 **Tradeoffs / pitfalls**
 
-CSS is ideal for bounded presentation effects. Keep a client component only when the animation needs live application state, gestures, or complex scroll interaction.
+Only use `export const csr = false` for completely isolated, zero-interaction static documents (e.g. RSS feeds, printable invoice templates) that do not share the interactive site shell.
 
 ### Caching public database reads
 
@@ -188,33 +195,74 @@ Images often dominate a page's transferred bytes. Optimizing them at build time 
 
 Generated variants increase build output and build work. Always provide accurate `sizes`, explicit dimensions where appropriate, and meaningful alternative text; otherwise the browser may download a larger variant than necessary or accessibility can regress. Static image files also avoid development server image middleware returning an incorrect MIME type.
 
-### Unified hero detection with data-hero and CSS Scroll-Driven Animations
+### Unified hero detection with data-hero and dynamic scroll exit transitions
 
 **Simple explanation**
 
-Floating navigation bars should adapt to whether a page has a hero section without hardcoding lists of route paths, and they should load immediately in their correct visual state without flashes or unwanted transition animations.
+Floating navigation bars should adapt to whether a page has a hero section without hardcoding route paths, and transition from transparent to solid exactly as the hero exits the viewport, regardless of whether the hero is 520px, 600px, 800px, or 100vh.
 
 **How it works**
 
-Instead of checking specific URL paths or maintaining route sets, any page featuring a hero section tags its hero container with the `data-hero` attribute.
+Any page featuring a hero section tags its hero container with the `data-hero` attribute. The navigation bar coordinates CSS Scroll-Driven Animations and Svelte Runes:
 
-1. **At the CSS level:** The navigation pill uses CSS Scroll-Driven Animations (`animation-timeline: scroll()`) scoped with `:root:has([data-hero])`. Because the browser's style and layout engine evaluates `:has([data-hero])` directly on the SSR HTML before first paint:
-   - On initial load at `scrollY = 0`, it paints the transparent hero navbar immediately without an entry transition.
-   - On page reload deep into the page (`scrollY > 70vh`), the compositor evaluates 100% scroll progress and paints the solid navbar immediately.
-   - Pages without `data-hero` match `:root:not(:has([data-hero]))`, statically rendering the solid navbar and full wordmark logo without enabling scroll timelines.
-2. **At the JavaScript level:** Client-side visibility checks use `document.querySelector<HTMLElement>("[data-hero]")`. When `rect.bottom > 80` changes, Svelte drives the discrete 300ms morph animation between the compact symbol and the full wordmark logo.
+1. **Dynamic exit distance calculation:** On mount, route navigation, and window/hero resize (via `ResizeObserver`), `SiteHeader.svelte` calculates the exact scroll offset where the hero passes under the floating navbar:
+   $\text{exitDistance} = \max(120, \text{heroBottomDoc} - 80)$
+   This offset is set as a CSS custom property on `:root`: `--hero-exit-distance: ${exitDistance}px`.
+2. **Synchronized 100px exit transition ramp:** In CSS:
+   `animation-range: calc(var(--hero-exit-distance, calc(100vh - 80px)) - 100px) var(--hero-exit-distance, calc(100vh - 80px));`
+   - Throughout the body of the hero (from `scrollY = 0` up to `exitDistance - 100px`), the navbar remains 100% transparent.
+   - Over the final 100px approaching the exit, it smoothly transitions into the solid style.
+   - At `exitDistance` (where `hero.bottom = 80px`), it reaches 100% solid styling.
+3. **Synchronized logo morph:** When `rect.bottom <= 80` triggers at the exit threshold, Svelte flips `isHeroInView = false`, driving the 300ms logo morph from compact symbol to full wordmark in perfect sync with the solid navbar background.
+4. **Zero-flash SSR & reload fallback:** On initial SSR and reload before JavaScript hydration, CSS defaults `--hero-exit-distance` to `calc(100vh - 80px)`. At `scrollY = 0`, the compositor paints transparent immediately; deep on reload (`scrollY > 100vh`), it paints solid immediately without transition jumps.
+5. **Pages without a hero:** Selectors match `:root:not(:has([data-hero]))`, rendering solid immediately on first paint without running scroll animations.
 
 **Why it matters**
 
-Hardcoding route lists (such as `Set(["/", "/blog", "/careers"])`) is brittle and requires manual updates whenever routes or hero sections change. Relying strictly on client hydration to toggle navbar states causes visual flashes or jarring transitions on initial load, while using cookies or server load functions to sync scroll position introduces unnecessary network and server overhead.
+Hardcoding a fixed viewport distance (such as `70vh`) causes the navbar to turn solid prematurely on tall heroes (like the 100vh homepage) while remaining semi-transparent long after shorter heroes (like the 600px Beelze Pub hero) have already exited offscreen. Dynamic exit calculations make navbar behavior identical across all page designs, aspect ratios, and device form factors.
 
 **In this project**
 
-`src/lib/components/SiteHeader.svelte` detects `[data-hero]` dynamically. Hero sections in `src/lib/components/home/HeroSplit.svelte`, `src/routes/games/beelze-pub/+page.svelte`, `src/routes/blog/+page.svelte`, and `src/routes/careers/+page.svelte` are marked with `data-hero`. Pages without a hero section (such as `src/routes/account/+page.svelte`) omit it.
+`src/lib/components/SiteHeader.svelte` coordinates dynamic `--hero-exit-distance` measuring with a `ResizeObserver`. Hero sections in `src/lib/components/home/HeroSplit.svelte`, `src/routes/games/beelze-pub/+page.svelte`, `src/routes/blog/+page.svelte`, and `src/routes/careers/+page.svelte` are marked with `data-hero`.
 
 **Tradeoffs / pitfalls**
 
-CSS `:has()` and `animation-timeline: scroll()` are supported in modern evergreen browsers. For older browsers without scroll-driven animation support, `@supports not (animation-timeline: scroll())` falls back to standard CSS transitions toggled by JavaScript state. The logo morphing animation retains a discrete 300ms CSS transition rather than scrubbing continuously along scroll progress to preserve its snappy, deliberate feel.
+Do not query DOM geometry or write CSS custom properties on every scroll tick — scroll listeners should only evaluate `rect.bottom > 80` for the logo state, while hero height measurements and CSS variable updates are restricted to mount, navigation, and `ResizeObserver` callbacks to prevent layout thrashing.
+
+### Isolating CSS scroll-driven animations from transitions to prevent reload jumps
+
+**Simple explanation**
+
+Never mix CSS transitions (`transition: all`) or Tailwind utility transform classes (`translate-*`, `scale-*`) with native CSS Scroll-Driven Animations (`animation-timeline: scroll()`) on the same element. When a user reloads a page while scrolled down, Svelte hydration updates the class list, which triggers a conflicting transition that causes the element to jump or slide.
+
+**How it works**
+
+In modern browsers (and Tailwind CSS v4), utility classes like `translate-x-2` and `scale-90` compile to independent CSS properties (`translate: 0.5rem 0` and `scale: 0.9`), while CSS `@keyframes` animations control `transform`. If the element has `transition: all`, the browser notices the class change when Svelte hydrates (`isHeroInView = false`), animating `translate: 8px -> 0px` over 300ms even though the scroll animation had already positioned the element correctly.
+
+To eliminate the reload jump:
+1. Under `@supports (animation-timeline: scroll())`, explicitly set:
+   ```css
+   :global(:root:has([data-hero])) .nav-symbol-icon,
+   :global(:root:has([data-hero])) .nav-wordmark-logo {
+     translate: none !important;
+     scale: none !important;
+     transition: none !important;
+   }
+   ```
+2. The GPU compositor controls opacity and transform exclusively via `animation-timeline: scroll()`, preventing duplicate transforms and eliminating all hydration transition triggers.
+3. Fallback transitions are scoped strictly inside `@supports not (animation-timeline: scroll())` for legacy browsers.
+
+**Why it matters**
+
+Reloading the page while scrolled down must paint the header and logo in their final scrolled state with 0px movement and zero visual flicker or FOUC.
+
+**In this project**
+
+In `src/lib/components/SiteHeader.svelte`, `.nav-symbol-icon` and `.nav-wordmark-logo` use native scroll animations. Disabling transitions and independent transforms when scroll animations are active guarantees that the logo remains completely static (`left: 226.5px`, `width: 71.2px`) from frame 0 through full hydration across all routes.
+
+**Tradeoffs / pitfalls**
+
+Always verify both modern browsers (with `animation-timeline: scroll()`) and fallback browsers. Do not remove the fallback classes from the markup because non-supporting browsers rely on Svelte's reactive classes to toggle between states.
 
 ### Mathematical 2-period SVGs for seamless infinite wave dividers
 

@@ -15,18 +15,62 @@
   );
   let isMobileMenuOpen = $state(false);
 
+  let heroResizeObserver: ResizeObserver | null = null;
+  let currentObservedHero: HTMLElement | null = null;
+
+  const updateHeroExitDistance = (hero: HTMLElement) => {
+    const heroTop = hero.getBoundingClientRect().top + window.scrollY;
+    const heroBottom = heroTop + hero.offsetHeight;
+    // Navbar sits at top: 16px with ~64px height -> bottom edge is ~80px.
+    // The exact scroll offset where the hero bottom passes the navbar bottom is: heroBottom - 80px.
+    const exitDistance = Math.max(120, Math.round(heroBottom - 80));
+    document.documentElement.style.setProperty("--hero-exit-distance", `${exitDistance}px`);
+  };
+
   const checkHeroVisibility = () => {
     // Only elements tagged with `data-hero` activate the hero navbar effect.
     // Any page without `data-hero` (e.g. /account) immediately stays in the solid style.
     const hero = document.querySelector<HTMLElement>("[data-hero]");
     if (!hero) {
       isHeroInView = false;
+      document.documentElement.style.removeProperty("--hero-exit-distance");
+      heroResizeObserver?.disconnect();
+      currentObservedHero = null;
       return;
     }
 
+    if (currentObservedHero !== hero) {
+      heroResizeObserver?.disconnect();
+      currentObservedHero = hero;
+      updateHeroExitDistance(hero);
+      if (typeof ResizeObserver !== "undefined") {
+        if (!heroResizeObserver) {
+          heroResizeObserver = new ResizeObserver(() => {
+            if (currentObservedHero) {
+              updateHeroExitDistance(currentObservedHero);
+              const rect = currentObservedHero.getBoundingClientRect();
+              isHeroInView = rect.bottom > 80;
+            }
+          });
+        }
+        heroResizeObserver.observe(hero);
+      }
+    } else {
+      updateHeroExitDistance(hero);
+    }
+
     const rect = hero.getBoundingClientRect();
-    // Navbar sits at top: 16px with ~64px height -> bottom edge is ~80px.
-    // Switch to solid style exactly when the hero exits past the navbar.
+    // Switch to solid style and morph logo exactly when the hero bottom passes under the navbar.
+    isHeroInView = rect.bottom > 80;
+  };
+
+  const onScroll = () => {
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    if (!hero) {
+      if (isHeroInView) isHeroInView = false;
+      return;
+    }
+    const rect = hero.getBoundingClientRect();
     isHeroInView = rect.bottom > 80;
   };
 
@@ -52,13 +96,19 @@
     };
 
     checkHeroVisibility();
+    // Allow slotted child components (e.g. BlogShell) to attach [data-hero] to DOM
+    const rafId = requestAnimationFrame(() => {
+      checkHeroVisibility();
+    });
 
-    window.addEventListener("scroll", checkHeroVisibility, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize, { passive: true });
 
     return () => {
       unsub();
-      window.removeEventListener("scroll", checkHeroVisibility);
+      cancelAnimationFrame(rafId);
+      heroResizeObserver?.disconnect();
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
   });
@@ -113,7 +163,7 @@
     >
       <!-- Small icon version: shown when hero is in view -->
       <picture
-        class="nav-symbol-icon col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {isHeroInView
+        class="nav-symbol-icon col-start-1 row-start-1 flex items-center justify-start origin-left {isHeroInView
           ? 'opacity-100 scale-100'
           : 'pointer-events-none opacity-0 scale-75 -translate-x-2'}"
       >
@@ -138,7 +188,7 @@
 
       <!-- Large wordmark version: shown when hero exits view -->
       <picture
-        class="nav-wordmark-logo col-start-1 row-start-1 flex items-center justify-start origin-left transition-all duration-300 ease-out {!isHeroInView
+        class="nav-wordmark-logo col-start-1 row-start-1 flex items-center justify-start origin-left {!isHeroInView
           ? 'opacity-100 scale-100'
           : 'pointer-events-none opacity-0 scale-90 translate-x-2'}"
       >
@@ -356,11 +406,30 @@
     :global(:root:has([data-hero])) .nav-pill-dynamic {
       animation: nav-pill-scroll linear both;
       animation-timeline: scroll();
-      animation-range: 0px var(--hero-exit-distance, 70vh);
+      animation-range: calc(var(--hero-exit-distance, calc(100vh - 80px)) - 100px) var(--hero-exit-distance, calc(100vh - 80px));
+    }
+
+    :global(:root:has([data-hero])) .nav-symbol-icon {
+      animation: nav-symbol-scroll linear both;
+      animation-timeline: scroll();
+      animation-range: calc(var(--hero-exit-distance, calc(100vh - 80px)) - 100px) var(--hero-exit-distance, calc(100vh - 80px));
+    }
+
+    :global(:root:has([data-hero])) .nav-wordmark-logo {
+      animation: nav-wordmark-scroll linear both;
+      animation-timeline: scroll();
+      animation-range: calc(var(--hero-exit-distance, calc(100vh - 80px)) - 100px) var(--hero-exit-distance, calc(100vh - 80px));
+    }
+
+    :global(:root:has([data-hero])) .nav-symbol-icon,
+    :global(:root:has([data-hero])) .nav-wordmark-logo {
+      translate: none !important;
+      scale: none !important;
+      transition: none !important;
     }
 
     @keyframes nav-pill-scroll {
-      0%, 70% {
+      0% {
         border-color: rgba(255, 253, 243, 0.35);
         background-color: rgba(98, 115, 131, 0.45);
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
@@ -373,6 +442,32 @@
         box-shadow: 0 12px 40px rgba(50, 62, 75, 0.22), 0 0 0 1px rgba(255, 253, 243, 0.4);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
+      }
+    }
+
+    @keyframes nav-symbol-scroll {
+      0%, 25% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+        pointer-events: auto;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.75) translateX(-8px);
+        pointer-events: none;
+      }
+    }
+
+    @keyframes nav-wordmark-scroll {
+      0%, 25% {
+        opacity: 0;
+        transform: scale(0.9) translateX(8px);
+        pointer-events: none;
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+        pointer-events: auto;
       }
     }
   }
@@ -392,12 +487,17 @@
   :global(:root:not(:has([data-hero]))) .nav-wordmark-logo {
     opacity: 1 !important;
     transform: scale(1) translateX(0) !important;
+    translate: none !important;
+    scale: none !important;
     pointer-events: auto !important;
+    transition: none !important;
   }
 
   /* Fallback for browsers without animation-timeline: scroll() */
   @supports not (animation-timeline: scroll()) {
-    .nav-pill-dynamic {
+    .nav-pill-dynamic,
+    .nav-symbol-icon,
+    .nav-wordmark-logo {
       transition: all 300ms ease-out;
     }
   }
