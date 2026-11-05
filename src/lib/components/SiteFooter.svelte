@@ -108,8 +108,8 @@
     <div
       class="flex flex-col gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-8"
     >
-      <!-- Zone 1: Logo + Vertical Divider -->
-      <div class="flex items-center">
+      <!-- Zone 1 & 2: Logo + Vertical Divider + Headline (Always in a row on both mobile and desktop) -->
+      <div class="flex w-full items-center justify-between sm:w-auto sm:justify-start lg:mr-auto">
         <a
           href="/"
           aria-label="Renhet Studio home"
@@ -119,12 +119,12 @@
             <source
               type="image/avif"
               srcset="/optimized/renhet-logo-white-176.avif 176w, /optimized/renhet-logo-white-360.avif 360w, /optimized/renhet-logo-white-720.avif 720w"
-              sizes="(max-width: 640px) 160px, (max-width: 1024px) 195px, 235px"
+              sizes="(max-width: 640px) 130px, (max-width: 1024px) 195px, 235px"
             />
             <source
               type="image/webp"
               srcset="/optimized/renhet-logo-white-176.webp 176w, /optimized/renhet-logo-white-360.webp 360w, /optimized/renhet-logo-white-720.webp 720w"
-              sizes="(max-width: 640px) 160px, (max-width: 1024px) 195px, 235px"
+              sizes="(max-width: 640px) 130px, (max-width: 1024px) 195px, 235px"
             />
             <img
               src="/renhet-logo-white.png"
@@ -132,74 +132,71 @@
               height="118"
               alt="Renhet Studio"
               loading="lazy"
-              class="h-auto w-[160px] -translate-y-1 object-contain transition-opacity duration-200 hover:opacity-90 sm:w-[195px] lg:w-[220px] xl:w-[235px]"
+              class="h-auto w-[125px] sm:w-[195px] lg:w-[220px] xl:w-[235px] -translate-y-0.5 sm:-translate-y-1 object-contain transition-opacity duration-200 hover:opacity-90"
             />
           </picture>
         </a>
 
         <!-- Vertical divider line (scaled to match logo & headline height) -->
         <div
-          class="mx-6 hidden h-16 w-px shrink-0 bg-[#fffdf3]/25 sm:block sm:mx-7 lg:mx-8 xl:mx-9 lg:h-20"
+          class="mx-2 sm:mx-7 lg:mx-8 xl:mx-9 h-12 sm:h-16 lg:h-20 w-px shrink-0 bg-[#fffdf3]/25"
           aria-hidden="true"
         ></div>
-      </div>
 
-      <!-- Zone 2: Monumental Title (2 lines on desktop) -->
-      <div class="shrink-0 lg:mr-auto">
+        <!-- Monumental Title -->
         <h2
-          class="font-black text-3xl sm:text-4xl lg:text-[40px] xl:text-[44px] leading-[0.98] tracking-tight text-[#fffdf3]"
+          class="font-black text-xl sm:text-4xl lg:text-[40px] xl:text-[44px] leading-[0.98] tracking-tight text-[#fffdf3] shrink-0 text-right sm:text-left"
         >
           Follow the<br />adventures.
         </h2>
       </div>
 
       <!-- Zone 3: Links (Two rows: pills on top, circular icons below) -->
-      <div class="relative z-10 flex flex-col gap-2.5 sm:gap-3 lg:shrink-0">
-        <!-- Row 1: Careers and Blog pills -->
-        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+      <div class="relative z-10 flex flex-col gap-2.5 sm:gap-3 w-full sm:w-auto lg:shrink-0">
+        <!-- Row 1: Careers and Blog pills (measured to exactly match the 5 social links below) -->
+        <div class="grid grid-cols-2 gap-2.5 sm:gap-3 w-full sm:w-[260px]">
           <a
             href="/careers"
-            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-5 sm:px-6 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
+            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
           >
             <span>Careers</span>
-            <span
-              class="inline-block"
-            >
+            <span class="inline-block">
               <IconArrowUpRight size={13} strokeWidth={2.2} />
             </span>
           </a>
 
           <a
             href="/blog"
-            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-5 sm:px-6 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
+            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
           >
             <span>Blog</span>
-            <span
-              class="inline-block"
-            >
+            <span class="inline-block">
               <IconArrowUpRight size={13} strokeWidth={2.2} />
             </span>
           </a>
         </div>
 
         <!-- Row 2: Five circular social icons + Docked Scroll to top button -->
-        <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
-          {#each socialLinks as link}
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Renhet Studio on {link.label}"
-              title={link.label}
-              class="flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
-            >
-              <link.icon size={link.size} />
-            </a>
-          {/each}
+        <div class="flex items-center w-full justify-between sm:w-auto sm:justify-start">
+          <!-- 5 Social Links Container (display: contents on mobile for perfectly uniform gap distribution) -->
+          <div class="contents sm:flex sm:items-center sm:justify-between sm:w-[260px] sm:gap-2.5">
+            {#each socialLinks as link}
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Renhet Studio on {link.label}"
+                title={link.label}
+                class="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
+              >
+                <link.icon size={link.size} />
+              </a>
+            {/each}
+          </div>
 
           <!-- Subtle divider separating external social links from utility scroll action -->
           <div
-            class="mx-0.5 h-5 w-px shrink-0 bg-[#fffdf3]/35 transition-opacity duration-300 sm:mx-1 {scrollDockState.isDocked
+            class="mx-0 sm:mx-2.5 h-5 w-px shrink-0 bg-[#fffdf3]/35 transition-opacity duration-300 {scrollDockState.isDocked
               ? 'opacity-100'
               : 'opacity-0'}"
             aria-hidden="true"
@@ -213,7 +210,7 @@
             aria-label="Scroll back to top"
             title="Scroll to top"
             tabindex={scrollDockState.isDocked ? 0 : -1}
-            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
+            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
               ? 'opacity-100 pointer-events-auto transition-all duration-200'
               : 'opacity-0 pointer-events-none transition-none'}"
           >

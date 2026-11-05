@@ -471,6 +471,37 @@ Superimposing text directly over intricate illustrations destroys readability or
 
 When scaling panoramic game banners inside fixed-height or responsive heroes, avoid blindly using `object-cover` with `w-full` on wide viewports; doing so can zoom in excessively and crop out bottom counter items (e.g. sandwiches, glasses, props) or top title decorations. Ensure `object-contain` or carefully calibrated aspect heights are used to preserve key focal points. On mobile viewports, let the banner reach all the way to the top edge behind the floating navbar rather than padding it down with artificial top margins, and use a generous bottom fade to melt the wooden counter into the cream canvas. Center mobile text and CTA buttons to avoid asymmetric whitespace imbalances. Set the responsive breakpoint at `lg:` (1024px) rather than `md:` (768px) to prevent narrow tablet screens from squeezing text against the background logo.
 
+### Responsive full-width footer alignment with FLIP docking and CSS display: contents
+
+**Simple explanation**
+
+In mobile viewports, footer components (brand mark, headline, navigation pills, and social icon buttons) should occupy the full horizontal width edge-to-edge rather than clustering into a narrow left-aligned box. To preserve exact button row alignment and maintain FLIP docking without layout distortion, nested flex wrappers can flatten on mobile using CSS `display: contents`.
+
+**How it works**
+
+1. **Brand row full-width distribution (`w-full justify-between`):**
+   - On mobile (`< 640px`), the brand container uses `w-full flex items-center justify-between`, placing the Renhet Studio logo on the far left, a centered vertical divider line (`h-12 w-px bg-[#fffdf3]/25`), and the two-line headline ("Follow the adventures.") right-aligned on the far right.
+   - On desktop (`sm:`), it transitions back to `sm:w-auto sm:justify-start lg:mr-auto` with left-aligned headline text.
+2. **Action pills edge-to-edge match (`w-full grid-cols-2`):**
+   - The large CTA buttons (`Careers ↗` and `Blog ↗`) span the full container width with `w-full grid grid-cols-2 gap-2.5 sm:w-[260px] sm:gap-3`.
+   - On desktop, both rows have an exact fixed width of 260px, aligning `Careers` with `X` on the left and `Blog` with `Itch.io` on the right.
+3. **Harmonious icon spacing via `contents sm:flex`:**
+   - On mobile, nesting the 5 social links in a dedicated inner `<div>` while docking the scroll-to-top button and divider outside it causes uneven gap clustering.
+   - Applying `contents sm:flex sm:items-center sm:justify-between sm:w-[260px] sm:gap-2.5` unwraps the 5 social links on mobile so all 7 elements (5 social icons, 1 vertical divider, 1 scroll-to-top docked button) participate directly in the parent `flex w-full justify-between`. Every gap across the row is mathematically identical.
+   - On desktop, the wrapper re-engages (`sm:flex`) to confine the 5 social links to exactly 260px before the docked utility button.
+
+**Why it matters**
+
+Leaving mobile elements in fixed-width desktop clusters creates unbalanced blank voids on the right side of phone screens. Conversely, hiding docked utility buttons on mobile causes floating action buttons to overlap interactive footer icons. Utilizing `display: contents` allows a single semantic DOM tree to seamlessly adapt from a segregated desktop grouping to a unified, full-width responsive grid.
+
+**In this project**
+
+`src/lib/components/SiteFooter.svelte` and `src/lib/components/ScrollToTop.svelte` coordinate this responsive alignment pattern.
+
+**Tradeoffs / pitfalls**
+
+When using `display: contents`, ensure any margins or borders on the wrapper are removed or transferred to direct children, as `contents` causes the browser to ignore the box model of the wrapper itself.
+
 ### Discreet, anti-cliché gameplay carousel in editorial layouts
 
 **Simple explanation**
