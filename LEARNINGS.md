@@ -223,7 +223,7 @@ Hardcoding a fixed viewport distance (such as `70vh`) causes the navbar to turn 
 
 **In this project**
 
-`src/lib/components/SiteHeader.svelte` coordinates dynamic `--hero-exit-distance` measuring with a `ResizeObserver`. Hero sections in `src/lib/components/home/HeroSplit.svelte`, `src/routes/games/beelze-pub/+page.svelte`, `src/routes/blog/+page.svelte`, and `src/routes/careers/+page.svelte` are marked with `data-hero`.
+`src/lib/components/SiteHeader.svelte` coordinates dynamic `--hero-exit-distance` measuring with a `ResizeObserver`. Hero sections in `src/lib/components/home/HeroSplit.svelte`, `src/routes/games/beelze-pub/+page.svelte`, and `src/routes/blog/+page.svelte` are marked with `data-hero` (non-hero pages such as `/careers` and `/account` render solid immediately).
 
 **Tradeoffs / pitfalls**
 
@@ -282,7 +282,7 @@ Single-period SVGs or percentage approximations cause jarring visual jumps on ea
 
 **In this project**
 
-`src/lib/components/home/WaveDivider.svelte` provides seamless 3-layer wave dividers, with an inverted variant (`scaleY(-1)`) used as a shoreline transition in `src/lib/components/SiteFooter.svelte` and on hero bottoms in `/blog` and `/careers`.
+`src/lib/components/home/WaveDivider.svelte` provides seamless 3-layer wave dividers, with an inverted variant (`scaleY(-1)`) used as a shoreline transition in `src/lib/components/SiteFooter.svelte` and on the hero bottom in `/blog`.
 
 **Tradeoffs / pitfalls**
 
