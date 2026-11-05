@@ -335,9 +335,9 @@
         rel="noreferrer"
         class="group inline-flex items-center gap-2.5 rounded-full bg-[#344253] px-8 py-4 text-base font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(52,66,83,0.22)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4f5f70] hover:shadow-[0_8px_24px_rgba(52,66,83,0.32)] active:translate-y-0 active:scale-[0.98]"
       >
-        <IconItch size={20} class="transition-transform duration-200 group-hover:scale-110" />
+        <IconItch size={20} />
         <span>Play free on itch.io</span>
-        <IconExternal size={15} class="opacity-80 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+        <IconExternal size={15} class="opacity-80 transition-opacity duration-200 group-hover:opacity-100" />
       </a>
     </div>
   </section>

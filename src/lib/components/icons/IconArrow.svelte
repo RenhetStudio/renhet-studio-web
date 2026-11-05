@@ -29,7 +29,7 @@
   height={size}
   viewBox="0 0 24 24"
   fill="currentColor"
-  class="inline-block transition-transform duration-200 {rotation} {className}"
+  class="inline-block {rotation} {className}"
   aria-hidden="true"
 >
   <!-- Tactile chunky filled arrow with rounded joints -->

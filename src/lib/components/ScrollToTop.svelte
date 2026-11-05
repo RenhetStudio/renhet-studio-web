@@ -256,10 +256,7 @@
     aria-label="Scroll back to top"
     title="Scroll to top"
   >
-    <IconArrowUp
-      size={16}
-      class="transition-transform duration-200 group-hover:-translate-y-0.5"
-    />
+    <IconArrowUp size={16} />
   </button>
 </div>
 

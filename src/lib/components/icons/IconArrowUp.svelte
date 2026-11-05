@@ -14,7 +14,7 @@
   height={size}
   viewBox="0 0 24 24"
   fill="currentColor"
-  class="inline-block transition-transform duration-200 {className}"
+  class="inline-block {className}"
   aria-hidden="true"
 >
   <!-- Tactile chunky upward arrow with rounded joints -->

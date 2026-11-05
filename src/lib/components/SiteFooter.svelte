@@ -163,7 +163,7 @@
           >
             <span>Careers</span>
             <span
-              class="inline-block transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.75 group-hover:-translate-y-0.75"
+              class="inline-block"
             >
               <IconArrowUpRight size={13} strokeWidth={2.2} />
             </span>
@@ -175,7 +175,7 @@
           >
             <span>Blog</span>
             <span
-              class="inline-block transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.75 group-hover:-translate-y-0.75"
+              class="inline-block"
             >
               <IconArrowUpRight size={13} strokeWidth={2.2} />
             </span>
@@ -217,10 +217,7 @@
               ? 'opacity-100 pointer-events-auto transition-all duration-200'
               : 'opacity-0 pointer-events-none transition-none'}"
           >
-            <IconArrowUp
-              size={16}
-              class="transition-transform duration-200 group-hover:-translate-y-0.5"
-            />
+            <IconArrowUp size={16} />
           </button>
         </div>
       </div>

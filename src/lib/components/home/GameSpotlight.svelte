@@ -26,7 +26,7 @@
           class="group inline-flex h-[52px] items-center gap-2 rounded-full border-2 border-transparent bg-[#4f5f70] px-6 text-base font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(79,95,112,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#344253] hover:shadow-[0_8px_24px_rgba(52,66,83,0.25)] active:translate-y-0"
         >
           <span>About the game</span>
-          <IconArrow direction="right" size={16} class="transition-transform duration-200 group-hover:translate-x-1" />
+          <IconArrow direction="right" size={16} />
         </a>
 
         <!-- Play free on Itch.io button -->
@@ -39,7 +39,7 @@
         >
           <IconItch size={16} />
           <span>Play free on Itch.io</span>
-          <IconExternal size={14} class="opacity-80 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <IconExternal size={14} class="opacity-80" />
         </a>
       </div>
     </div>

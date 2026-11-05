@@ -15,7 +15,7 @@
     {#if post.excerpt}<p>{post.excerpt}</p>{/if}
     <a class="post-card-read" href={`/blog/${post.slug}`}>
       <span>Read story</span>
-      <IconArrow direction="right" size={13} class="transition-transform duration-200 group-hover:translate-x-1" />
+      <IconArrow direction="right" size={13} />
     </a>
   </div>
 </article>

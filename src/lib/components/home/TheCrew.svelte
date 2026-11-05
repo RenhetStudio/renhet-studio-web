@@ -335,10 +335,7 @@
                 aria-label={`View ${activeMember.name}'s portfolio (opens in new tab)`}
               >
                 <span>View portfolio</span>
-                <IconExternal
-                  size={12}
-                  class="opacity-80 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
+                <IconExternal size={12} class="opacity-80" />
               </a>
             {/if}
           </div>

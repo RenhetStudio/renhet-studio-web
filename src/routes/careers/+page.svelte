@@ -64,7 +64,7 @@
               class="group inline-flex h-[52px] items-center gap-2 rounded-full border-2 border-transparent bg-[#4f5f70] px-6 text-base font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(79,95,112,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#344253] hover:shadow-[0_8px_24px_rgba(52,66,83,0.25)] active:translate-y-0"
             >
               <span>View open roles</span>
-              <IconArrow direction="down" size={16} class="transition-transform duration-200 group-hover:translate-y-1" />
+              <IconArrow direction="down" size={16} />
             </a>
 
             <!-- Jump to open application -->
@@ -73,7 +73,7 @@
               class="group inline-flex h-[52px] items-center gap-2 rounded-full border-2 border-[#4f5f70]/30 bg-[#fffdf3] px-6 text-base font-black text-[#4f5f70] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#4f5f70] hover:bg-[#f6f1e8] active:translate-y-0"
             >
               <span>Introduce yourself</span>
-              <IconArrow direction="right" size={16} class="transition-transform duration-200 group-hover:translate-x-1" />
+              <IconArrow direction="right" size={16} />
             </a>
           </div>
         </div>
@@ -126,7 +126,7 @@
             class="group inline-flex h-[52px] shrink-0 items-center gap-2 rounded-full border-2 border-transparent bg-[#4f5f70] px-6 text-base font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(79,95,112,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#344253] hover:shadow-[0_8px_24px_rgba(52,66,83,0.25)] active:translate-y-0"
           >
             <span>Introduce yourself</span>
-            <IconArrow direction="right" size={16} class="transition-transform duration-200 group-hover:translate-x-1" />
+            <IconArrow direction="right" size={16} />
           </a>
         </div>
       </div>
@@ -215,7 +215,7 @@
                       class="group inline-flex h-[48px] items-center gap-2 rounded-full border-2 border-transparent bg-[#4f5f70] px-6 text-sm font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(79,95,112,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#344253] active:translate-y-0"
                     >
                       <span>Apply for this role</span>
-                      <IconArrow direction="right" size={14} class="transition-transform duration-200 group-hover:translate-x-1" />
+                      <IconArrow direction="right" size={14} />
                     </a>
                   </div>
                 </div>
@@ -435,7 +435,7 @@
                 class="group inline-flex h-[52px] items-center gap-2 rounded-full border-2 border-transparent bg-[#4f5f70] px-8 text-base font-black text-[#fffdf3] shadow-[0_4px_16px_rgba(79,95,112,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#344253] hover:shadow-[0_8px_24px_rgba(52,66,83,0.25)] active:translate-y-0 cursor-pointer disabled:cursor-wait disabled:opacity-60"
               >
                 <span>Send application</span>
-                <IconArrow direction="right" size={16} class="transition-transform duration-200 group-hover:translate-x-1" />
+                <IconArrow direction="right" size={16} />
               </button>
             </div>
           </form>

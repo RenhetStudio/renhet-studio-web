@@ -264,6 +264,28 @@ In `src/lib/components/SiteHeader.svelte`, `.nav-symbol-icon` and `.nav-wordmark
 
 Always verify both modern browsers (with `animation-timeline: scroll()`) and fallback browsers. Do not remove the fallback classes from the markup because non-supporting browsers rely on Svelte's reactive classes to toggle between states.
 
+### Monolithic button feedback over generic AI icon translation
+
+**Simple explanation**
+
+Buttons and action links should behave as cohesive, tactile physical units. Never animate internal arrows or external link icons sliding (`translate-x-1`, `translate-y-0.5`) or scaling on hover, which feels like a generic AI template cliché.
+
+**How it works**
+
+Hover feedback belongs to the button container as a whole (subtle elevation lift `hover:-translate-y-0.5`, background shade shift, and tactile procedural click audio), while icons inside remain completely anchored (`translate: none`, static geometry). If visual emphasis is desired on the icon, use a subtle opacity shift (`opacity-80` to `opacity-100`) rather than positional drift.
+
+**Why it matters**
+
+Generic landing page templates and AI builders ubiquitously add `group-hover:translate-x-1` to arrows. In handcrafted indie design, elements feel grounded, confident, and physical rather than restless or gimmicky.
+
+**In this project**
+
+All buttons and link pills across `GameSpotlight.svelte`, `Beelze-Pub/+page.svelte`, `SiteFooter.svelte`, `ScrollToTop.svelte`, `TheCrew.svelte`, `SiteHeader.svelte`, and `careers/+page.svelte` have had all icon translations (`translate-x-1`, `translate-y-1`, `scale-110`, diagonal translations) completely removed.
+
+**Tradeoffs / pitfalls**
+
+Keep the icon visually weighted and aligned with the text baseline so that static placement looks deliberate and crisp without relying on movement to attract attention.
+
 ### Mathematical 2-period SVGs for seamless infinite wave dividers
 
 **Simple explanation**

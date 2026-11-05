@@ -353,7 +353,7 @@
             <IconArrow
               direction="right"
               size={14}
-              class="text-[#fffdf3]/50 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#fffdf3]"
+              class="text-[#fffdf3]/50 transition-colors duration-200 group-hover:text-[#fffdf3]"
             />
           </a>
         {/each}
@@ -371,7 +371,7 @@
             class="group flex items-center justify-between rounded-2xl bg-[#fffdf3] px-4 py-2.5 text-sm font-black text-[#344253] transition-all duration-200 hover:bg-[#b8d4f0]"
           >
             <span>Author Dashboard</span>
-            <IconArrow direction="right" size={14} class="transition-transform duration-200 group-hover:translate-x-1" />
+            <IconArrow direction="right" size={14} />
           </a>
         {/if}
 
