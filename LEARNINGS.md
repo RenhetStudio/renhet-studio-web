@@ -387,6 +387,35 @@ Abruptly showing/hiding buttons creates visual stutter, while leaving a floating
 
 If the source element fades out with a CSS transition while the target element moves, both elements will temporarily be visible simultaneously (creating a ghost clone). The handoff must be instantaneous. Additionally, verify `prefers-reduced-motion` to disable transforms for users who request minimal motion, and guard against route navigation by invalidating the observer when the page changes.
 
+### Layout shift prevention in randomized typographic roster sections (The Crew)
+
+**Simple explanation**
+
+When rendering a randomized typographic roster that animates into view on scroll, shuffling member order, font swapping (FOUT), or dynamic contextual details (e.g. varying role lengths, presence/absence of portfolio links) will cause Cumulative Layout Shift (CLS) unless dimensions are strictly stabilized.
+
+**How it works**
+
+1. **Font Preloading (`app.html`):** Heavy display fonts (`Paperlogy-9Black.woff2` and `Paperlogy-7Bold.woff2`) are preloaded with `<link rel="preload" as="font" type="font/woff2" crossorigin>` in `<head>`. This prevents FOUT where system fallback fonts suddenly expand when custom fonts finish downloading.
+2. **Font Readiness Guard:** Shuffled DOM readiness is deferred via `document.fonts.ready` (with a fast fallback timeout) and `requestAnimationFrame` before marking the roster as prepared (`isPrepared = true`). The entrance animation never fires while text metrics are fluctuating.
+3. **Names Cloud Minimum Height:** Responsive min-height (`min-h-[290px] sm:min-h-[240px] lg:min-h-[260px]`) prevents the flex-wrap cloud from changing section height between shuffle variations (e.g. 5 vs 6 lines on mobile, 3 vs 4 lines on desktop).
+4. **Contextual Info Slot Reservation:**
+   - Both mobile (`min-h-[195px]`) and desktop (`min-h-[200px]`) info containers declare stable minimum heights.
+   - Role paragraphs reserve space for multi-line titles (`min-h-[38px]` mobile, `min-h-[48px]` desktop).
+   - Portfolio link slots reserve an explicit container (`min-h-[26px]`) so members without links do not collapse the vertical layout.
+5. **Keyed Iteration & Targeted Transitions:** `{#each team as member, i (member.name)}` ensures DOM node identity is preserved across reordering, and CSS transitions target exclusively `opacity` and `transform` rather than `transition-all`.
+
+**Why it matters**
+
+Layout shifts destroy reading flow and penalize Core Web Vitals (CLS). Ensuring deterministic height bounds prevents sections below (like game showcases and footers) from jumping during page load, hydration, and user interaction.
+
+**In this project**
+
+`src/lib/components/home/TheCrew.svelte` and `src/app.html` implement these stability patterns for the Renhet Studio team cloud.
+
+**Tradeoffs / pitfalls**
+
+Do not shuffle arrays during SSR (`Math.random()`), as this causes Svelte hydration mismatches. Always start with deterministic initial data during SSR, shuffle on client mount, and hold elements invisible until fonts and layout are ready.
+
 ### Integrated panoramic keyart hero with horizontal gradient & responsive stacked mobile layout
 
 **Simple explanation**

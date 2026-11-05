@@ -10,20 +10,80 @@
   }
 
   const initialTeam: CrewMember[] = [
-    { name: "Miguel", role: "Founder, Producer & Programmer", country: "Spain", href: "https://www.bitemdev.com/" },
-    { name: "Vaclav", role: "Publishing Advisor", country: "Czech Republic", href: "https://www.linkedin.com/in/vaclavkorycanek/" },
-    { name: "Todd", role: "Narrative Designer", country: "USA", href: "https://nat20.mal.plus/technical-portfolio/" },
-    { name: "Pablo", role: "QA & Gameplay Polish Specialist", country: "Spain", href: "https://www.pablogozalvez.com/" },
-    { name: "Burakcan", role: "Game Designer", country: "Turkey", href: "https://www.artstation.com/george_akil" },
-    { name: "Paulo", role: "Game Designer & Technical Artist", country: "Spain / Portugal", href: "https://view.genially.com/69788574df8490ea6fd02246" },
-    { name: "Maurice", role: "UI/UX Designer", country: "USA", href: "https://www.linkedin.com/in/mauricebirchard/" },
-    { name: "Daniël", role: "Music Composer", country: "The Netherlands", href: "https://daniel-otten.bandcamp.com/" },
-    { name: "Denys", role: "Sound Designer", country: "Ukraine", href: "https://drive.google.com/drive/folders/1eBPnpS1N5JXDlTUpv92ci_UVk8KwPmSo" },
+    {
+      name: "Miguel",
+      role: "Founder, Producer & Programmer",
+      country: "Spain",
+      href: "https://www.bitemdev.com/",
+    },
+    {
+      name: "Vaclav",
+      role: "Publishing Advisor",
+      country: "Czech Republic",
+      href: "https://www.linkedin.com/in/vaclavkorycanek/",
+    },
+    {
+      name: "Todd",
+      role: "Narrative Designer",
+      country: "USA",
+      href: "https://nat20.mal.plus/technical-portfolio/",
+    },
+    {
+      name: "Pablo",
+      role: "QA & Gameplay Polish Specialist",
+      country: "Spain",
+      href: "https://www.pablogozalvez.com/",
+    },
+    {
+      name: "Burakcan",
+      role: "Game Designer",
+      country: "Turkey",
+      href: "https://www.artstation.com/george_akil",
+    },
+    {
+      name: "Paulo",
+      role: "Game Designer & Technical Artist",
+      country: "Spain / Portugal",
+      href: "https://view.genially.com/69788574df8490ea6fd02246",
+    },
+    {
+      name: "Maurice",
+      role: "UI/UX Designer",
+      country: "USA",
+      href: "https://www.linkedin.com/in/mauricebirchard/",
+    },
+    {
+      name: "Daniël",
+      role: "Music Composer",
+      country: "The Netherlands",
+      href: "https://daniel-otten.bandcamp.com/",
+    },
+    {
+      name: "Denys",
+      role: "Sound Designer",
+      country: "Ukraine",
+      href: "https://drive.google.com/drive/folders/1eBPnpS1N5JXDlTUpv92ci_UVk8KwPmSo",
+    },
     { name: "Anton", role: "3D Artist", country: "Finland" },
-    { name: "Naomi", role: "3D Animator", country: "Australia", href: "https://www.artstation.com/naoface" },
+    {
+      name: "Naomi",
+      role: "3D Animator",
+      country: "Australia",
+      href: "https://www.artstation.com/naoface",
+    },
     { name: "Ole", role: "Concept Artist", country: "The Netherlands" },
-    { name: "Freya", role: "Marketer & Writer", country: "UK", href: "https://www.linkedin.com/in/freya-clinton-06383134a/" },
-    { name: "Luca", role: "Marketer", country: "Italy", href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk" },
+    {
+      name: "Freya",
+      role: "Marketer & Writer",
+      country: "UK",
+      href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
+    },
+    {
+      name: "Luca",
+      role: "Marketer",
+      country: "Italy",
+      href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk",
+    },
   ];
 
   let team = $state<CrewMember[]>(initialTeam);
@@ -31,8 +91,14 @@
   let hoveredIndex = $state<number | null>(null);
   let leaveTimeout: ReturnType<typeof setTimeout> | null = null;
 
+  let isPrepared = $state(false);
+  let isVisible = $state(false);
+  let sectionEl = $state<HTMLElement | null>(null);
+
+  let shouldAnimate = $derived(isPrepared && isVisible);
+
   onMount(() => {
-    // Randomize member order on each entry to symbolize that everyone holds equal weight
+    // 1. Randomize member order to symbolize that everyone holds equal weight
     const shuffled = [...initialTeam];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -40,13 +106,48 @@
     }
     team = shuffled;
 
-    // Also select a random member initially from the shuffled roster
+    // 2. Select a random member initially from the shuffled roster
     selectedIndex = Math.floor(Math.random() * shuffled.length);
+
+    // 3. Mark as prepared only after fonts are ready (or fast fallback) and the next frame paints the shuffled roster
+    const fontReadyPromise =
+      typeof document !== "undefined" && document.fonts?.ready
+        ? document.fonts.ready
+        : Promise.resolve();
+
+    Promise.race([
+      fontReadyPromise,
+      new Promise((resolve) => setTimeout(resolve, 250)),
+    ]).then(() => {
+      requestAnimationFrame(() => {
+        isPrepared = true;
+      });
+    });
+
+    // 4. Viewport entrance detection: reveal once intersecting
+    if (!sectionEl) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          isVisible = true;
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.12 },
+    );
+
+    observer.observe(sectionEl);
+    return () => observer.disconnect();
   });
 
-  let activeIndex = $derived(hoveredIndex !== null ? hoveredIndex : selectedIndex);
+  let activeIndex = $derived(
+    hoveredIndex !== null ? hoveredIndex : selectedIndex,
+  );
   let activeMember = $derived(team[activeIndex]);
-  let activeNumber = $derived(String(activeIndex + 1).padStart(2, "0") + " / 14");
+  let activeNumber = $derived(
+    String(activeIndex + 1).padStart(2, "0") + " / 14",
+  );
 
   const onHover = (index: number) => {
     if (leaveTimeout) {
@@ -57,7 +158,6 @@
   };
 
   const onLeave = () => {
-    // 70ms buffer to prevent flickering while moving cursor between names
     leaveTimeout = setTimeout(() => {
       hoveredIndex = null;
     }, 70);
@@ -88,40 +188,52 @@
   };
 </script>
 
-<section id="crew" class="px-5 py-14 sm:px-8 sm:py-16 md:py-20 lg:px-10" aria-labelledby="crew-title">
+<section
+  id="crew"
+  bind:this={sectionEl}
+  class="px-5 py-14 sm:px-8 sm:py-16 md:py-20 lg:px-10"
+  aria-labelledby="crew-title"
+>
   <div class="mx-auto max-w-[1440px]">
-    <!-- Header: Dominant title + Secondary introduction -->
-    <div class="mb-10 sm:mb-12">
+    <!-- Header: Dominant title -->
+    <div class="mb-8 sm:mb-10">
       <h2
         id="crew-title"
         class="text-[clamp(3.5rem,8vw,7.5rem)] font-black leading-[0.88] tracking-tight text-[#4f5f70]"
       >
         The crew.
       </h2>
-      <p class="mt-4 text-base font-semibold leading-relaxed text-[#627383] sm:text-lg max-w-xl">
-        As many countries as talents.
-      </p>
     </div>
 
     <!-- Main Editorial Layout: Typographic Names Cloud (72%) + Hairline + Context Panel (28%) — NO CARDS -->
-    <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto_340px] lg:gap-12 xl:grid-cols-[1fr_auto_380px] xl:gap-14">
-      
-      <!-- Typographic Names Cloud -->
+    <div
+      class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto_340px] lg:gap-12 xl:grid-cols-[1fr_auto_380px] xl:gap-14"
+    >
+      <!-- Typographic Names Cloud: min-h stabilizes vertical footprint across shuffle variations -->
       <div
-        class="flex flex-wrap items-center gap-y-4 text-[clamp(1.75rem,2.8vw,2.4rem)] font-black leading-tight sm:gap-y-6 select-none"
+        class="flex flex-wrap items-center gap-y-4 text-[clamp(1.75rem,2.8vw,2.4rem)] font-black leading-tight sm:gap-y-6 select-none min-h-[290px] sm:min-h-[240px] lg:min-h-[260px]"
         role="region"
         aria-label="Renhet Studio team members"
       >
-        {#each team as member, i}
+        {#each team as member, i (member.name)}
           {@const isCurrent = i === activeIndex}
           {@const isPinned = i === selectedIndex}
 
-          <div class="inline-flex items-center">
+          <div
+            class="crew-member-item inline-flex items-center"
+            style={shouldAnimate
+              ? `opacity: 1; transform: translate3d(0, 0, 0); transition-delay: ${i * 45}ms;`
+              : "opacity: 0; transform: translate3d(0, 16px, 0); pointer-events: none;"}
+          >
             <button
               id={`crew-btn-${i}`}
               type="button"
-              class="group relative cursor-pointer rounded-md px-2.5 py-0.5 text-left font-black transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f5f70]/50"
-              style:background-color={isCurrent ? "rgba(79, 95, 112, 0.08)" : isPinned ? "rgba(79, 95, 112, 0.04)" : "transparent"}
+              class="group relative cursor-pointer rounded-md px-2.5 py-0.5 text-left font-black transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f5f70]/50"
+              style:background-color={isCurrent
+                ? "rgba(79, 95, 112, 0.08)"
+                : isPinned
+                  ? "rgba(79, 95, 112, 0.04)"
+                  : "transparent"}
               onmouseenter={() => onHover(i)}
               onmouseleave={onLeave}
               onfocus={() => onHover(i)}
@@ -134,7 +246,9 @@
               <!-- Name text with smooth contrast adjustment -->
               <span
                 class="relative z-10 text-[#4f5f70] transition-opacity duration-200"
-                style:opacity={isCurrent || hoveredIndex === null ? "1" : "0.45"}
+                style:opacity={isCurrent || hoveredIndex === null
+                  ? "1"
+                  : "0.45"}
               >
                 {member.name}
               </span>
@@ -142,7 +256,9 @@
               <!-- Sliding underline -->
               <span
                 class="pointer-events-none absolute -bottom-0.5 left-2 right-2 h-[2px] origin-left bg-[#4f5f70] transition-transform duration-200 ease-out"
-                style:transform={isCurrent || isPinned ? "scaleX(1)" : "scaleX(0)"}
+                style:transform={isCurrent || isPinned
+                  ? "scaleX(1)"
+                  : "scaleX(0)"}
                 aria-hidden="true"
               ></span>
             </button>
@@ -161,11 +277,20 @@
       </div>
 
       <!-- Vertical Hairline Divider (Desktop) -->
-      <div class="hidden self-stretch bg-[#d6d5ca] lg:block lg:w-[1px] lg:min-h-[200px]" aria-hidden="true"></div>
+      <div
+        class="hidden self-stretch bg-[#d6d5ca] lg:block lg:w-[1px] lg:min-h-[220px] transition-opacity duration-500 ease-out"
+        style={shouldAnimate
+          ? "opacity: 1; transition-delay: 150ms;"
+          : "opacity: 0;"}
+        aria-hidden="true"
+      ></div>
 
       <!-- Contextual Panel (Desktop: 100% Card-free, pure editorial text directly on paper canvas) -->
       <aside
-        class="hidden lg:flex relative min-h-[180px] w-full flex-col justify-start pt-1"
+        class="hidden lg:flex relative min-h-[200px] w-full flex-col justify-start pt-1 transition-opacity duration-500 ease-out"
+        style={shouldAnimate
+          ? "opacity: 1; transition-delay: 200ms;"
+          : "opacity: 0;"}
         aria-live="polite"
       >
         <div class="transition-opacity duration-200 ease-out">
@@ -173,19 +298,35 @@
             {activeMember.name}
           </h3>
 
-          <p class="mt-2 text-base font-semibold leading-snug text-[#627383] m-0">
+          <p
+            class="mt-2 min-h-[48px] text-base font-semibold leading-snug text-[#627383] m-0"
+          >
             {activeMember.role}
           </p>
 
-          <div class="mt-3.5 flex items-center gap-1.5 text-sm font-semibold text-[#718191]">
-            <svg class="h-4 w-4 shrink-0 text-[#718191]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z" />
+          <div
+            class="mt-3.5 flex items-center gap-1.5 text-sm font-semibold text-[#718191]"
+          >
+            <svg
+              class="h-4 w-4 shrink-0 text-[#718191]"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z"
+              />
             </svg>
             <span>{activeMember.country}</span>
           </div>
 
-          {#if activeMember.href}
-            <div class="mt-5">
+          <!-- Reserved slot for portfolio link to prevent height shifts -->
+          <div class="mt-5 min-h-[26px]">
+            {#if activeMember.href}
               <a
                 href={activeMember.href}
                 target="_blank"
@@ -194,43 +335,71 @@
                 aria-label={`View ${activeMember.name}'s portfolio (opens in new tab)`}
               >
                 <span>View portfolio</span>
-                <IconExternal size={12} class="opacity-80 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <IconExternal
+                  size={12}
+                  class="opacity-80 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
               </a>
-            </div>
-          {/if}
+            {/if}
+          </div>
         </div>
       </aside>
     </div>
 
     <!-- Contextual Info (Mobile & Tablet: 100% Card-free, pure editorial typography below hairline) -->
+    <!-- min-h-[195px] prevents CLS when switching between 1-line and 2-line roles, or with/without portfolio link -->
     <div
-      class="mt-8 border-t border-[#d6d5ca] pt-6 lg:hidden min-h-[140px] flex flex-col justify-between"
+      class="mt-8 border-t border-[#d6d5ca] pt-6 lg:hidden min-h-[195px] flex flex-col justify-between transition-opacity duration-500 ease-out"
+      style={shouldAnimate
+        ? "opacity: 1; transition-delay: 200ms;"
+        : "opacity: 0;"}
       aria-live="polite"
     >
       <div>
-        <div class="mb-1.5 flex items-center justify-between text-[11px] font-mono font-bold text-[#718191]">
+        <div
+          class="mb-1.5 flex items-center justify-between text-[11px] font-mono font-bold text-[#718191]"
+        >
           <span>{activeNumber}</span>
-          <span class="font-sans font-bold uppercase tracking-wider text-[#718191]/80">Tap a name</span>
+          <span
+            class="font-sans font-bold uppercase tracking-wider text-[#718191]/80"
+            >Tap a name</span
+          >
         </div>
 
         <h3 class="text-2xl font-black tracking-tight text-[#4f5f70] m-0">
           {activeMember.name}
         </h3>
 
-        <p class="mt-1 text-sm font-semibold text-[#627383] m-0">
+        <p
+          class="mt-1 min-h-[38px] text-sm font-semibold leading-snug text-[#627383] m-0"
+        >
           {activeMember.role}
         </p>
 
-        <div class="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-[#718191]">
-          <svg class="h-3.5 w-3.5 text-[#718191] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z" />
+        <div
+          class="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-[#718191]"
+        >
+          <svg
+            class="h-3.5 w-3.5 text-[#718191] shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z"
+            />
           </svg>
           <span>{activeMember.country}</span>
         </div>
       </div>
 
-      {#if activeMember.href}
-        <div class="mt-4">
+      <!-- Reserved slot for portfolio link -->
+      <div class="mt-4 min-h-[26px]">
+        {#if activeMember.href}
           <a
             href={activeMember.href}
             target="_blank"
@@ -241,13 +410,24 @@
             <span>View portfolio</span>
             <IconExternal size={11} class="opacity-80" />
           </a>
-        </div>
-      {/if}
+        {/if}
+      </div>
     </div>
 
     <!-- Bottom Hairline & Micro-Guide (Desktop only; completely removed on mobile) -->
-    <div class="hidden items-center gap-3 border-t border-[#d6d5ca] pt-4 mt-12 sm:mt-14 text-xs font-medium text-[#718191] md:flex">
-      <svg class="h-4 w-4 shrink-0 stroke-[1.8] text-[#718191]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <div
+      class="hidden items-center gap-3 border-t border-[#d6d5ca] pt-4 mt-12 sm:mt-14 text-xs font-medium text-[#718191] md:flex transition-opacity duration-500 ease-out"
+      style={shouldAnimate
+        ? "opacity: 1; transition-delay: 350ms;"
+        : "opacity: 0;"}
+    >
+      <svg
+        class="h-4 w-4 shrink-0 stroke-[1.8] text-[#718191]"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
         <rect x="6" y="3" width="12" height="18" rx="6" />
         <path d="M12 7v4" />
       </svg>
@@ -255,3 +435,20 @@
     </div>
   </div>
 </section>
+
+<style>
+  .crew-member-item {
+    transition:
+      opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .crew-member-item {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
