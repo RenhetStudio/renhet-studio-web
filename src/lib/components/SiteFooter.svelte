@@ -62,6 +62,17 @@
   });
 
   const scrollToTop = () => {
+    scrollDockState.isScrollingToTop = true;
+    scrollDockState.isDocked = false;
+
+    const footerBtn = document.getElementById("footer-scroll-to-top");
+    if (footerBtn) {
+      footerBtn.style.transition = "";
+      footerBtn.style.transform = "";
+      footerBtn.style.opacity = "";
+      footerBtn.style.pointerEvents = "";
+    }
+
     const prefersReducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -202,9 +213,9 @@
             aria-label="Scroll back to top"
             title="Scroll to top"
             tabindex={scrollDockState.isDocked ? 0 : -1}
-            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
-              ? 'opacity-100 pointer-events-auto'
-              : 'opacity-0 pointer-events-none'}"
+            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
+              ? 'opacity-100 pointer-events-auto transition-all duration-200'
+              : 'opacity-0 pointer-events-none transition-none'}"
           >
             <IconArrowUp
               size={16}

@@ -1,184 +1,236 @@
 <script lang="ts">
-  import { page } from "$app/state";
+  import { onMount } from "svelte";
+  import { afterNavigate } from "$app/navigation";
   import { scrollDockState } from "./scrollDock.svelte";
   import IconArrowUp from "$lib/components/icons/IconArrowUp.svelte";
 
   let scrollY = $state(0);
   let isVisible = $derived(scrollY > 400 && !scrollDockState.isDocked);
   let floatingBtnEl: HTMLDivElement | null = $state(null);
-  let isAnimating = $state(false);
+  let isAnimating = false;
 
-  $effect(() => {
-    // Re-evaluate whenever the route changes (SvelteKit client navigation)
-    void page.url.pathname;
+  function cleanupFloating() {
+    if (!floatingBtnEl) return;
+    floatingBtnEl.style.transition = "";
+    floatingBtnEl.style.transform = "";
+    floatingBtnEl.style.opacity = "";
+    floatingBtnEl.style.visibility = "";
+  }
+
+  function cleanupFooter(btn: HTMLElement | null) {
+    if (!btn) return;
+    btn.style.transition = "";
+    btn.style.transform = "";
+    btn.style.opacity = "";
+    btn.style.pointerEvents = "";
+  }
+
+  function checkFooterIntersection(): boolean {
+    const footerBtn = document.getElementById("footer-scroll-to-top");
+    if (!footerBtn) return false;
+    const rect = footerBtn.getBoundingClientRect();
+    return rect.top < window.innerHeight - 10 && rect.bottom > 0;
+  }
+
+  function dock(animated = true) {
+    if (scrollDockState.isDocked) return;
+    const footerBtn = document.getElementById("footer-scroll-to-top");
+    if (!footerBtn || !floatingBtnEl) {
+      scrollDockState.isDocked = true;
+      return;
+    }
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (
+      !animated ||
+      prefersReducedMotion ||
+      scrollY <= 400 ||
+      scrollDockState.isScrollingToTop
+    ) {
+      scrollDockState.isDocked = true;
+      cleanupFloating();
+      cleanupFooter(footerBtn);
+      return;
+    }
+
+    // FLIP: Measure current positions
+    const first = floatingBtnEl.getBoundingClientRect();
+    const last = footerBtn.getBoundingClientRect();
+    const dx = first.left - last.left;
+    const dy = first.top - last.top;
+
+    // The floating button vanishes INSTANTLY in frame 0 (no ghost fadeout)
+    scrollDockState.isDocked = true;
+    floatingBtnEl.style.transition = "none";
+    floatingBtnEl.style.opacity = "0";
+    floatingBtnEl.style.visibility = "hidden";
+
+    isAnimating = true;
+    footerBtn.style.transition = "none";
+    footerBtn.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+    footerBtn.style.opacity = "1";
+    footerBtn.style.pointerEvents = "auto";
+    footerBtn.getBoundingClientRect(); // force reflow
+
+    const currentFooter = footerBtn;
+    requestAnimationFrame(() => {
+      currentFooter.style.transition =
+        "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)";
+      currentFooter.style.transform = "translate3d(0, 0, 0)";
+
+      const onEnd = (e?: TransitionEvent) => {
+        if (e && e.propertyName !== "transform") return;
+        currentFooter.removeEventListener("transitionend", onEnd);
+        cleanupFooter(currentFooter);
+        cleanupFloating();
+        isAnimating = false;
+        verifyState();
+      };
+
+      currentFooter.addEventListener("transitionend", onEnd);
+      setTimeout(onEnd, 420);
+    });
+  }
+
+  function undock(animated = true) {
+    if (!scrollDockState.isDocked) return;
+    const footerBtn = document.getElementById("footer-scroll-to-top");
+    if (!footerBtn || !floatingBtnEl) {
+      scrollDockState.isDocked = false;
+      return;
+    }
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (
+      !animated ||
+      prefersReducedMotion ||
+      scrollY <= 400 ||
+      scrollDockState.isScrollingToTop
+    ) {
+      scrollDockState.isDocked = false;
+      cleanupFooter(footerBtn);
+      cleanupFloating();
+      return;
+    }
+
+    // FLIP: Measure current positions
+    const first = footerBtn.getBoundingClientRect();
+    scrollDockState.isDocked = false;
+    cleanupFooter(footerBtn);
+
+    const last = floatingBtnEl.getBoundingClientRect();
+    const dx = first.left - last.left;
+    const dy = first.top - last.top;
+
+    isAnimating = true;
+    floatingBtnEl.style.visibility = "visible";
+    floatingBtnEl.style.opacity = "1";
+    floatingBtnEl.style.transition = "none";
+    floatingBtnEl.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+    floatingBtnEl.getBoundingClientRect(); // force reflow
+
+    const currentFloating = floatingBtnEl;
+    requestAnimationFrame(() => {
+      if (!currentFloating) return;
+      currentFloating.style.transition =
+        "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)";
+      currentFloating.style.transform = "translate3d(0, 0, 0)";
+
+      const onEnd = (e?: TransitionEvent) => {
+        if (e && e.propertyName !== "transform") return;
+        currentFloating.removeEventListener("transitionend", onEnd);
+        cleanupFloating();
+        isAnimating = false;
+        verifyState();
+      };
+
+      currentFloating.addEventListener("transitionend", onEnd);
+      setTimeout(onEnd, 420);
+    });
+  }
+
+  function verifyState() {
+    if (isAnimating || scrollDockState.isScrollingToTop) return;
+    const inView = checkFooterIntersection();
+    if (inView && !scrollDockState.isDocked) {
+      dock(true);
+    } else if (!inView && scrollDockState.isDocked) {
+      undock(true);
+    }
+  }
+
+  onMount(() => {
+    // Initial check on page load / refresh
+    scrollY = window.scrollY;
+    if (checkFooterIntersection()) {
+      scrollDockState.isDocked = true;
+    }
 
     const footerBtn = document.getElementById("footer-scroll-to-top");
-    if (!footerBtn || !floatingBtnEl) return;
+    let observer: IntersectionObserver | null = null;
 
-    let initialized = false;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const isIntersecting = entries[0]?.isIntersecting ?? false;
-        if (!floatingBtnEl || isAnimating) return;
-
-        const prefersReducedMotion =
-          typeof window !== "undefined" &&
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-        // If page is loaded while already scrolled into the footer:
-        if (!initialized) {
-          initialized = true;
-          if (isIntersecting) {
-            scrollDockState.isDocked = true;
-            return;
+    if (footerBtn) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (scrollDockState.isScrollingToTop) return;
+          const isIntersecting = entries[0]?.isIntersecting ?? false;
+          if (isIntersecting && !scrollDockState.isDocked) {
+            dock(true);
+          } else if (!isIntersecting && scrollDockState.isDocked) {
+            undock(true);
           }
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(footerBtn);
+    }
+
+    const onScroll = () => {
+      scrollY = window.scrollY;
+      if (scrollDockState.isScrollingToTop) {
+        if (scrollY <= 10) {
+          scrollDockState.isScrollingToTop = false;
         }
+        return;
+      }
+      if (!isAnimating) {
+        verifyState();
+      }
+    };
 
-        if (isIntersecting && !scrollDockState.isDocked) {
-          // If floating button wasn't even visible yet (e.g. short page), dock without animation
-          if (prefersReducedMotion || scrollY <= 400) {
-            scrollDockState.isDocked = true;
-            return;
-          }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
 
-          // FLIP docking animation: Floating button glides into Footer button
-          const first = floatingBtnEl.getBoundingClientRect();
-          const last = footerBtn.getBoundingClientRect();
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  });
 
-          const dx = first.left - last.left;
-          const dy = first.top - last.top;
-
-          isAnimating = true;
-
-          // Set footer button to starting position (matching floating button's position)
-          footerBtn.style.transition = "none";
-          footerBtn.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
-          footerBtn.style.opacity = "1";
-          footerBtn.style.pointerEvents = "auto";
-          footerBtn.getBoundingClientRect(); // force reflow
-
-          // Floating button vanishes immediately (no ghost duplicate)
-          scrollDockState.isDocked = true;
-
-          const currentFooterBtn = footerBtn;
-          requestAnimationFrame(() => {
-            currentFooterBtn.style.transition =
-              "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)";
-            currentFooterBtn.style.transform = "translate3d(0, 0, 0)";
-
-            const handleTransitionEnd = (e: TransitionEvent) => {
-              if (
-                e.target !== currentFooterBtn ||
-                e.propertyName !== "transform"
-              )
-                return;
-              currentFooterBtn.removeEventListener(
-                "transitionend",
-                handleTransitionEnd
-              );
-              currentFooterBtn.style.transform = "";
-              currentFooterBtn.style.transition = "";
-              currentFooterBtn.style.opacity = "";
-              currentFooterBtn.style.pointerEvents = "";
-              isAnimating = false;
-            };
-
-            currentFooterBtn.addEventListener(
-              "transitionend",
-              handleTransitionEnd
-            );
-
-            // Fallback timeout in case transitionend does not fire
-            setTimeout(() => {
-              currentFooterBtn.removeEventListener(
-                "transitionend",
-                handleTransitionEnd
-              );
-              currentFooterBtn.style.transform = "";
-              currentFooterBtn.style.transition = "";
-              currentFooterBtn.style.opacity = "";
-              currentFooterBtn.style.pointerEvents = "";
-              isAnimating = false;
-            }, 460);
-          });
-        } else if (!isIntersecting && scrollDockState.isDocked) {
-          if (prefersReducedMotion) {
-            scrollDockState.isDocked = false;
-            return;
-          }
-
-          // FLIP undocking animation: Footer button glides back to Floating position
-          const first = footerBtn.getBoundingClientRect();
-          isAnimating = true;
-
-          // Footer button hides immediately
-          scrollDockState.isDocked = false;
-
-          requestAnimationFrame(() => {
-            if (!floatingBtnEl) {
-              isAnimating = false;
-              return;
-            }
-
-            const currentFloatingEl = floatingBtnEl;
-            const last = currentFloatingEl.getBoundingClientRect();
-            const dx = first.left - last.left;
-            const dy = first.top - last.top;
-
-            currentFloatingEl.style.transition = "none";
-            currentFloatingEl.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
-            currentFloatingEl.style.opacity = "1";
-            currentFloatingEl.getBoundingClientRect(); // force reflow
-
-            requestAnimationFrame(() => {
-              currentFloatingEl.style.transition =
-                "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)";
-              currentFloatingEl.style.transform = "translate3d(0, 0, 0)";
-
-              const handleTransitionEnd = (e: TransitionEvent) => {
-                if (
-                  e.target !== currentFloatingEl ||
-                  e.propertyName !== "transform"
-                )
-                  return;
-                currentFloatingEl.removeEventListener(
-                  "transitionend",
-                  handleTransitionEnd
-                );
-                currentFloatingEl.style.transform = "";
-                currentFloatingEl.style.transition = "";
-                currentFloatingEl.style.opacity = "";
-                isAnimating = false;
-              };
-
-              currentFloatingEl.addEventListener(
-                "transitionend",
-                handleTransitionEnd
-              );
-
-              setTimeout(() => {
-                currentFloatingEl.removeEventListener(
-                  "transitionend",
-                  handleTransitionEnd
-                );
-                currentFloatingEl.style.transform = "";
-                currentFloatingEl.style.transition = "";
-                currentFloatingEl.style.opacity = "";
-                isAnimating = false;
-              }, 460);
-            });
-          });
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(footerBtn);
-    return () => observer.disconnect();
+  afterNavigate(() => {
+    scrollDockState.isDocked = false;
+    scrollDockState.isScrollingToTop = false;
+    isAnimating = false;
+    cleanupFloating();
+    const footerBtn = document.getElementById("footer-scroll-to-top");
+    cleanupFooter(footerBtn);
   });
 
   const scrollToTop = () => {
+    scrollDockState.isScrollingToTop = true;
+    scrollDockState.isDocked = false;
+
+    const footerBtn = document.getElementById("footer-scroll-to-top");
+    cleanupFooter(footerBtn);
+    cleanupFloating();
+
     const prefersReducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -190,16 +242,12 @@
   };
 </script>
 
-<svelte:window bind:scrollY />
-
 <div
   bind:this={floatingBtnEl}
-  class="fixed bottom-6 right-6 z-40 sm:bottom-8 sm:right-8 {isVisible
-    ? 'pointer-events-auto opacity-100 scale-100'
-    : 'pointer-events-none opacity-0 scale-90'}"
-  style={scrollDockState.isDocked
-    ? "opacity: 0; pointer-events: none; transition: none;"
-    : "transition: opacity 250ms ease, scale 250ms ease;"}
+  class="scroll-floating-container fixed bottom-6 right-6 z-40 sm:bottom-8 sm:right-8"
+  class:is-visible={isVisible}
+  class:is-hidden={!isVisible}
+  class:is-docked={scrollDockState.isDocked}
 >
   <button
     type="button"
@@ -214,3 +262,44 @@
     />
   </button>
 </div>
+
+<style>
+  .scroll-floating-container {
+    will-change: opacity, transform;
+  }
+
+  .scroll-floating-container.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    pointer-events: auto;
+    transition:
+      opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .scroll-floating-container.is-hidden {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0) scale(0.82);
+    pointer-events: none;
+    transition:
+      opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Docked state: Must vanish INSTANTLY in frame 0 (no ghost fadeout or slide) */
+  .scroll-floating-container.is-docked {
+    opacity: 0 !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transition: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-floating-container.is-visible,
+    .scroll-floating-container.is-hidden {
+      transition: opacity 200ms ease !important;
+      transform: none !important;
+    }
+  }
+</style>

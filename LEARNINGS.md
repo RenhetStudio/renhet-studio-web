@@ -385,7 +385,11 @@ Abruptly showing/hiding buttons creates visual stutter, while leaving a floating
 
 **Tradeoffs / pitfalls**
 
-If the source element fades out with a CSS transition while the target element moves, both elements will temporarily be visible simultaneously (creating a ghost clone). The handoff must be instantaneous. Additionally, verify `prefers-reduced-motion` to disable transforms for users who request minimal motion, and guard against route navigation by invalidating the observer when the page changes.
+1. **Avoid dynamic `style={...}` on FLIP elements:** In Svelte 5, binding reactive expressions to the `style` attribute (e.g. `style={isDocked ? "..." : "..."}`) will overwrite manual JS `style.transform` and `style.transition` mutations whenever reactive state (like `scrollY`) updates during scrolling. Instead, use static CSS classes (`.is-visible`, `.is-hidden`, `.is-docked`) for baseline presentation and isolate inline style mutations strictly to the active FLIP execution.
+2. **Never drop intersection events during animation:** Guarding observer callbacks with `if (isAnimating) return` creates permanent desynchronization if the user reverses scroll direction before the animation concludes. Always verify state upon transition completion and on scroll ticks to guarantee self-healing.
+3. **Instant handoff without ghost clones:** If the source element fades out with a CSS transition while the target element moves, both elements will temporarily be visible simultaneously. The handoff must be instantaneous.
+4. **Route transitions:** Global dock runes (`scrollDockState.isDocked`) must explicitly reset to `false` and clear element transforms upon client-side route changes (`page.url.pathname`).
+5. **Smooth scroll-to-top bypass:** When clicking scroll-to-top while docked, flag `isScrollingToTop = true` to immediately undock without running a reverse cross-page flight animation while the viewport is already rapidly moving to $y=0$.
 
 ### Layout shift prevention in randomized typographic roster sections (The Crew)
 
