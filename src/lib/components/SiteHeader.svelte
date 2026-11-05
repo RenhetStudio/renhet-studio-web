@@ -17,7 +17,7 @@
 
   const checkHeroVisibility = () => {
     // Only elements tagged with `data-hero` activate the hero navbar effect.
-    // Any page without `data-hero` (e.g. /games/beelze-pub) immediately stays in the solid style.
+    // Any page without `data-hero` (e.g. /account) immediately stays in the solid style.
     const hero = document.querySelector<HTMLElement>("[data-hero]");
     if (!hero) {
       isHeroInView = false;

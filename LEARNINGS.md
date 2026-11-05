@@ -18,7 +18,7 @@ A successful local build only proves the chosen adapter's output. Deployment can
 
 **In this project**
 
-`svelte.config.js` selects the adapter and `vercel.json` pins the Vercel preset. `package.json` uses port 3000 for local development, matching the local production server.
+`svelte.config.js` selects the adapter and `vercel.json` pins the Vercel preset. `package.json` uses port 3000 for local development, matching the local production server.e`svelte.config.js` selects the adapter and `vercel.json` pins the Vercel preset. `package.json` uses port 3000 for local development, matching the local production server.
 
 **Tradeoffs / pitfalls**
 
@@ -210,7 +210,7 @@ Hardcoding route lists (such as `Set(["/", "/blog", "/careers"])`) is brittle an
 
 **In this project**
 
-`src/lib/components/SiteHeader.svelte` detects `[data-hero]` dynamically. Hero sections in `src/lib/components/home/HeroSplit.svelte`, `src/routes/blog/+page.svelte`, and `src/routes/careers/+page.svelte` are marked with `data-hero`. Non-hero pages like `src/routes/games/beelze-pub/+page.svelte` and `src/routes/account/+page.svelte` omit it.
+`src/lib/components/SiteHeader.svelte` detects `[data-hero]` dynamically. Hero sections in `src/lib/components/home/HeroSplit.svelte`, `src/routes/games/beelze-pub/+page.svelte`, `src/routes/blog/+page.svelte`, and `src/routes/careers/+page.svelte` are marked with `data-hero`. Pages without a hero section (such as `src/routes/account/+page.svelte`) omit it.
 
 **Tradeoffs / pitfalls**
 
@@ -338,6 +338,60 @@ Abruptly showing/hiding buttons creates visual stutter, while leaving a floating
 **Tradeoffs / pitfalls**
 
 If the source element fades out with a CSS transition while the target element moves, both elements will temporarily be visible simultaneously (creating a ghost clone). The handoff must be instantaneous. Additionally, verify `prefers-reduced-motion` to disable transforms for users who request minimal motion, and guard against route navigation by invalidating the observer when the page changes.
+
+### Integrated panoramic keyart hero with horizontal gradient & responsive stacked mobile layout
+
+**Simple explanation**
+
+Game landing heroes should showcase official wide-format key art with their embedded title logo while keeping editorial headlines readable on indie paper canvas without resorting to artificial text cards, dark overlays, or duplicate logos.
+
+**How it works**
+
+1. **Desktop (>= 1024px):** To avoid the harsh vertical cut where the contained key art ends on wide viewports while elongating the tavern atmosphere to the left, a dual-layer approach is used:
+   - An underlying blurred backdrop layer (`.hero-extended-bg`, `filter: blur(28px) saturate(1.1) opacity(0.6)`) fills the entire hero width, extending the warm wood shelves, lanterns, and red counter continuously to the far left edge.
+   - The primary sharp key art (`.hero-sharp-keyart`, `h-full w-auto max-w-none object-contain absolute right-0 top-0`) keeps the complete Beelze Pub title and sandwich (*bocadillo*) intact, and uses a CSS mask (`mask-image: linear-gradient(to right, transparent 0%, ... black 24%)`) to seamlessly dissolve its left edge into the blurred backdrop with zero visible seam.
+   - A smooth non-linear horizontal gradient (`.hero-paper-gradient`) provides a paper wash on the left, guaranteeing WCAG AA text contrast for the editorial copy while seamlessly fading into the unblurred art. The signature animated `WaveDivider` ripples along the bottom counter into the paper canvas.
+2. **Entire hero as interactive destination:** Rather than adding visual clutter with repetitive CTA buttons in both the hero and page bottom, the entire hero is wrapped in an accessible `<a>` link leading to the itch.io store page. On desktop, the copy is vertically centered within the hero (`lg:min-h-[600px] flex items-center`), optically compensated for the floating header.
+3. **Mobile & Tablet (< 1024px):** Stacking the text directly over detailed art causes severe legibility clashes and cuts off the embedded logo. Instead, the hero gracefully decouples into two dedicated zones:
+   - A full-bleed upper banner zone reaching all the way to `top: 0` (`h-[360px] sm:h-[420px] md:h-[480px]`) that sits directly behind the floating frosted navbar (`SiteHeader`), centered on the game logo and sandwich (`object-[49.5%_center]`) and dissolving smoothly at the bottom via a multi-stop non-linear cream fade (`.hero-mobile-fade`).
+   - A lower content zone rendered on solid cream paper canvas (`#f6f1e8`) with centered typography (`text-center py-8 sm:py-12`) sitting naturally between the banner fade and the wave divider without button clutter.
+
+**Why it matters**
+
+Superimposing text directly over intricate illustrations destroys readability or forces heavy artificial drop-shadows and box cards that violate Renhet's anti-cliché design system. Decoupling mobile into a banner + solid canvas layout preserves brand fidelity and character art without compromising accessibility, while vertical containment on desktop prevents image cropping from cutting critical illustrated elements like props or titles.
+
+**In this project**
+
+`src/routes/games/beelze-pub/+page.svelte` implements this pattern for Beelze Pub, unifying the official itch.io key art, floating `SiteHeader`, signature `WaveDivider`, and transition to the gameplay features grid.
+
+**Tradeoffs / pitfalls**
+
+When scaling panoramic game banners inside fixed-height or responsive heroes, avoid blindly using `object-cover` with `w-full` on wide viewports; doing so can zoom in excessively and crop out bottom counter items (e.g. sandwiches, glasses, props) or top title decorations. Ensure `object-contain` or carefully calibrated aspect heights are used to preserve key focal points. On mobile viewports, let the banner reach all the way to the top edge behind the floating navbar rather than padding it down with artificial top margins, and use a generous bottom fade to melt the wooden counter into the cream canvas. Center mobile text and CTA buttons to avoid asymmetric whitespace imbalances. Set the responsive breakpoint at `lg:` (1024px) rather than `md:` (768px) to prevent narrow tablet screens from squeezing text against the background logo.
+
+### Discreet, anti-cliché gameplay carousel in editorial layouts
+
+**Simple explanation**
+
+Multiple gameplay screenshots can be showcased inline within an editorial grid using an artisanal container with discreet, quiet navigation rather than heavy SaaS sliders with intrusive arrow boxes and drop shadows.
+
+**How it works**
+
+1. **Artisanal organic mask:** The carousel container retains the custom border radius (`border-radius: 37px 48px 44px 42px / 43px 40px 35px 44px`) so the image feels naturally framed rather than boxed into a generic card.
+2. **CSP-compliant CSS transforms:** Slide position uses a `data-slide={currentSlide}` attribute mapped to CSS translation rules in `<style>` rather than dynamic inline `style="transform: ..."` which violates `style-src-attr: none`.
+3. **Discreet controls:** Subtle semi-transparent circular buttons (`bg-[#1e2632]/50 hover:bg-[#1e2632]/80`) fade in only on hover on desktop, alongside a minimal pill capsule with small dot indicators at the bottom.
+4. **Natural interactions:** Touch swipe support (`touchstart`/`touchend`) and arrow keyboard navigation (`<svelte:window onkeydown>`) provide effortless browsing. Centralized `<SoundProvider>` handles procedural audio clicks automatically.
+
+**Why it matters**
+
+Consolidating multiple gameplay moments into a discreet carousel keeps the landing page concise and editorial without repeating endless alternating image/text blocks.
+
+**In this project**
+
+`src/routes/games/beelze-pub/+page.svelte` replaces the repetitive dialogue section with a 4-slide discreet gameplay gallery (drink mixing, dialogue, regular customers, secret recipes).
+
+**Tradeoffs / pitfalls**
+
+Avoid attaching keyboard listeners or nonnegative `tabindex` to non-interactive `<div>` containers which trigger Svelte a11y warnings; place global key listeners on `<svelte:window>` guarded by hover state.
 
 # Security
 
