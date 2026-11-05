@@ -107,28 +107,28 @@
           <picture class="block">
             <source
               type="image/avif"
-              srcset="/optimized/renhet-logo-white-88.avif 88w, /optimized/renhet-logo-white-176.avif 176w, /optimized/renhet-logo-white-360.avif 360w"
-              sizes="(max-width: 640px) 110px, (max-width: 1024px) 130px, 145px"
+              srcset="/optimized/renhet-logo-white-176.avif 176w, /optimized/renhet-logo-white-360.avif 360w, /optimized/renhet-logo-white-720.avif 720w"
+              sizes="(max-width: 640px) 160px, (max-width: 1024px) 195px, 235px"
             />
             <source
               type="image/webp"
-              srcset="/optimized/renhet-logo-white-88.webp 88w, /optimized/renhet-logo-white-176.webp 176w, /optimized/renhet-logo-white-360.webp 360w"
-              sizes="(max-width: 640px) 110px, (max-width: 1024px) 130px, 145px"
+              srcset="/optimized/renhet-logo-white-176.webp 176w, /optimized/renhet-logo-white-360.webp 360w, /optimized/renhet-logo-white-720.webp 720w"
+              sizes="(max-width: 640px) 160px, (max-width: 1024px) 195px, 235px"
             />
             <img
               src="/renhet-logo-white.png"
-              width="145"
-              height="73"
+              width="235"
+              height="118"
               alt="Renhet Studio"
               loading="lazy"
-              class="h-auto w-[110px] object-contain transition-opacity duration-200 hover:opacity-90 sm:w-[130px] lg:w-[145px]"
+              class="h-auto w-[160px] -translate-y-1 object-contain transition-opacity duration-200 hover:opacity-90 sm:w-[195px] lg:w-[220px] xl:w-[235px]"
             />
           </picture>
         </a>
 
-        <!-- Vertical divider line (like in reference image) -->
+        <!-- Vertical divider line (scaled to match logo & headline height) -->
         <div
-          class="mx-6 hidden h-12 w-px shrink-0 bg-[#fffdf3]/25 sm:block sm:mx-8 lg:mx-8 xl:mx-10 lg:h-14"
+          class="mx-6 hidden h-16 w-px shrink-0 bg-[#fffdf3]/25 sm:block sm:mx-7 lg:mx-8 xl:mx-9 lg:h-20"
           aria-hidden="true"
         ></div>
       </div>
