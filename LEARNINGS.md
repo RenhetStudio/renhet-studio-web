@@ -527,6 +527,54 @@ Consolidating multiple gameplay moments into a discreet carousel keeps the landi
 
 Avoid attaching keyboard listeners or nonnegative `tabindex` to non-interactive `<div>` containers which trigger Svelte a11y warnings; place global key listeners on `<svelte:window>` guarded by hover state.
 
+### Editorial pagination vs infinite scroll when using an interactive site footer
+
+**Simple explanation**
+
+Infinite scroll destroys access to footers and utility controls docked at the bottom of the page. An artisanal indie studio archive benefits far more from quiet, editorial pagination with explicit URL parameters.
+
+**How it works**
+
+1. **Footer protection:** The site features a rich footer with external links, studio navigation, and a floating scroll-to-top button. Infinite scroll triggers whenever the user approaches the bottom, perpetually pushing the footer away.
+2. **Deterministic URL states:** Using `?page=2`, `?search=...`, and `?category=...` in SvelteKit keeps any page directly linkable, shareable, and crawlable by search engines without requiring client-side DOM restoration.
+3. **Featured post pinning:** Page 1 showcases the latest post in a prominent editorial card plus 6 archival items; subsequent pages display a clean 7-item list without duplicating the featured post.
+
+**Why it matters**
+
+Preserves ergonomics and accessibility across devices while maintaining a relaxed, book-like browsing rhythm.
+
+**In this project**
+
+`src/routes/blog/+page.svelte` and `src/routes/blog/+page.server.ts` handle pagination (7 posts per page) with `[← Newer]` and `[Older →]` navigation, displaying total post counts and page progress.
+
+**Tradeoffs / pitfalls**
+
+Requires server-side bounds checking: invalid or out-of-range page numbers must clamp cleanly or redirect to the closest valid page. When a search filter is applied, pagination must recalculate based on filtered results.
+
+### Debounced client search in Svelte 5 with URL synchronization
+
+**Simple explanation**
+
+Live search inputs should update results smoothly without making network requests on every keystroke, while keeping the URL in sync and preserving focus.
+
+**How it works**
+
+1. Instead of duplicating state with `$state(data.query)` and `$effect`, the input reads `data.query ?? ""` directly.
+2. On `input`, a 300ms timer debounces navigation via `goto(targetUrl, { replaceState: true, keepFocus: true, noScroll: true })`.
+3. Constructing URL search params without mutable `URLSearchParams` instances satisfies Svelte 5 and ESLint reactivity rules while preventing unnecessary history stack pollution.
+
+**Why it matters**
+
+Zero flicker, no loss of input focus, instantaneous back/forward browser navigation support, and zero linting warnings.
+
+**In this project**
+
+`src/routes/blog/+page.svelte` debounces search queries at 300ms and resets the active page to 1 upon each search update.
+
+**Tradeoffs / pitfalls**
+
+Always cancel the pending `clearTimeout` on component teardown (`$effect` cleanup or `onDestroy`) to prevent race conditions during rapid route transitions.
+
 # Security
 
 ### Validate return URLs by parsing them
