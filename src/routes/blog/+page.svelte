@@ -362,10 +362,14 @@
         >
           <!-- Live Story Count -->
           <p class="text-sm font-bold text-[#627383]">
-            Showing {(postsData.page - 1) * postsData.perPage + 1}–{Math.min(
-              postsData.page * postsData.perPage,
-              postsData.total
-            )} of {postsData.total} {postsData.total === 1 ? "story" : "stories"}
+            {#if postsData.totalPages > 1}
+              Showing {(postsData.page - 1) * postsData.perPage + 1}–{Math.min(
+                postsData.page * postsData.perPage,
+                postsData.total
+              )} of {postsData.total} {postsData.total === 1 ? "story" : "stories"}
+            {:else}
+              {postsData.total} {postsData.total === 1 ? "story" : "stories"}
+            {/if}
           </p>
 
           <!-- Editorial Pagination Controls (Accessible & Responsive) -->
