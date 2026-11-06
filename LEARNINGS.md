@@ -575,6 +575,28 @@ Zero flicker, no loss of input focus, instantaneous back/forward browser navigat
 
 Always cancel the pending `clearTimeout` on component teardown (`$effect` cleanup or `onDestroy`) to prevent race conditions during rapid route transitions.
 
+### Beware of overflow-x: hidden on page containers breaking position: sticky
+
+**Simple explanation**
+
+Applying `overflow-x: hidden` to a main container or layout wrapper disables `position: sticky` on all nested elements.
+
+**How it works**
+
+According to the CSS Overflow Module specification, if an element has `overflow-x: hidden` and `overflow-y: visible`, browsers automatically compute `overflow-y` to `auto` or `hidden`. This turns the container into an isolated scroll port. The sticky descendant will attempt to stick within that element's scroll context, but because user scrolling is driven by the window/document, the sticky element fails to track window scroll and scrolls off screen.
+
+**Why it matters**
+
+Editorial layouts frequently rely on sticky headlines or context panels that stay in view while long multi-column forms or narrative sections scroll alongside them.
+
+**In this project**
+
+In `src/routes/careers/+page.svelte`, the `<main>` tag had `overflow-x-hidden`, causing the left column (`Tell us what you would love to make.` with `lg:sticky lg:top-28`) to scroll away rather than sticking during form completion. Removing `overflow-x-hidden` from `<main>` (with horizontal viewport bounds handled globally in CSS) restored the sticky column.
+
+**Tradeoffs / pitfalls**
+
+If horizontal overflow clipping is strictly required on a specific section to avoid scrollbars from oversized background decorations, use `overflow-x: clip` instead of `overflow-x: hidden`. Unlike `hidden`, `overflow: clip` does not create an independent scroll container and therefore does not break `position: sticky`.
+
 # Security
 
 ### Validate return URLs by parsing them

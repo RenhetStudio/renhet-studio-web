@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
-<main class="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f6f1e8] text-[#4f5f70]">
+<main class="min-h-screen w-full max-w-full bg-[#f6f1e8] text-[#4f5f70]">
   <!-- Floating Site Header (renders solid immediately on non-hero pages) -->
   <SiteHeader />
 
