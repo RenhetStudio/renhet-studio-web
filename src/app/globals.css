@@ -359,3 +359,13 @@ a {
 @media (max-width: 640px) {
   .blog-hero { min-height: 82vh; }.blog-hero h1 { font-size: clamp(3.6rem,19vw,6rem); }.blog-stories { padding-top: 6rem; }.post-card-meta { align-items: start; flex-direction: column; }.post-accordion { margin-top: 3rem; }.post-page { padding-top: 8.5rem; }.post-cover { margin: 3rem auto; }.comments-heading,.comment-form-row { align-items: start; flex-direction: column; }.editor-settings-grid,.cover-field { grid-template-columns: 1fr; }.editor-topbar { align-items: flex-start; flex-direction: column; gap: .7rem; }.editor-topbar > div:last-child { width: 100%; }.editor-topbar a,.editor-topbar button { flex: 1; text-align: center; }.editor-toolbar { top: 7.3rem; }.editor-prose { padding: 2rem 1.2rem 5rem; }
 }
+
+/* Disable native search cancel / decoration buttons */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}

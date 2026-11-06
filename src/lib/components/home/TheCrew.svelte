@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import IconExternal from "$lib/components/icons/IconExternal.svelte";
+  import IconArrow from "$lib/components/icons/IconArrow.svelte";
+  import OrganicDivider from "$lib/components/OrganicDivider.svelte";
 
   interface CrewMember {
     name: string;
@@ -191,7 +192,7 @@
 <section
   id="crew"
   bind:this={sectionEl}
-  class="px-5 py-14 sm:px-8 sm:py-16 md:py-20 lg:px-10"
+  class="px-5 pt-14 pb-0 sm:px-8 sm:pt-16 sm:pb-0 md:pt-20 md:pb-0 lg:px-10"
   aria-labelledby="crew-title"
 >
   <div class="mx-auto max-w-[1440px]">
@@ -335,7 +336,7 @@
                 aria-label={`View ${activeMember.name}'s portfolio (opens in new tab)`}
               >
                 <span>View portfolio</span>
-                <IconExternal size={12} class="opacity-80" />
+                <IconArrow size={11} direction="up-right" />
               </a>
             {/if}
           </div>
@@ -405,31 +406,14 @@
             aria-label={`View ${activeMember.name}'s portfolio`}
           >
             <span>View portfolio</span>
-            <IconExternal size={11} class="opacity-80" />
+            <IconArrow size={11} direction="up-right" />
           </a>
         {/if}
       </div>
     </div>
 
-    <!-- Bottom Hairline & Micro-Guide (Desktop only; completely removed on mobile) -->
-    <div
-      class="hidden items-center gap-3 border-t border-[#d6d5ca] pt-4 mt-12 sm:mt-14 text-xs font-medium text-[#718191] md:flex transition-opacity duration-500 ease-out"
-      style={shouldAnimate
-        ? "opacity: 1; transition-delay: 350ms;"
-        : "opacity: 0;"}
-    >
-      <svg
-        class="h-4 w-4 shrink-0 stroke-[1.8] text-[#718191]"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <rect x="6" y="3" width="12" height="18" rx="6" />
-        <path d="M12 7v4" />
-      </svg>
-      <span>Hover to explore the team.</span>
-    </div>
+    <!-- Organic section divider -->
+    <OrganicDivider randomOnMount />
   </div>
 </section>
 

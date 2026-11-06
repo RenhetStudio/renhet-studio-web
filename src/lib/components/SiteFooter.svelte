@@ -27,7 +27,7 @@
       label: "Reddit",
       href: "https://www.reddit.com/user/RenhetStudio/",
       icon: IconReddit,
-      size: 18,
+      size: 23,
     },
     {
       label: "TikTok",
@@ -39,7 +39,7 @@
       label: "Itch.io",
       href: "https://renhetstudio.itch.io/",
       icon: IconItch,
-      size: 18,
+      size: 21,
     },
   ];
 

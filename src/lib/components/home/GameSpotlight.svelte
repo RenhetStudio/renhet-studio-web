@@ -1,11 +1,15 @@
 <script lang="ts">
-  import IconItch from "$lib/components/icons/IconItch.svelte";
-  import IconExternal from "$lib/components/icons/IconExternal.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
 </script>
 
-<section id="game" class="px-5 py-14 sm:px-8 sm:py-16 md:py-20 lg:px-10" aria-labelledby="game-title">
-  <div class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[0.55fr_0.45fr] lg:items-center">
+<section
+  id="game"
+  class="px-5 pt-10 pb-14 sm:px-8 sm:pt-12 sm:pb-16 md:pt-14 md:pb-20 lg:px-10"
+  aria-labelledby="game-title"
+>
+  <div
+    class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[0.55fr_0.45fr] lg:items-center"
+  >
     <!-- Left Column: Copy & CTAs -->
     <div>
       <h2
@@ -15,8 +19,11 @@
         Our first game<br />is out now.
       </h2>
 
-      <p class="mt-6 max-w-xl text-lg font-bold leading-8 text-[#627383] sm:text-xl">
-        Mix drinks, serve customers, and keep the business running as Skelly, a laid-back skeletender filling in at Beelze Pub for the weekend.
+      <p
+        class="mt-6 max-w-xl text-lg font-bold leading-8 text-[#627383] sm:text-xl"
+      >
+        Mix drinks, serve customers, and keep the business running as Skelly, a
+        laid-back skeletender filling in at Beelze Pub for the weekend.
       </p>
 
       <div class="mt-8 flex flex-wrap items-center gap-4">
@@ -34,18 +41,19 @@
           href="https://renhetstudio.itch.io/beelze-pub"
           target="_blank"
           rel="noreferrer"
-          class="group inline-flex h-[52px] items-center gap-2 rounded-full border-2 border-[#4f5f70]/30 bg-[#fffdf3] px-5 text-sm font-black text-[#4f5f70] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#4f5f70] hover:bg-[#f6f1e8] active:translate-y-0"
+          class="group hidden sm:inline-flex h-[52px] items-center gap-2 rounded-full border-2 border-[#4f5f70]/30 bg-[#fffdf3] px-6 text-base font-black text-[#4f5f70] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#4f5f70] hover:bg-[#f6f1e8] active:translate-y-0"
           aria-label="Play Beelze Pub free on Itch.io (opens in new tab)"
         >
-          <IconItch size={16} />
-          <span>Play free on Itch.io</span>
-          <IconExternal size={14} class="opacity-80" />
+          <span>Play Beelze Pub</span>
+          <IconArrow direction="up-right" size={16} />
         </a>
       </div>
     </div>
 
     <!-- Right Column: Floating Logo -->
-    <div class="flex min-h-[360px] items-center justify-center sm:min-h-[420px]">
+    <div
+      class="flex min-h-[360px] items-center justify-center sm:min-h-[420px]"
+    >
       <a
         href="/games/beelze-pub"
         class="block transition-transform duration-300 hover:scale-105"

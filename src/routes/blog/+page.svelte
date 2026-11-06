@@ -89,12 +89,12 @@
         <input
           id="blog-search"
           name="q"
-          type="search"
+          type="text"
           value={data.query ?? ""}
           oninput={handleSearchInput}
           placeholder="Search stories..."
           maxlength="80"
-          class="h-[48px] w-full rounded-full border border-[#4f5f70]/25 bg-[#fffdf3]/80 px-5 text-[15px] font-medium text-[#344253] placeholder:text-[#8a98a5] transition-all duration-200 hover:border-[#8fb8d8] focus:border-[#8fb8d8] focus:bg-[#fffdf3] focus:outline-none focus:ring-2 focus:ring-[#8fb8d8]/25"
+          class="h-[48px] w-full rounded-full border border-[#4f5f70]/25 bg-[#fffdf3]/80 pl-5 pr-10 text-[15px] font-medium text-[#344253] placeholder:text-[#8a98a5] transition-all duration-200 hover:border-[#8fb8d8] focus:border-[#8fb8d8] focus:bg-[#fffdf3] focus:outline-none focus:ring-2 focus:ring-[#8fb8d8]/25"
         />
         {#if hasQuery}
           <button
