@@ -142,11 +142,7 @@
                   >
                     Open Application
                   </span>
-                  <span
-                    class="inline-flex items-center rounded-full bg-[#8fb8d8]/25 px-2.5 py-0.5 text-xs font-black text-[#344253]"
-                  >
-                    Always open
-                  </span>
+                  
                 </div>
                 <h3
                   class="mt-3 text-2xl font-black text-[#4f5f70] sm:text-3xl md:text-4xl"
