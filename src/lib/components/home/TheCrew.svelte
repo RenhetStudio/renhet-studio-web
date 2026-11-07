@@ -24,22 +24,10 @@
       href: "https://www.linkedin.com/in/vaclavkorycanek/",
     },
     {
-      name: "Todd",
-      role: "Narrative Designer",
-      country: "USA",
-      href: "https://nat20.mal.plus/technical-portfolio/",
-    },
-    {
       name: "Pablo",
       role: "QA & Gameplay Polish Specialist",
       country: "Spain",
       href: "https://www.pablogozalvez.com/",
-    },
-    {
-      name: "Burakcan",
-      role: "Game Designer",
-      country: "Turkey",
-      href: "https://www.artstation.com/george_akil",
     },
     {
       name: "Paulo",
