@@ -223,77 +223,80 @@
       {:else}
         <!-- Featured Post: Authentic Indie Editorial Layout without artificial card box -->
         {#if featured}
-          <article class="group relative pt-2 sm:pt-4 pb-2 sm:pb-3">
-            <!-- Desktop Layout (3 Columns: Date ~15%, Content ~70%, Category ~15%) -->
-            <div
-              class="hidden md:grid md:grid-cols-[140px_1fr_auto] lg:grid-cols-[160px_1fr_auto] gap-6 items-start"
+          <article class="group relative">
+            <a
+              href={`/blog/${featured.slug}`}
+              class="block pt-2 sm:pt-4 pb-2 sm:pb-3 cursor-pointer focus:outline-none"
             >
-              <!-- Column 1: Date -->
-              <time
-                datetime={featured.published_at ?? featured.created_at}
-                class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-[#8a98a5] shrink-0 pt-2"
-              >
-                {formatDate(featured.published_at ?? featured.created_at)}
-              </time>
-
-              <!-- Column 2: Content (Title & Excerpt) -->
+              <!-- Desktop Layout (3 Columns: Date ~15%, Content ~70%, Category ~15%) -->
               <div
-                class="relative z-10 flex flex-col items-start pr-6 max-w-[780px]"
+                class="hidden md:grid md:grid-cols-[140px_1fr_auto] lg:grid-cols-[160px_1fr_auto] gap-6 items-start"
               >
-                <a
-                  href={`/blog/${featured.slug}`}
-                  class="font-black text-2xl sm:text-3xl lg:text-[40px] leading-[0.96] text-[#4f5f70] tracking-tight group-hover:text-[#344253] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8] transition-colors"
+                <!-- Column 1: Date -->
+                <time
+                  datetime={featured.published_at ?? featured.created_at}
+                  class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-[#8a98a5] shrink-0 pt-2"
+                >
+                  {formatDate(featured.published_at ?? featured.created_at)}
+                </time>
+
+                <!-- Column 2: Content (Title & Excerpt) -->
+                <div
+                  class="relative z-10 flex flex-col items-start pr-6 max-w-[780px]"
+                >
+                  <h2
+                    class="font-black text-2xl sm:text-3xl lg:text-[40px] leading-[0.96] text-[#4f5f70] tracking-tight group-hover:text-[#344253] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8] transition-colors"
+                  >
+                    {featured.title}
+                  </h2>
+                  {#if featured.excerpt}
+                    <p
+                      class="mt-3 text-[16px] sm:text-[17px] text-[#627383] font-normal leading-relaxed"
+                    >
+                      {featured.excerpt}
+                    </p>
+                  {/if}
+                </div>
+
+                <!-- Column 3: Category Pill -->
+                <div class="relative z-10 shrink-0 pt-1">
+                  <span
+                    class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-4 py-1 text-xs font-black text-[#4f5f70] transition-colors group-hover:border-[#8fb8d8] group-hover:bg-[#8fb8d8]/15 group-hover:text-[#344253]"
+                  >
+                    {featured.category}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Mobile Layout (Compact Single Column Stack) -->
+              <div class="flex flex-col md:hidden relative z-10">
+                <div class="flex items-center justify-between w-full mb-2.5">
+                  <time
+                    datetime={featured.published_at ?? featured.created_at}
+                    class="text-xs font-bold uppercase tracking-wider text-[#8a98a5]"
+                  >
+                    {formatDate(featured.published_at ?? featured.created_at)}
+                  </time>
+                  <span
+                    class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-3 py-0.5 text-[11px] font-black text-[#4f5f70]"
+                  >
+                    {featured.category}
+                  </span>
+                </div>
+                <h2
+                  class="font-black text-2xl sm:text-[26px] leading-[1.04] text-[#4f5f70] tracking-tight group-hover:text-[#344253] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8]"
                 >
                   {featured.title}
-                </a>
+                </h2>
                 {#if featured.excerpt}
                   <p
-                    class="mt-3 text-[16px] sm:text-[17px] text-[#627383] font-normal leading-relaxed"
+                    class="mt-2 text-sm text-[#627383] font-normal leading-relaxed"
                   >
                     {featured.excerpt}
                   </p>
                 {/if}
               </div>
-
-              <!-- Column 3: Category Pill -->
-              <div class="relative z-10 shrink-0 pt-1">
-                <span
-                  class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-4 py-1 text-xs font-black text-[#4f5f70] transition-colors group-hover:border-[#8fb8d8] group-hover:bg-[#8fb8d8]/15 group-hover:text-[#344253]"
-                >
-                  {featured.category}
-                </span>
-              </div>
-            </div>
-
-            <!-- Mobile Layout (Compact Single Column Stack) -->
-            <div class="flex flex-col md:hidden relative z-10">
-              <div class="flex items-center justify-between w-full mb-2.5">
-                <time
-                  datetime={featured.published_at ?? featured.created_at}
-                  class="text-xs font-bold uppercase tracking-wider text-[#8a98a5]"
-                >
-                  {formatDate(featured.published_at ?? featured.created_at)}
-                </time>
-                <span
-                  class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-3 py-0.5 text-[11px] font-black text-[#4f5f70]"
-                >
-                  {featured.category}
-                </span>
-              </div>
-              <a
-                href={`/blog/${featured.slug}`}
-                class="font-black text-2xl sm:text-[26px] leading-[1.04] text-[#4f5f70] tracking-tight group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8]"
-              >
-                {featured.title}
-              </a>
-              {#if featured.excerpt}
-                <p
-                  class="mt-2 text-sm text-[#627383] font-normal leading-relaxed"
-                >
-                  {featured.excerpt}
-                </p>
-              {/if}
-            </div>
+            </a>
 
             <!-- Single Decorative Artistic Organic Splash in Desaturated Sky Blue #bbd5e2 -->
             <BlogDecoSplash
