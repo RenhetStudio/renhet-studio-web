@@ -40,9 +40,20 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Renhet Display";
+  src:
+    url("/fonts/renhet-display.woff2") format("woff2"),
+    url("/fonts/renhet-display.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-sans: "Paperlogy", "Outfit Variable", "Outfit", system-ui, -apple-system, sans-serif;
   --font-display: "Paperlogy", system-ui, -apple-system, sans-serif;
+  --font-brand: "Renhet Display", cursive, sans-serif;
   --color-paper: #f6f1e8;
   --color-cream: #fffdf3;
   --color-pond: #8fb8d8;
