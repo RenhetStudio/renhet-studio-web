@@ -10,12 +10,22 @@
   let { data }: PageProps = $props();
 
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-  const hasQuery = $derived(Boolean(data.query && data.query.trim().length > 0));
+  const hasQuery = $derived(
+    Boolean(data.query && data.query.trim().length > 0),
+  );
 
-  function applyFilter(updates: { query?: string; category?: string; page?: number; scroll?: boolean }) {
-    const newQuery = updates.query !== undefined ? updates.query : (data.query ?? "");
-    const newCategory = updates.category !== undefined ? updates.category : (data.category ?? "");
-    const newPage = updates.page !== undefined ? updates.page : (data.page ?? 1);
+  function applyFilter(updates: {
+    query?: string;
+    category?: string;
+    page?: number;
+    scroll?: boolean;
+  }) {
+    const newQuery =
+      updates.query !== undefined ? updates.query : (data.query ?? "");
+    const newCategory =
+      updates.category !== undefined ? updates.category : (data.category ?? "");
+    const newPage =
+      updates.page !== undefined ? updates.page : (data.page ?? 1);
 
     const parts: string[] = [];
     if (newQuery.trim()) parts.push(`q=${encodeURIComponent(newQuery.trim())}`);
@@ -43,7 +53,9 @@
     applyFilter({ query: "", page: 1, scroll: false });
   }
 
-  function handleCategoryChange(e: Event & { currentTarget: HTMLSelectElement }) {
+  function handleCategoryChange(
+    e: Event & { currentTarget: HTMLSelectElement },
+  ) {
     applyFilter({ category: e.currentTarget.value, page: 1, scroll: false });
   }
 
@@ -65,7 +77,9 @@
 </svelte:head>
 
 <BlogShell profile={data.profile}>
-  <div class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10 pt-28 sm:pt-36 md:pt-40 pb-20 sm:pb-24">
+  <div
+    class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10 pt-28 sm:pt-36 md:pt-40 pb-20 sm:pb-24"
+  >
     <!-- Editorial Header: Standardized with Careers and The Crew in monumental scale, font-black leading-[1.08] and authentic Indie Palette -->
     <header class="mb-10 sm:mb-14 text-left">
       <h1
@@ -74,7 +88,9 @@
       >
         Renhet Between Builds.
       </h1>
-      <p class="mt-4 sm:mt-6 text-lg sm:text-xl md:text-[22px] font-bold leading-relaxed text-[#627383]">
+      <p
+        class="mt-4 sm:mt-6 text-lg sm:text-xl md:text-[22px] font-bold leading-relaxed text-[#627383]"
+      >
         Small updates from our warm, handmade game studio.
       </p>
     </header>
@@ -136,7 +152,9 @@
             <option value={item}>{item}</option>
           {/each}
         </select>
-        <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#4f5f70]">
+        <div
+          class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#4f5f70]"
+        >
           <IconChevronDown size={14} strokeWidth={2.4} />
         </div>
       </div>
@@ -157,7 +175,9 @@
           </div>
           <div class="h-6 w-16 rounded-full bg-[#8fb8d8]/20"></div>
         </div>
-        <div class="divide-y divide-[#4f5f70]/15 mt-8 border-t border-[#4f5f70]/15">
+        <div
+          class="divide-y divide-[#4f5f70]/15 mt-8 border-t border-[#4f5f70]/15"
+        >
           {#each [1, 2, 3] as i (i)}
             <div class="py-5 px-3 flex items-center justify-between">
               <div class="h-4 w-16 rounded bg-[#4f5f70]/10"></div>
@@ -173,13 +193,18 @@
     {:then [postsData, globalLatestSlug]}
       {@const isFiltered = Boolean(data.category || data.query)}
       {@const isPageOne = (data.page ?? 1) === 1}
-      {@const isLatestInResults = isPageOne && (!isFiltered || (postsData.items[0] && postsData.items[0].slug === globalLatestSlug))}
+      {@const isLatestInResults =
+        isPageOne &&
+        (!isFiltered ||
+          (postsData.items[0] && postsData.items[0].slug === globalLatestSlug))}
       {@const featured = isLatestInResults ? postsData.items[0] : null}
       {@const listPosts = featured ? postsData.items.slice(1) : postsData.items}
 
       {#if postsData.total === 0}
         <div class="py-16 text-left">
-          <h2 class="text-2xl font-black text-[#4f5f70]">No stories here yet.</h2>
+          <h2 class="text-2xl font-black text-[#4f5f70]">
+            No stories here yet.
+          </h2>
           <p class="text-base text-[#627383] mt-2">
             {data.category || data.query
               ? "Try a different filter or search term."
@@ -188,7 +213,13 @@
           {#if data.category || data.query}
             <button
               type="button"
-              onclick={() => applyFilter({ query: "", category: "", page: 1, scroll: false })}
+              onclick={() =>
+                applyFilter({
+                  query: "",
+                  category: "",
+                  page: 1,
+                  scroll: false,
+                })}
               class="inline-block mt-4 text-sm font-bold text-[#8fb8d8] underline underline-offset-4 hover:text-[#4f5f70] transition-colors"
             >
               Reset filters and view all stories
@@ -214,12 +245,9 @@
               </time>
 
               <!-- Column 2: Content (LATEST POST pill, Title & Excerpt) -->
-              <div class="relative z-10 flex flex-col items-start pr-6 max-w-[760px]">
-                <span
-                  class="inline-flex h-[26px] items-center rounded-full bg-[#b8d4f0]/40 border border-[#8fb8d8]/60 px-3.5 text-xs font-black tracking-widest text-[#344253] uppercase mb-3"
-                >
-                  LATEST POST
-                </span>
+              <div
+                class="relative z-10 flex flex-col items-start pr-6 max-w-[760px]"
+              >
                 <a
                   href={`/blog/${featured.slug}`}
                   class="font-black text-2xl sm:text-3xl lg:text-[34px] leading-[1.08] text-[#344253] tracking-tight group-hover:text-[#4f5f70] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8] transition-colors"
@@ -227,7 +255,9 @@
                   {featured.title}
                 </a>
                 {#if featured.excerpt}
-                  <p class="mt-2.5 text-[15px] sm:text-[16px] text-[#627383] font-normal leading-relaxed">
+                  <p
+                    class="mt-2.5 text-[15px] sm:text-[16px] text-[#627383] font-normal leading-relaxed"
+                  >
                     {featured.excerpt}
                   </p>
                 {/if}
@@ -245,11 +275,6 @@
 
             <!-- Mobile Layout (Compact Single Column Stack) -->
             <div class="flex flex-col md:hidden relative z-10">
-              <span
-                class="inline-flex self-start h-[24px] items-center rounded-full bg-[#b8d4f0]/40 border border-[#8fb8d8]/60 px-3 text-[11px] font-black tracking-widest text-[#344253] uppercase mb-2"
-              >
-                LATEST POST
-              </span>
               <div class="flex items-center justify-between w-full mb-2">
                 <time
                   datetime={featured.published_at ?? featured.created_at}
@@ -270,7 +295,9 @@
                 {featured.title}
               </a>
               {#if featured.excerpt}
-                <p class="mt-2 text-sm text-[#627383] font-normal leading-relaxed">
+                <p
+                  class="mt-2 text-sm text-[#627383] font-normal leading-relaxed"
+                >
                   {featured.excerpt}
                 </p>
               {/if}
@@ -285,7 +312,9 @@
 
         <!-- Editorial List of Other Stories (Separated by subtle dividers) -->
         {#if listPosts.length > 0}
-          <div class="divide-y divide-[#4f5f70]/15 mt-8 sm:mt-10 border-t border-[#4f5f70]/15">
+          <div
+            class="divide-y divide-[#4f5f70]/15 mt-8 sm:mt-10 border-t border-[#4f5f70]/15"
+          >
             {#each listPosts as post (post.id)}
               <article
                 class="group relative transition-colors duration-200 hover:bg-[#fffdf3]/50"
@@ -311,7 +340,9 @@
                       {post.title}
                     </a>
                     {#if post.excerpt}
-                      <p class="mt-1 text-[14px] sm:text-[15px] text-[#627383] font-normal leading-relaxed">
+                      <p
+                        class="mt-1 text-[14px] sm:text-[15px] text-[#627383] font-normal leading-relaxed"
+                      >
                         {post.excerpt}
                       </p>
                     {/if}
@@ -329,8 +360,13 @@
 
                 <!-- Mobile vertical row -->
                 <div class="flex flex-col md:hidden py-4 px-2 gap-1.5">
-                  <div class="flex items-center justify-between text-xs text-[#627383]">
-                    <time datetime={post.published_at ?? post.created_at} class="font-bold uppercase tracking-wider">
+                  <div
+                    class="flex items-center justify-between text-xs text-[#627383]"
+                  >
+                    <time
+                      datetime={post.published_at ?? post.created_at}
+                      class="font-bold uppercase tracking-wider"
+                    >
                       {formatDate(post.published_at ?? post.created_at)}
                     </time>
                     <span
@@ -346,7 +382,9 @@
                     {post.title}
                   </a>
                   {#if post.excerpt}
-                    <p class="text-xs sm:text-sm text-[#627383] leading-relaxed">
+                    <p
+                      class="text-xs sm:text-sm text-[#627383] leading-relaxed"
+                    >
                       {post.excerpt}
                     </p>
                   {/if}
@@ -365,8 +403,9 @@
             {#if postsData.totalPages > 1}
               Showing {(postsData.page - 1) * postsData.perPage + 1}–{Math.min(
                 postsData.page * postsData.perPage,
-                postsData.total
-              )} of {postsData.total} {postsData.total === 1 ? "story" : "stories"}
+                postsData.total,
+              )} of {postsData.total}
+              {postsData.total === 1 ? "story" : "stories"}
             {:else}
               {postsData.total} {postsData.total === 1 ? "story" : "stories"}
             {/if}
@@ -379,7 +418,8 @@
               <button
                 type="button"
                 disabled={postsData.page <= 1}
-                onclick={() => applyFilter({ page: postsData.page - 1, scroll: true })}
+                onclick={() =>
+                  applyFilter({ page: postsData.page - 1, scroll: true })}
                 class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#4f5f70]/25 bg-[#fffdf3] px-4 text-xs font-bold text-[#4f5f70] shadow-sm transition-all hover:border-[#8fb8d8] hover:bg-[#8fb8d8]/15 hover:text-[#344253] disabled:opacity-35 disabled:pointer-events-none active:scale-95"
               >
                 <IconArrow direction="left" size={13} />
@@ -395,7 +435,8 @@
               <button
                 type="button"
                 disabled={postsData.page >= postsData.totalPages}
-                onclick={() => applyFilter({ page: postsData.page + 1, scroll: true })}
+                onclick={() =>
+                  applyFilter({ page: postsData.page + 1, scroll: true })}
                 class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#4f5f70]/25 bg-[#fffdf3] px-4 text-xs font-bold text-[#4f5f70] shadow-sm transition-all hover:border-[#8fb8d8] hover:bg-[#8fb8d8]/15 hover:text-[#344253] disabled:opacity-35 disabled:pointer-events-none active:scale-95"
               >
                 <span>Older</span>
