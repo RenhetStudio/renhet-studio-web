@@ -18,6 +18,7 @@ export interface BlogPost {
   author_id: string;
   created_at: string;
   updated_at: string;
+  deleted_at?: string | null;
 }
 
 export type BlogPostSummary = Pick<BlogPost, "id" | "slug" | "title" | "excerpt" | "category" | "published_at" | "created_at" | "updated_at">;

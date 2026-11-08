@@ -728,6 +728,23 @@ Users regularly cancel or navigate back from third-party login screens. If the o
 **Tradeoffs / pitfalls**
 Do not rely exclusively on `window.addEventListener("pageshow")`; listening to `focus` also covers scenarios where the auth window opens or closes in an external tab or popup. Ensure listeners are cleaned up during component unmount.
 
+### Compact authenticated navigation dropdowns for fixed pill navbars
+
+**Simple explanation**
+When a floating pill navbar uses centered navigation links alongside user controls, laying out multiple buttons in a row (e.g., Dashboard, username, Sign out) consumes excessive horizontal space and inevitably collides with the centered links. Consolidating user actions into a single dropdown trigger preserves the visual balance of the navbar.
+
+**How it works**
+Replace inline authenticated links with a single interactive pill displaying the user's name and a chevron. Clicking toggles a floating contextual menu (`role="menu"`) styled with the studio aesthetic (frosted dark slate background `#4f5f70`/95, white border, soft blur). Listen to click-outside on `window` and the `Escape` key, and automatically close the menu on client navigation (`afterNavigate`) and window resize.
+
+**Why it matters**
+On fixed pill headers with absolutely centered elements (`left-1/2 -translate-x-1/2`), right-aligned action groups that grow with author privileges easily collide with navigation links (e.g., placing audio toggle buttons directly on top of "Careers"). A compact dropdown guarantees a predictable max-width (~160px) regardless of user role or action count.
+
+**In this project**
+`src/lib/components/SiteHeader.svelte` uses `IconChevronDown` with a rotational transition and renders an organic floating menu offering "Author Dashboard", "Account Settings", and a distinct "Sign out" action.
+
+**Tradeoffs / pitfalls**
+Always ensure the click-outside handler checks whether the click originated within `userMenuRef` before closing, and close the dropdown on both route navigation and viewport resize to avoid orphaned floating overlays.
+
 # Security
 
 ### Validate return URLs by parsing them
@@ -780,20 +797,41 @@ Enforced in `src/routes/auth/callback/+server.ts`, `src/routes/account/+page.ser
 **Tradeoffs / pitfalls**
 Remember to revoke the session via `auth.signOut()` before issuing the redirect in the auth callback; otherwise, session cookies remain in the browser for subsequent requests.
 
-### Compact authenticated navigation dropdowns for fixed pill navbars
+### Aborting SvelteKit `use:enhance` actions with `cancel()`
 
 **Simple explanation**
-When a floating pill navbar uses centered navigation links alongside user controls, laying out multiple buttons in a row (e.g., Dashboard, username, Sign out) consumes excessive horizontal space and inevitably collides with the centered links. Consolidating user actions into a single dropdown trigger preserves the visual balance of the navbar.
+Calling `event.preventDefault()` inside an inline `onsubmit` handler does not cancel a SvelteKit form action managed by `use:enhance`. You must call the `cancel()` callback provided by `use:enhance`.
 
 **How it works**
-Replace inline authenticated links with a single interactive pill displaying the user's name and a chevron. Clicking toggles a floating contextual menu (`role="menu"`) styled with the studio aesthetic (frosted dark slate background `#4f5f70`/95, white border, soft blur). Listen to click-outside on `window` and the `Escape` key, and automatically close the menu on client navigation (`afterNavigate`) and window resize.
+`use:enhance` intercepts form submissions asynchronously with `fetch` rather than standard browser navigation. `use:enhance` accepts a submit callback `({ cancel })`. Calling `cancel()` inside that function tells SvelteKit to immediately abort the submission before any network request is initiated.
 
 **Why it matters**
-On fixed pill headers with absolutely centered elements (`left-1/2 -translate-x-1/2`), right-aligned action groups that grow with author privileges easily collide with navigation links (e.g., placing audio toggle buttons directly on top of "Careers"). A compact dropdown guarantees a predictable max-width (~160px) regardless of user role or action count.
+Confirmation prompts (e.g. `confirm("Delete this story?")`) that rely on `event.preventDefault()` in `onsubmit` will fail: even if the user clicks "Cancel", `use:enhance` continues running and dispatches the delete action to the server, unintentionally destroying data.
 
 **In this project**
-`src/lib/components/SiteHeader.svelte` uses `IconChevronDown` with a rotational transition and renders an organic floating menu offering "Author Dashboard", "Account Settings", and a distinct "Sign out" action.
+Used on the story delete buttons in `src/routes/blog/dashboard/+page.svelte` to guarantee that clicking "Cancel" in the native confirmation prompt reliably halts the destructive action.
 
 **Tradeoffs / pitfalls**
-Always ensure the click-outside handler checks whether the click originated within `userMenuRef` before closing, and close the dropdown on both route navigation and viewport resize to avoid orphaned floating overlays.
+Never mix inline `onsubmit={(e) => e.preventDefault()}` with `use:enhance` for cancellation logic; always pass `use:enhance={({ cancel }) => { ... }}`.
 
+
+### Soft delete pattern with instant editorial recovery
+
+**Simple explanation**
+Destructive database `DELETE` operations permanently remove rows, which cannot be recovered on managed cloud databases without superuser access or expensive PITR backups. A soft-delete flag (`deleted_at`) safely hides records from the public and author dashboards while enabling instant one-click restoration.
+
+**How it works**
+The `posts` table includes a `deleted_at timestamptz default null` column and an index on `(deleted_at)`.
+1. **Public queries and RLS:** Public queries filter `.is("deleted_at", null)`. Row-Level Security policies restrict published visibility to rows where `deleted_at is null`.
+2. **Partial unique indexes:** The global unique constraint on `slug` is converted to a partial unique index `where deleted_at is null`, allowing authors to reuse a URL slug if an older story was deleted.
+3. **Soft-delete mutation:** Instead of calling `delete()`, the dashboard delete action calls `.update({ deleted_at: new Date().toISOString() })`.
+4. **Editorial Trash and Restore:** In `src/routes/blog/dashboard/+page.server.ts`, the dashboard server load separates `posts` into active (`!p.deleted_at`) and `deletedPosts` (`Boolean(p.deleted_at)`). If `deletedPosts` exist, a subtle Trash section renders with a "Restore story" button that sets `deleted_at = null`, moving the story back to the active table in one click.
+
+**Why it matters**
+Accidental post deletions can happen due to misclicks or UI issues. Without expensive managed PITR backups, hard deletions in cloud-hosted PostgreSQL are catastrophic. Soft deletes guarantee zero data loss and empower authors to recover content without database intervention.
+
+**In this project**
+Implemented in `supabase/migrations/202611080001_soft_delete_posts.sql`, `src/lib/blog/data.ts`, `src/lib/blog/types.ts`, `src/routes/blog/dashboard/+page.server.ts`, and `src/routes/blog/dashboard/+page.svelte`.
+
+**Tradeoffs / pitfalls**
+Remember to add partial unique constraints on unique columns like `slug` so that soft-deleted rows do not block new records with identical slugs. Ensure all public endpoints, feeds, and sitemaps include the `.is("deleted_at", null)` condition.

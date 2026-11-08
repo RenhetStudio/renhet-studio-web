@@ -8,79 +8,6 @@ const publicCache = new Map<string, CacheEntry<unknown>>();
 const PUBLIC_CACHE_MS = 300_000;
 const PUBLIC_CACHE_MAX_ENTRIES = 200;
 
-export const FALLBACK_POSTS: BlogPostSummary[] = [
-  {
-    id: "post-006",
-    slug: "006-its-okay-if-youre-not-there-yet",
-    title: "#006: It's Okay If You're Not There Yet",
-    excerpt: "Sharing thoughts on trying to break into the industry.",
-    category: "General",
-    published_at: "2026-08-09T12:00:00Z",
-    created_at: "2026-08-09T12:00:00Z",
-    updated_at: "2026-08-09T12:00:00Z",
-  },
-  {
-    id: "post-weekend-shift",
-    slug: "the-weekend-shift-update",
-    title: "The Weekend Shift Update",
-    excerpt: "A big one this time, we've rebuilt the rhythm of a night behind the bar from the ground up. Here's what's new.",
-    category: "Dev Log",
-    published_at: "2026-07-31T12:00:00Z",
-    created_at: "2026-07-31T12:00:00Z",
-    updated_at: "2026-07-31T12:00:00Z",
-  },
-  {
-    id: "post-005",
-    slug: "005-a-beginners-guide-to-languages-that-dont-exist",
-    title: "#005: A Beginners Guide to Languages That Don't Exist",
-    excerpt: "Todd explains to us how Conlang works within world-building and game design!",
-    category: "General",
-    published_at: "2026-07-26T12:00:00Z",
-    created_at: "2026-07-26T12:00:00Z",
-    updated_at: "2026-07-26T12:00:00Z",
-  },
-  {
-    id: "post-004",
-    slug: "004-renhets-origins",
-    title: "#004: Renhet's Origins",
-    excerpt: "A small chat with Miguel around the creation of Renhet!",
-    category: "General",
-    published_at: "2026-07-19T12:00:00Z",
-    created_at: "2026-07-19T12:00:00Z",
-    updated_at: "2026-07-19T12:00:00Z",
-  },
-  {
-    id: "post-003",
-    slug: "003-who-is-renhet-part-2",
-    title: "#003: Who Is Renhet? Part 2!",
-    excerpt: "Round 2 of showing off our amazing team!",
-    category: "General",
-    published_at: "2026-07-12T12:00:00Z",
-    created_at: "2026-07-12T12:00:00Z",
-    updated_at: "2026-07-12T12:00:00Z",
-  },
-  {
-    id: "post-002",
-    slug: "002-who-is-renhet-part-1",
-    title: "#002: Who Is Renhet? Part 1!",
-    excerpt: "The first small glimpse into the team!",
-    category: "General",
-    published_at: "2026-07-05T12:00:00Z",
-    created_at: "2026-07-05T12:00:00Z",
-    updated_at: "2026-07-05T12:00:00Z",
-  },
-  {
-    id: "post-001",
-    slug: "001-hello-from-the-desk",
-    title: "#001: Hello From the Desk.",
-    excerpt: "An introduction to Renhet Between Builds!",
-    category: "General",
-    published_at: "2026-06-28T12:00:00Z",
-    created_at: "2026-06-28T12:00:00Z",
-    updated_at: "2026-06-28T12:00:00Z",
-  },
-];
-
 let cachedPublicClient: SupabaseClient | null = null;
 function getPublicClient(): SupabaseClient {
   if (!cachedPublicClient) {
@@ -111,22 +38,7 @@ export function clearPublishedPostsCache() {
   publicCache.clear();
 }
 
-function filterFallbackPosts(options: PublishedPostsOptions = {}): BlogPostSummary[] {
-  let list = [...FALLBACK_POSTS];
-  if (options.category) {
-    list = list.filter((p) => p.category.toLowerCase() === options.category?.toLowerCase());
-  }
-  if (options.query) {
-    const q = options.query.toLowerCase().trim();
-    list = list.filter((p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q));
-  }
-  if (options.limit) {
-    list = list.slice(0, options.limit);
-  }
-  return list;
-}
-
-export async function getPublishedPosts(options: PublishedPostsOptions = {}) {
+export async function getPublishedPosts(options: PublishedPostsOptions = {}): Promise<BlogPostSummary[]> {
   return cached(`posts:${JSON.stringify(options)}`, async () => {
     try {
       const supabase = getPublicClient();
@@ -134,29 +46,31 @@ export async function getPublishedPosts(options: PublishedPostsOptions = {}) {
         .from("posts")
         .select("id, slug, title, excerpt, category, published_at, created_at, updated_at")
         .eq("status", "published")
+        .is("deleted_at", null)
         .lte("published_at", new Date().toISOString())
         .order("published_at", { ascending: false })
         .limit(options.limit ?? 100);
+
       if (options.category) request = request.eq("category", options.category);
       if (options.query) {
         const safeQuery = options.query.replace(/[%_,()]/g, " ").trim().slice(0, 80);
         if (safeQuery) request = request.or(`title.ilike.%${safeQuery}%,excerpt.ilike.%${safeQuery}%`);
       }
+
       const { data, error } = await request;
       if (error) {
-        return filterFallbackPosts(options);
+        console.error("Could not fetch published posts:", error.message);
+        return [];
       }
-      if (!data || data.length === 0) {
-        return filterFallbackPosts(options);
-      }
-      return data as BlogPostSummary[];
-    } catch {
-      return filterFallbackPosts(options);
+      return (data ?? []) as BlogPostSummary[];
+    } catch (err) {
+      console.error("Unexpected error fetching published posts:", err);
+      return [];
     }
   });
 }
 
-export async function getPublishedPost(slug: string) {
+export async function getPublishedPost(slug: string): Promise<BlogPost | null> {
   return cached(`post:${slug}`, async () => {
     try {
       const { data, error } = await getPublicClient()
@@ -164,68 +78,34 @@ export async function getPublishedPost(slug: string) {
         .select("*")
         .eq("slug", slug)
         .eq("status", "published")
+        .is("deleted_at", null)
         .lte("published_at", new Date().toISOString())
         .maybeSingle();
-      if (error || !data) {
-        const fallback = FALLBACK_POSTS.find((p) => p.slug === slug);
-        if (fallback) {
-          return {
-            ...fallback,
-            cover_image_url: null,
-            cover_image_alt: "",
-            content: {
-              type: "doc",
-              content: [
-                {
-                  type: "paragraph",
-                  content: [{ type: "text", text: fallback.excerpt }],
-                },
-              ],
-            },
-            status: "published" as const,
-            author_id: "author-1",
-          } as BlogPost;
-        }
+
+      if (error) {
+        console.error(`Could not fetch post ${slug}:`, error.message);
         return null;
       }
-      return data as BlogPost | null;
-    } catch {
-      const fallback = FALLBACK_POSTS.find((p) => p.slug === slug);
-      if (fallback) {
-        return {
-          ...fallback,
-          cover_image_url: null,
-          cover_image_alt: "",
-          content: {
-            type: "doc",
-            content: [
-              {
-                type: "paragraph",
-                content: [{ type: "text", text: fallback.excerpt }],
-              },
-            ],
-          },
-          status: "published" as const,
-          author_id: "author-1",
-        } as BlogPost;
-      }
+      return (data ?? null) as BlogPost | null;
+    } catch (err) {
+      console.error(`Unexpected error fetching post ${slug}:`, err);
       return null;
     }
   });
 }
 
-export async function getPostForEditor(supabase: SupabaseClient, id: string) {
+export async function getPostForEditor(supabase: SupabaseClient, id: string): Promise<BlogPost | null> {
   const { data } = await supabase.from("posts").select("*").eq("id", id).maybeSingle();
   return data as BlogPost | null;
 }
 
-export async function getAllPostsForDashboard(supabase: SupabaseClient) {
+export async function getAllPostsForDashboard(supabase: SupabaseClient): Promise<BlogPost[]> {
   const { data, error } = await supabase.from("posts").select("*").order("updated_at", { ascending: false });
   if (error) throw new Error(`Could not load dashboard posts: ${error.message}`);
   return (data ?? []) as BlogPost[];
 }
 
-export async function getPostComments(supabase: SupabaseClient, postId: string) {
+export async function getPostComments(supabase: SupabaseClient, postId: string): Promise<BlogComment[]> {
   const { data, error } = await supabase
     .from("comments")
     .select("*")
@@ -236,7 +116,7 @@ export async function getPostComments(supabase: SupabaseClient, postId: string) 
   return (data ?? []) as BlogComment[];
 }
 
-export async function getPendingComments(supabase: SupabaseClient) {
+export async function getPendingComments(supabase: SupabaseClient): Promise<BlogComment[]> {
   const { data, error } = await supabase
     .from("comments")
     .select("*")
