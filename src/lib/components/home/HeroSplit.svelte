@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import WaveDivider from "$lib/components/home/WaveDivider.svelte";
+  import IconArrow from "$lib/components/icons/IconArrow.svelte";
 
   let activePanel = $state<"studio" | "game" | null>(null);
   let isReducedMotion = $state(false);
 
-  // Unified full-bleed morphing wave divider (viewBox 0 0 1000 1000) — INTACTO
+  // Wave divider morphing contour paths (viewBox 0 0 1000 1000)
   const sNeutral =
     "M 500,0 C 510,70 515,160 508,250 C 498,340 486,430 492,520 C 500,610 514,700 508,790 C 500,870 492,940 500,1000";
   const sActive =
@@ -105,11 +106,11 @@
 <section
   id="hero"
   data-hero
-  class="relative isolate w-full overflow-hidden bg-[#344253]"
+  class="relative isolate h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-[#344253] xl:h-auto xl:max-h-none"
   aria-label="Welcome to Renhet Studio"
   onmousemove={onMouseMove}
 >
-  <!-- Base Full-Bleed Desktop Wave Background: z-0 -->
+  <!-- Background desktop wave contours -->
   <div
     class="pointer-events-none absolute -top-48 -bottom-48 inset-0 z-0 hidden h-[calc(100%+24rem)] w-full overflow-visible xl:block"
     aria-hidden="true"
@@ -134,7 +135,7 @@
     </svg>
   </div>
 
-  <!-- Dynamic Wave Cover & Highlight Stroke: z-20 -->
+  <!-- Interactive wave mask and highlight strokes -->
   <div
     class="pointer-events-none absolute -top-48 -bottom-48 inset-0 z-20 hidden h-[calc(100%+24rem)] w-full overflow-visible xl:block"
     aria-hidden="true"
@@ -193,61 +194,54 @@
   </div>
 
   <div
-    class="hero-split-container grid min-h-[94vh] w-full grid-cols-1 xl:grid-cols-2 {activePanel ===
+    class="hero-split-container grid h-[100dvh] max-h-[100dvh] w-full grid-cols-1 grid-rows-2 overflow-hidden xl:h-auto xl:min-h-[94vh] xl:max-h-none xl:grid-cols-2 xl:grid-rows-1 {activePanel ===
     'studio'
       ? 'xl:grid-cols-[1.28fr_0.72fr]'
       : activePanel === 'game'
         ? 'xl:grid-cols-[0.72fr_1.28fr]'
         : 'xl:grid-cols-[1fr_1fr]'}"
   >
-    <!-- ==========================================
-         LEFT PANEL: The Studio (#crew)
-         Composición superpuesta con relieve 3D
-         ========================================== -->
+    <!-- Studio Panel (#crew) -->
     <a
       href="#crew"
       aria-label="Meet the Renhet Studio crew"
-      class="panel-studio group relative flex min-h-[540px] flex-col items-center justify-end bg-[#8fb8d8] px-6 pt-24 pb-20 no-underline sm:min-h-[600px] sm:px-10 xl:min-h-0 xl:bg-transparent xl:pb-24 {activePanel ===
+      class="panel-studio group relative flex h-full min-h-0 flex-col items-center justify-between bg-[#8fb8d8] px-4 pt-16 pb-8 no-underline sm:px-8 sm:pt-20 sm:pb-10 xl:min-h-0 xl:bg-transparent xl:justify-end xl:px-10 xl:pt-24 xl:pb-24 {activePanel ===
       'studio'
         ? 'z-30'
         : 'z-10'}"
       onmouseenter={() => handlePanelEnter("studio")}
       onmouseleave={handlePanelLeave}
     >
-      <!-- CAPA 1 (z-0): Marca de agua gigante del Sol de Renhet + Halo atmosférico -->
-      <!-- Hace de espejo con la marca de agua de Beelze Pub y ancla la base de la ola -->
+      <!-- Studio background watermark -->
       <div
         bind:this={studioBgEl}
         class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-visible"
         aria-hidden="true"
       >
-        <!-- Halo central cálido detrás del tótem -->
         <div
-          class="absolute top-1/2 left-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fffdf3]/25 blur-3xl"
+          class="absolute top-1/2 left-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fffdf3]/25 blur-3xl sm:h-[380px] sm:w-[380px] xl:h-[420px] xl:w-[420px]"
         ></div>
-        <!-- Sombra ambiental suave en la esquina superior izquierda para dar viñeta -->
         <div
-          class="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-[#344253]/15 blur-3xl"
+          class="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#344253]/15 blur-3xl xl:h-96 xl:w-96"
         ></div>
 
-        <!-- Marca de agua de Renhet Symbol en el fondo -->
         <picture class="flex items-center justify-center">
           <source
             type="image/avif"
             srcset="/optimized/renhet-symbol-white-240.avif 240w, /optimized/renhet-symbol-white-480.avif 480w"
-            sizes="(max-width: 640px) 280px, (max-width: 1280px) 440px, 520px"
+            sizes="(max-width: 640px) 300px, (max-width: 1280px) 440px, 520px"
           />
           <source
             type="image/webp"
             srcset="/optimized/renhet-symbol-white-240.webp 240w, /optimized/renhet-symbol-white-480.webp 480w"
-            sizes="(max-width: 640px) 280px, (max-width: 1280px) 440px, 520px"
+            sizes="(max-width: 640px) 300px, (max-width: 1280px) 440px, 520px"
           />
           <img
             src="/renhet-symbol-white.png"
             alt=""
             width="475"
             height="475"
-            class="h-auto w-[82%] max-w-[420px] sm:max-w-[500px] xl:max-w-[580px] 2xl:max-w-[640px] object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
+            class="h-auto w-[76%] max-w-[300px] sm:max-w-[380px] xl:w-[82%] xl:max-w-[580px] 2xl:max-w-[640px] object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
             'studio'
               ? 'opacity-30 scale-[1.12] rotate-3'
               : activePanel === 'game'
@@ -257,33 +251,31 @@
         </picture>
       </div>
 
-      <!-- CAPA 2 (z-25): Tótem central superpuesto (Logo grande con extrusión + Eslogan pisando el logo) -->
+      <!-- Studio brand lockup -->
       <div
-        class="pointer-events-none relative z-25 my-auto flex w-full flex-col items-center justify-center pt-10 pb-6 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
+        class="pointer-events-none relative z-25 my-auto flex w-full flex-col items-center justify-center pt-2 pb-1 sm:pt-4 xl:pt-10 xl:pb-6 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
         'studio'
           ? 'scale-105 opacity-100'
           : activePanel === 'game'
             ? 'scale-90 opacity-45'
             : 'scale-100 opacity-100'}"
       >
-        <!-- Logo de Renhet Studio a gran escala con sombra dura 3D (#344253) como el arte de Beelze Pub -->
         <img
           src="/renhet-logo-white.png"
           alt="Renhet Studio"
           width="1024"
           height="516"
-          class="studio-logo-extrusion relative z-10 w-[84%] max-w-[360px] sm:max-w-[430px] xl:max-w-[490px] 2xl:max-w-[540px] -rotate-1 object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-rotate-2 group-hover:scale-[1.03]"
+          class="studio-logo-extrusion relative z-10 w-[80%] max-w-[280px] sm:max-w-[340px] md:max-w-[380px] xl:w-[84%] xl:max-w-[490px] 2xl:max-w-[540px] -rotate-1 object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-rotate-2 group-hover:scale-[1.03]"
         />
 
-        <!-- Eslogan: tipografía limpia en Paperlogy acorde a la identidad de la web -->
         <div
-          class="relative z-20 -mt-2 sm:-mt-3 flex flex-col items-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+          class="relative z-20 -mt-1 sm:-mt-2 xl:-mt-3 flex flex-col items-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
         >
           <h1
             class="studio-slogan-extrusion text-center font-brand tracking-normal text-[#fffdf3]"
           >
             <span
-              class="block text-2xl sm:text-3xl xl:text-[2.4rem] 2xl:text-[2.75rem] leading-[1.08] tracking-wide"
+              class="block text-xl sm:text-2xl md:text-3xl xl:text-[2.4rem] 2xl:text-[2.75rem] leading-[1.08] tracking-wide"
             >
               Friendly detailed worlds
             </span>
@@ -291,23 +283,20 @@
         </div>
       </div>
 
-      <!-- CAPA 3 (z-30): Pill CTA -->
+      <!-- Studio CTA button -->
       <div
-        class="hero-cta-pill relative z-30 flex items-center gap-2.5 rounded-full border border-[#fffdf3]/45 bg-[#344253]/90 px-6 py-3 text-sm font-bold tracking-tight text-[#fffdf3] shadow-lg backdrop-blur-md transition-all duration-500 group-hover:scale-105 group-hover:border-[#fffdf3] group-hover:bg-[#fffdf3] group-hover:text-[#344253] {activePanel ===
+        class="hero-cta-button relative z-30 inline-flex h-8 sm:h-9 xl:h-10 w-[172px] sm:w-[190px] xl:w-[205px] items-center justify-center gap-2 rounded-full border border-[#fffdf3]/20 bg-[#344253]/45 text-xs sm:text-sm font-bold tracking-tight text-[#fffdf3] shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:border-[#fffdf3]/40 group-hover:bg-[#344253]/65 {activePanel ===
         'game'
-          ? 'opacity-40 scale-90'
+          ? 'opacity-40'
           : 'opacity-100'}"
       >
         <span>Meet the crew</span>
-        <span
-          class="transition-transform duration-300 group-hover:translate-y-0.5"
-          aria-hidden="true">↓</span
-        >
+        <IconArrow direction="down" size={13} />
       </div>
 
-      <!-- Mobile Horizontal Seam Separator -->
+      <!-- Mobile horizontal seam separator -->
       <div
-        class="pointer-events-none absolute -bottom-5 left-0 right-0 z-20 block h-10 w-full overflow-hidden xl:hidden"
+        class="pointer-events-none absolute -bottom-3 left-0 right-0 z-20 block h-7 w-full overflow-hidden xl:hidden"
         aria-hidden="true"
       >
         <svg
@@ -336,27 +325,25 @@
       </div>
     </a>
 
-    <!-- ==========================================
-         RIGHT PANEL: Beelze Pub (#game) — INTACTO
-         ========================================== -->
+    <!-- Beelze Pub Panel (#game) -->
     <a
       href="#game"
       aria-label="Explore Beelze Pub"
-      class="panel-game group relative flex min-h-[540px] flex-col items-center justify-end bg-transparent px-6 pt-20 pb-20 text-[#fffdf3] no-underline sm:min-h-[600px] sm:px-10 xl:min-h-0 xl:pb-24 {activePanel ===
+      class="panel-game group relative flex h-full min-h-0 flex-col items-center justify-end bg-transparent px-4 pt-3 pb-12 text-[#fffdf3] no-underline sm:px-8 sm:pb-16 xl:min-h-0 xl:pt-20 xl:pb-24 {activePanel ===
       'game'
         ? 'z-30'
         : 'z-10'}"
       onmouseenter={() => handlePanelEnter("game")}
       onmouseleave={handlePanelLeave}
     >
-      <!-- CAPA 1: Logo de Beelze Pub de fondo -->
+      <!-- Beelze Pub background watermark -->
       <div
         bind:this={gameBgEl}
-        class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center pb-24 sm:pb-32 xl:pb-28"
+        class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center pb-20 sm:pb-26 xl:pb-28"
         aria-hidden="true"
       >
         <div
-          class="absolute right-0 top-1/4 h-80 w-80 rounded-full bg-[#8fb8d8]/15 blur-3xl"
+          class="absolute right-0 top-1/4 h-56 w-56 rounded-full bg-[#8fb8d8]/15 blur-3xl xl:h-80 xl:w-80"
         ></div>
 
         <img
@@ -364,7 +351,7 @@
           alt=""
           width="520"
           height="260"
-          class="w-[80%] max-w-md object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
+          class="w-[75%] max-w-[270px] sm:max-w-[330px] xl:w-[80%] xl:max-w-md object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
           'game'
             ? 'opacity-85 scale-105'
             : activePanel === 'studio'
@@ -373,9 +360,9 @@
         />
       </div>
 
-      <!-- CAPA 2: Skelly GIF anclado abajo en primer plano -->
+      <!-- Skelly foreground character -->
       <div
-        class="pointer-events-none absolute -bottom-5 left-1/2 z-25 -translate-x-1/2 sm:-bottom-7 xl:-bottom-9 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
+        class="pointer-events-none absolute bottom-0 left-1/2 z-25 -translate-x-1/2 sm:-bottom-3 xl:-bottom-9 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
         'game'
           ? 'scale-105 opacity-100'
           : activePanel === 'studio'
@@ -388,31 +375,28 @@
           alt="Skelly serving drinks in Beelze Pub"
           width="706"
           height="211"
-          class="block h-[220px] w-auto max-w-none object-contain object-bottom align-bottom transition-all duration-500 {activePanel ===
+          class="block h-[180px] sm:h-[225px] md:h-[275px] xl:h-[390px] 2xl:h-[450px] w-auto max-w-none object-contain object-bottom align-bottom transition-all duration-500 {activePanel ===
           'game'
             ? 'drop-shadow-[0_-18px_44px_rgba(143,184,216,0.5)]'
-            : 'drop-shadow-[0_-14px_36px_rgba(143,184,216,0.35)]'} sm:h-[280px] md:h-[340px] xl:h-[390px] 2xl:h-[450px]"
+            : 'drop-shadow-[0_-14px_36px_rgba(143,184,216,0.35)]'}"
           loading="eager"
         />
       </div>
 
-      <!-- CAPA 3: Pill CTA -->
+      <!-- Beelze Pub CTA button -->
       <div
-        class="hero-cta-pill relative z-30 flex items-center gap-2.5 rounded-full border border-[#fffdf3]/35 bg-[#1e2632]/75 px-6 py-3 text-sm font-bold tracking-tight text-[#fffdf3] shadow-lg backdrop-blur-md transition-all duration-500 group-hover:scale-105 group-hover:border-[#fffdf3] group-hover:bg-[#fffdf3] group-hover:text-[#344253] {activePanel ===
+        class="hero-cta-button relative z-30 inline-flex h-8 sm:h-9 xl:h-10 w-[172px] sm:w-[190px] xl:w-[205px] items-center justify-center gap-2 rounded-full border border-[#fffdf3]/20 bg-[#1e2632]/50 text-xs sm:text-sm font-bold tracking-tight text-[#fffdf3] shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:border-[#fffdf3]/40 group-hover:bg-[#1e2632]/70 {activePanel ===
         'studio'
-          ? 'opacity-40 scale-90'
+          ? 'opacity-40'
           : 'opacity-100'}"
       >
         <span>Explore Beelze Pub</span>
-        <span
-          class="transition-transform duration-300 group-hover:translate-y-0.5"
-          aria-hidden="true">↓</span
-        >
+        <IconArrow direction="down" size={13} />
       </div>
     </a>
   </div>
 
-  <!-- Integrated Bottom Wave Divider: INTACTO -->
+  <!-- Bottom wave transition to paper body -->
   <div class="pointer-events-none absolute bottom-0 left-0 right-0 z-40">
     <WaveDivider fillColor="#f6f1e8" />
   </div>
@@ -426,9 +410,9 @@
   }
 
   .studio-slogan-extrusion {
-    filter: drop-shadow(0 1px 0 #34425320) drop-shadow(0 -1px 0 #34425320)
-      drop-shadow(1.5px 0 0 #34425320) drop-shadow(-1.5px 0 0 #34425320)
-      drop-shadow(0 5px 10px rgba(30, 38, 50, 0.25));
+    filter: drop-shadow(0 1.5px 0 #34425355) drop-shadow(0 -0.5px 0 #34425335)
+      drop-shadow(1px 0 0 #34425345) drop-shadow(-1px 0 0 #34425345)
+      drop-shadow(0 6px 14px rgba(30, 38, 50, 0.2));
   }
 
   .hero-split-container {
@@ -441,8 +425,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .hero-split-container,
-    .wave-path-seam,
-    .hero-cta-pill {
+    .wave-path-seam {
       transition: none !important;
       animation: none !important;
     }
