@@ -780,3 +780,20 @@ Enforced in `src/routes/auth/callback/+server.ts`, `src/routes/account/+page.ser
 **Tradeoffs / pitfalls**
 Remember to revoke the session via `auth.signOut()` before issuing the redirect in the auth callback; otherwise, session cookies remain in the browser for subsequent requests.
 
+### Compact authenticated navigation dropdowns for fixed pill navbars
+
+**Simple explanation**
+When a floating pill navbar uses centered navigation links alongside user controls, laying out multiple buttons in a row (e.g., Dashboard, username, Sign out) consumes excessive horizontal space and inevitably collides with the centered links. Consolidating user actions into a single dropdown trigger preserves the visual balance of the navbar.
+
+**How it works**
+Replace inline authenticated links with a single interactive pill displaying the user's name and a chevron. Clicking toggles a floating contextual menu (`role="menu"`) styled with the studio aesthetic (frosted dark slate background `#4f5f70`/95, white border, soft blur). Listen to click-outside on `window` and the `Escape` key, and automatically close the menu on client navigation (`afterNavigate`) and window resize.
+
+**Why it matters**
+On fixed pill headers with absolutely centered elements (`left-1/2 -translate-x-1/2`), right-aligned action groups that grow with author privileges easily collide with navigation links (e.g., placing audio toggle buttons directly on top of "Careers"). A compact dropdown guarantees a predictable max-width (~160px) regardless of user role or action count.
+
+**In this project**
+`src/lib/components/SiteHeader.svelte` uses `IconChevronDown` with a rotational transition and renders an organic floating menu offering "Author Dashboard", "Account Settings", and a distinct "Sign out" action.
+
+**Tradeoffs / pitfalls**
+Always ensure the click-outside handler checks whether the click originated within `userMenuRef` before closing, and close the dropdown on both route navigation and viewport resize to avoid orphaned floating overlays.
+

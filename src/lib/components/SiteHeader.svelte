@@ -6,6 +6,7 @@
   import type { UserProfile } from "$lib/blog/types";
   import { sound } from "$lib/audio/soundEffects";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
+  import IconChevronDown from "$lib/components/icons/IconChevronDown.svelte";
 
   let { profile = null }: { profile?: UserProfile | null } = $props();
 
@@ -14,6 +15,8 @@
     typeof document !== "undefined" ? Boolean(document.querySelector("[data-hero]")) : true
   );
   let isMobileMenuOpen = $state(false);
+  let isUserMenuOpen = $state(false);
+  let userMenuRef = $state<HTMLElement | null>(null);
 
   let heroResizeObserver: ResizeObserver | null = null;
   let currentObservedHero: HTMLElement | null = null;
@@ -76,6 +79,8 @@
 
   afterNavigate(() => {
     checkHeroVisibility();
+    isUserMenuOpen = false;
+    isMobileMenuOpen = false;
   });
 
   $effect(() => {
@@ -92,6 +97,9 @@
       checkHeroVisibility();
       if (window.innerWidth >= 768 && isMobileMenuOpen) {
         isMobileMenuOpen = false;
+      }
+      if (isUserMenuOpen) {
+        isUserMenuOpen = false;
       }
     };
 
@@ -121,6 +129,7 @@
 
   const canAuthor = $derived(profile ? ["author", "admin"].includes(profile.role) : false);
 
+
   const toggleSound = () => {
     sound.toggleMute();
   };
@@ -132,8 +141,18 @@
 
 <svelte:window
   onkeydown={(e) => {
-    if (e.key === "Escape" && isMobileMenuOpen) {
-      isMobileMenuOpen = false;
+    if (e.key === "Escape") {
+      if (isUserMenuOpen) isUserMenuOpen = false;
+      if (isMobileMenuOpen) isMobileMenuOpen = false;
+    }
+  }}
+  onclick={(e) => {
+    if (
+      isUserMenuOpen &&
+      userMenuRef &&
+      !userMenuRef.contains(e.target as Node)
+    ) {
+      isUserMenuOpen = false;
     }
   }}
 />
@@ -302,32 +321,102 @@
         </span>
       </button>
 
-      <!-- Desktop author dashboard & account controls -->
-      {#if canAuthor}
-        <a
-          href="/blog/dashboard"
-          class="hidden rounded-full bg-[#fffdf3] px-3 py-1.5 text-xs font-black text-[#344253] transition-transform duration-200 hover:scale-105 hover:bg-[#b8d4f0] md:inline-flex sm:px-4 sm:text-sm"
-        >
-          Dashboard
-        </a>
-      {/if}
-
+      <!-- Desktop User Account Dropdown (replaces scattered Dashboard/Name/Signout buttons) -->
       {#if profile}
-        <a
-          href="/account"
-          title={profile.display_name}
-          class="hidden max-w-24 truncate rounded-full px-2 py-1.5 text-xs font-bold text-[#fffdf3] hover:bg-[#fffdf3]/15 md:inline-flex sm:max-w-36"
-        >
-          {profile.display_name}
-        </a>
-        <form method="POST" action="/auth/signout" class="hidden md:flex">
+        <div class="relative hidden md:block" bind:this={userMenuRef}>
           <button
-            type="submit"
-            class="rounded-full px-2.5 py-1.5 text-xs font-bold text-[#fffdf3]/80 hover:text-[#fffdf3]"
+            type="button"
+            onclick={() => (isUserMenuOpen = !isUserMenuOpen)}
+            class="inline-flex h-9 items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all duration-200 active:scale-95 {isUserMenuOpen
+              ? 'border-[#fffdf3] bg-[#fffdf3] text-[#344253] shadow-xs'
+              : 'border-[#fffdf3]/30 bg-[#fffdf3]/10 text-[#fffdf3] hover:border-[#fffdf3]/50 hover:bg-[#fffdf3]/20'}"
+            aria-expanded={isUserMenuOpen}
+            aria-haspopup="menu"
+            aria-label="User account menu"
           >
-            Sign out
+            <span class="max-w-[130px] truncate sm:max-w-[160px]">
+              {profile.display_name}
+            </span>
+            <IconChevronDown
+              size={13}
+              class="transition-transform duration-200 {isUserMenuOpen ? 'rotate-180' : ''}"
+            />
           </button>
-        </form>
+
+          {#if isUserMenuOpen}
+            <div
+              transition:fly={{ y: -6, duration: 180 }}
+              class="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-2xl border-2 border-[#fffdf3] bg-[#4f5f70]/95 p-1.5 text-[#fffdf3] shadow-[0_16px_40px_rgba(30,40,55,0.35)] ring-1 ring-[#fffdf3]/30 backdrop-blur-xl"
+              role="menu"
+              aria-label="Account options"
+            >
+              <!-- User info header -->
+              <div class="border-b border-[#fffdf3]/15 px-3 py-2 mb-1">
+                <p class="text-[11px] font-bold uppercase tracking-wider text-[#fffdf3]/65">
+                  Signed in as
+                </p>
+                <div class="mt-0.5 flex items-center justify-between gap-1.5">
+                  <span class="truncate text-sm font-black text-[#fffdf3]">
+                    {profile.display_name}
+                  </span>
+                  {#if canAuthor}
+                    <span
+                      class="shrink-0 rounded-full border border-[#8fb8d8]/60 bg-[#8fb8d8]/20 px-2 py-0.5 text-[10px] font-black text-[#fffdf3]"
+                    >
+                      {profile.role === 'admin' ? 'Admin' : 'Author'}
+                    </span>
+                  {/if}
+                </div>
+              </div>
+
+              <!-- Menu Links -->
+              <div class="flex flex-col gap-0.5">
+                {#if canAuthor}
+                  <a
+                    href="/blog/dashboard"
+                    role="menuitem"
+                    onclick={() => (isUserMenuOpen = false)}
+                    class="group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-[#fffdf3] transition-colors hover:bg-[#fffdf3]/15"
+                  >
+                    <span>Author Dashboard</span>
+                    <IconArrow
+                      direction="right"
+                      size={12}
+                      class="opacity-60 transition-opacity group-hover:opacity-100"
+                    />
+                  </a>
+                {/if}
+
+                <a
+                  href="/account"
+                  role="menuitem"
+                  onclick={() => (isUserMenuOpen = false)}
+                  class="group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-[#fffdf3] transition-colors hover:bg-[#fffdf3]/15"
+                >
+                  <span>Account Settings</span>
+                  <IconArrow
+                    direction="right"
+                    size={12}
+                    class="opacity-60 transition-opacity group-hover:opacity-100"
+                  />
+                </a>
+
+                <div class="my-1 h-px w-full bg-[#fffdf3]/15"></div>
+
+                <form method="POST" action="/auth/signout" class="w-full">
+                  <button
+                    type="submit"
+                    role="menuitem"
+                    class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-rose-300 transition-colors hover:bg-rose-500/20 hover:text-rose-100 cursor-pointer"
+                  >
+                    <span>Sign out</span>
+                    <IconArrow direction="right" size={12} class="opacity-60" />
+                  </button>
+                </form>
+              </div>
+            </div>
+          {/if}
+        </div>
       {/if}
     </div>
   </div>
@@ -358,42 +447,71 @@
           </a>
         {/each}
 
-        {#if canAuthor || profile}
-          <div class="my-1 h-px w-full bg-[#fffdf3]/15"></div>
-        {/if}
-
-        {#if canAuthor}
-          <a
-            href="/blog/dashboard"
-            onclick={() => {
-              isMobileMenuOpen = false;
-            }}
-            class="group flex items-center justify-between rounded-2xl bg-[#fffdf3] px-4 py-2.5 text-sm font-black text-[#344253] transition-all duration-200 hover:bg-[#b8d4f0]"
-          >
-            <span>Author Dashboard</span>
-            <IconArrow direction="right" size={14} />
-          </a>
-        {/if}
-
         {#if profile}
-          <div class="flex items-center justify-between px-3 py-2">
-            <a
-              href="/account"
-              onclick={() => {
-                isMobileMenuOpen = false;
-              }}
-              class="text-xs font-bold text-[#fffdf3]/80 hover:text-[#fffdf3]"
-            >
-              Account: {profile.display_name}
-            </a>
-            <form method="POST" action="/auth/signout" class="flex">
-              <button
-                type="submit"
-                class="rounded-full px-3 py-1 text-xs font-bold text-[#fffdf3]/70 hover:bg-[#fffdf3]/10 hover:text-[#fffdf3]"
+          <div class="my-1.5 h-px w-full bg-[#fffdf3]/15"></div>
+
+          <!-- Compact Mobile Account Section -->
+          <div class="flex flex-col gap-0.5 px-1 py-0.5">
+            <div class="flex items-center justify-between px-3 py-1">
+              <span class="truncate text-xs font-bold text-[#fffdf3]/75">
+                {profile.display_name}
+              </span>
+              {#if canAuthor}
+                <span
+                  class="shrink-0 rounded-full border border-[#8fb8d8]/60 bg-[#8fb8d8]/20 px-2 py-0.5 text-[9px] font-black text-[#fffdf3]"
+                >
+                  {profile.role === 'admin' ? 'Admin' : 'Author'}
+                </span>
+              {/if}
+            </div>
+
+            <div class="flex items-center gap-1 text-xs">
+              {#if canAuthor}
+                <a
+                  href="/blog/dashboard"
+                  onclick={() => {
+                    isMobileMenuOpen = false;
+                  }}
+                  class="group inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold text-[#fffdf3] transition-colors hover:bg-[#fffdf3]/15 active:scale-95"
+                >
+                  <span>Dashboard</span>
+                  <IconArrow
+                    direction="right"
+                    size={11}
+                    class="opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:opacity-100"
+                  />
+                </a>
+              {/if}
+
+              <a
+                href="/account"
+                onclick={() => {
+                  isMobileMenuOpen = false;
+                }}
+                class="group inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold text-[#fffdf3] transition-colors hover:bg-[#fffdf3]/15 active:scale-95"
               >
-                Sign out
-              </button>
-            </form>
+                <span>Account</span>
+                <IconArrow
+                  direction="right"
+                  size={11}
+                  class="opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:opacity-100"
+                />
+              </a>
+
+              <form method="POST" action="/auth/signout" class="ml-auto">
+                <button
+                  type="submit"
+                  class="group inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold text-rose-300 transition-colors hover:bg-rose-500/20 hover:text-rose-100 active:scale-95 cursor-pointer"
+                >
+                  <span>Sign out</span>
+                  <IconArrow
+                    direction="right"
+                    size={11}
+                    class="opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:opacity-100"
+                  />
+                </button>
+              </form>
+            </div>
           </div>
         {/if}
       </div>
