@@ -5,6 +5,7 @@
   import IconChevronDown from "$lib/components/icons/IconChevronDown.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
   import BlogDecoSplash from "$lib/components/blog/BlogDecoSplash.svelte";
+  import OrganicDivider from "$lib/components/OrganicDivider.svelte";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
@@ -80,11 +81,11 @@
   <div
     class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10 pt-28 sm:pt-36 md:pt-40 pb-20 sm:pb-24"
   >
-    <!-- Editorial Header: Standardized with Careers and The Crew in monumental scale, font-black leading-[1.08] and authentic Indie Palette -->
+    <!-- 1. Editorial Header: Standardized with Careers and The Crew in monumental scale, Paperlogy font-black leading-[0.88] and Slate Ink (#4f5f70) -->
     <header class="mb-10 sm:mb-14 text-left">
       <h1
         id="blog-title"
-        class="text-[clamp(3.2rem,7.5vw,7rem)] font-black leading-[1.08] tracking-tight text-[#4f5f70]"
+        class="text-[clamp(3.5rem,8vw,7.5rem)] font-black leading-[0.88] tracking-tight text-[#4f5f70]"
       >
         Renhet Between Builds.
       </h1>
@@ -95,7 +96,7 @@
       </p>
     </header>
 
-    <!-- Search & Category Controls with Debounced Instant Input (300ms) & Authentic Renhet Blue Accents -->
+    <!-- 2. Search & Category Controls with Debounced Instant Input (300ms) & Authentic Renhet Blue Accents -->
     <div
       class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-10"
     >
@@ -110,13 +111,13 @@
           oninput={handleSearchInput}
           placeholder="Search stories..."
           maxlength="80"
-          class="h-[48px] w-full rounded-full border border-[#4f5f70]/25 bg-[#fffdf3]/80 pl-5 pr-10 text-[15px] font-medium text-[#344253] placeholder:text-[#8a98a5] transition-all duration-200 hover:border-[#8fb8d8] focus:border-[#8fb8d8] focus:bg-[#fffdf3] focus:outline-none focus:ring-2 focus:ring-[#8fb8d8]/25"
+          class="h-[48px] w-full rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] pl-5 pr-10 text-[15px] font-bold text-[#4f5f70] placeholder:text-[#8a98a5] transition-all duration-200 hover:border-[#8fb8d8] focus:border-[#8fb8d8] focus:bg-[#fffdf3] focus:outline-none focus:ring-2 focus:ring-[#8fb8d8]/25"
         />
         {#if hasQuery}
           <button
             type="button"
             onclick={clearSearch}
-            class="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#627383] hover:text-[#344253] transition-colors"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#627383] hover:text-[#344253] transition-colors cursor-pointer"
             aria-label="Clear search"
           >
             <svg
@@ -129,6 +130,7 @@
               stroke-width="2.5"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -138,14 +140,14 @@
       </div>
 
       <!-- Category Filter Dropdown Pill with Chevron Icon & Pond Blue Accents -->
-      <div class="relative w-full sm:w-[180px]">
+      <div class="relative w-full sm:w-[190px]">
         <label for="blog-category" class="sr-only">Filter by category</label>
         <select
           id="blog-category"
           name="category"
           value={data.category ?? ""}
           onchange={handleCategoryChange}
-          class="h-[48px] w-full appearance-none cursor-pointer rounded-full border border-[#4f5f70]/25 bg-[#fffdf3]/80 pl-5 pr-10 text-[14px] sm:text-[15px] font-bold text-[#4f5f70] transition-all duration-200 hover:border-[#8fb8d8] hover:bg-[#fffdf3] focus:border-[#8fb8d8] focus:outline-none focus:ring-2 focus:ring-[#8fb8d8]/25"
+          class="h-[48px] w-full appearance-none cursor-pointer rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] pl-5 pr-10 text-[14px] sm:text-[15px] font-bold text-[#4f5f70] transition-all duration-200 hover:border-[#8fb8d8] hover:bg-[#fffdf3] focus:border-[#8fb8d8] focus:outline-none focus:ring-2 focus:ring-[#8fb8d8]/25"
         >
           <option value="">All categories</option>
           {#each BLOG_CATEGORIES as item}
@@ -160,28 +162,20 @@
       </div>
     </div>
 
-    <!-- Articles Stream: Featured Post, Editorial List, & Editorial Pagination -->
+    <!-- 3. Articles Stream: Featured Post, Editorial List, & Editorial Pagination -->
     {#await Promise.all([data.posts, data.globalLatestSlug])}
-      <!-- Non-blocking pulse skeleton matching the 3-column editorial grid -->
+      <!-- Non-blocking pulse skeleton -->
       <div class="animate-pulse" aria-busy="true" aria-label="Loading stories">
-        <div
-          class="rounded-[28px] bg-[#f0f5fa] border-2 border-[#8fb8d8]/25 p-6 sm:p-8 lg:p-10 min-h-[160px] flex items-center justify-between shadow-sm"
-        >
-          <div class="h-4 w-20 rounded bg-[#4f5f70]/15"></div>
-          <div class="flex-1 max-w-xl mx-8">
-            <div class="h-5 w-28 rounded-full bg-[#8fb8d8]/25 mb-3"></div>
-            <div class="h-8 w-4/5 rounded bg-[#4f5f70]/15 mb-2"></div>
-            <div class="h-4 w-3/5 rounded bg-[#4f5f70]/10"></div>
-          </div>
-          <div class="h-6 w-16 rounded-full bg-[#8fb8d8]/20"></div>
+        <div class="py-6 sm:py-8 border-b border-[#4f5f70]/15">
+          <div class="h-4 w-20 rounded bg-[#4f5f70]/15 mb-3"></div>
+          <div class="h-10 w-3/5 rounded bg-[#4f5f70]/15 mb-3"></div>
+          <div class="h-4 w-2/5 rounded bg-[#4f5f70]/10"></div>
         </div>
-        <div
-          class="divide-y divide-[#4f5f70]/15 mt-8 border-t border-[#4f5f70]/15"
-        >
+        <div class="divide-y divide-[#4f5f70]/15 mt-4">
           {#each [1, 2, 3] as i (i)}
-            <div class="py-5 px-3 flex items-center justify-between">
+            <div class="py-5 flex items-center justify-between">
               <div class="h-4 w-16 rounded bg-[#4f5f70]/10"></div>
-              <div class="flex-1 max-w-lg mx-8">
+              <div class="flex-1 max-w-lg mx-6">
                 <div class="h-5 w-2/3 rounded bg-[#4f5f70]/15 mb-1.5"></div>
                 <div class="h-3 w-1/2 rounded bg-[#4f5f70]/10"></div>
               </div>
@@ -220,53 +214,51 @@
                   page: 1,
                   scroll: false,
                 })}
-              class="inline-block mt-4 text-sm font-bold text-[#8fb8d8] underline underline-offset-4 hover:text-[#4f5f70] transition-colors"
+              class="inline-block mt-4 text-sm font-bold text-[#8fb8d8] underline underline-offset-4 hover:text-[#4f5f70] transition-colors cursor-pointer"
             >
               Reset filters and view all stories
             </button>
           {/if}
         </div>
       {:else}
-        <!-- Featured Post: Delicate Light Blue Wash #f0f5fa with Pond Blue Border #8fb8d8 & Handcrafted Organic Star Splash -->
+        <!-- Featured Post: Authentic Indie Editorial Layout without artificial card box -->
         {#if featured}
-          <article
-            class="group relative overflow-hidden rounded-[28px] bg-[#f0f5fa] border-2 border-[#8fb8d8]/30 shadow-[0_4px_24px_rgba(143,184,216,0.12)] p-6 sm:p-8 lg:p-10 transition-all duration-200 hover:border-[#8fb8d8] hover:shadow-[0_8px_32px_rgba(143,184,216,0.2)]"
-          >
+          <article class="group relative py-6 sm:py-8 lg:py-10">
             <!-- Desktop Layout (3 Columns: Date ~15%, Content ~70%, Category ~15%) -->
             <div
-              class="hidden md:grid md:grid-cols-[140px_1fr_auto] lg:grid-cols-[160px_1fr_auto] gap-6 items-center"
+              class="hidden md:grid md:grid-cols-[140px_1fr_auto] lg:grid-cols-[160px_1fr_auto] gap-6 items-start"
             >
               <!-- Column 1: Date -->
               <time
                 datetime={featured.published_at ?? featured.created_at}
-                class="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-[#627383] shrink-0"
+                class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-[#8a98a5] shrink-0 pt-2"
               >
                 {formatDate(featured.published_at ?? featured.created_at)}
               </time>
 
-              <!-- Column 2: Content (LATEST POST pill, Title & Excerpt) -->
+              <!-- Column 2: Content (Title & Excerpt) -->
               <div
-                class="relative z-10 flex flex-col items-start pr-6 max-w-[760px]"
+                class="relative z-10 flex flex-col items-start pr-6 max-w-[780px]"
               >
                 <a
                   href={`/blog/${featured.slug}`}
-                  class="font-black text-2xl sm:text-3xl lg:text-[34px] leading-[1.08] text-[#344253] tracking-tight group-hover:text-[#4f5f70] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8] transition-colors"
+                  class="font-black text-2xl sm:text-3xl lg:text-[40px] leading-[0.96] text-[#4f5f70] tracking-tight group-hover:text-[#344253] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8] transition-colors"
                 >
                   {featured.title}
                 </a>
                 {#if featured.excerpt}
                   <p
-                    class="mt-2.5 text-[15px] sm:text-[16px] text-[#627383] font-normal leading-relaxed"
+                    class="mt-3 text-[16px] sm:text-[17px] text-[#627383] font-normal leading-relaxed"
                   >
                     {featured.excerpt}
                   </p>
                 {/if}
               </div>
 
-              <!-- Column 3: Category Pill with Pond Blue Theme -->
-              <div class="relative z-10 shrink-0">
+              <!-- Column 3: Category Pill -->
+              <div class="relative z-10 shrink-0 pt-1">
                 <span
-                  class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-4 py-1 text-xs font-bold text-[#4f5f70] transition-colors group-hover:border-[#8fb8d8] group-hover:bg-[#8fb8d8]/15 group-hover:text-[#344253]"
+                  class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-4 py-1 text-xs font-black text-[#4f5f70] transition-colors group-hover:border-[#8fb8d8] group-hover:bg-[#8fb8d8]/15 group-hover:text-[#344253]"
                 >
                   {featured.category}
                 </span>
@@ -275,22 +267,22 @@
 
             <!-- Mobile Layout (Compact Single Column Stack) -->
             <div class="flex flex-col md:hidden relative z-10">
-              <div class="flex items-center justify-between w-full mb-2">
+              <div class="flex items-center justify-between w-full mb-2.5">
                 <time
                   datetime={featured.published_at ?? featured.created_at}
-                  class="text-xs font-bold uppercase tracking-wider text-[#627383]"
+                  class="text-xs font-bold uppercase tracking-wider text-[#8a98a5]"
                 >
                   {formatDate(featured.published_at ?? featured.created_at)}
                 </time>
                 <span
-                  class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-3 py-0.5 text-[11px] font-bold text-[#4f5f70]"
+                  class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-3 py-0.5 text-[11px] font-black text-[#4f5f70]"
                 >
                   {featured.category}
                 </span>
               </div>
               <a
                 href={`/blog/${featured.slug}`}
-                class="font-black text-2xl leading-tight text-[#344253] tracking-tight group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8]"
+                class="font-black text-2xl sm:text-[26px] leading-[1.04] text-[#4f5f70] tracking-tight group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8]"
               >
                 {featured.title}
               </a>
@@ -305,15 +297,20 @@
 
             <!-- Single Decorative Artistic Organic Splash in Desaturated Sky Blue #bbd5e2 -->
             <BlogDecoSplash
-              class="absolute -top-6 right-6 sm:-top-8 sm:right-16 lg:right-28 xl:right-36 w-[130px] h-[130px] sm:w-[190px] sm:h-[190px] lg:w-[215px] lg:h-[215px] opacity-75 z-0"
+              class="absolute -top-4 right-4 sm:-top-6 sm:right-12 lg:right-24 w-[110px] h-[110px] sm:w-[160px] sm:h-[160px] lg:w-[180px] lg:h-[180px] opacity-35 z-0 pointer-events-none"
             />
           </article>
+
+          <!-- Organic Divider separating featured post from archive list -->
+          <div class="my-4 sm:my-6">
+            <OrganicDivider orientation="horizontal" seed="blog-archive-split" />
+          </div>
         {/if}
 
-        <!-- Editorial List of Other Stories (Separated by subtle dividers) -->
+        <!-- Editorial List of Other Stories (Separated by subtle hairline dividers) -->
         {#if listPosts.length > 0}
           <div
-            class="divide-y divide-[#4f5f70]/15 mt-8 sm:mt-10 border-t border-[#4f5f70]/15"
+            class="divide-y divide-[#4f5f70]/15 {featured ? '' : 'border-t border-[#4f5f70]/15'}"
           >
             {#each listPosts as post (post.id)}
               <article
@@ -326,7 +323,7 @@
                   <!-- Column 1: Date -->
                   <time
                     datetime={post.published_at ?? post.created_at}
-                    class="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-[#627383] shrink-0"
+                    class="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-[#8a98a5] shrink-0"
                   >
                     {formatDate(post.published_at ?? post.created_at)}
                   </time>
@@ -335,7 +332,7 @@
                   <div class="flex flex-col items-start pr-6">
                     <a
                       href={`/blog/${post.slug}`}
-                      class="font-black text-lg sm:text-[21px] leading-[1.2] text-[#344253] tracking-tight group-hover:text-[#4f5f70] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8] transition-colors"
+                      class="font-black text-lg sm:text-[21px] leading-[1.12] text-[#4f5f70] tracking-tight group-hover:text-[#344253] group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8] transition-colors"
                     >
                       {post.title}
                     </a>
@@ -351,7 +348,7 @@
                   <!-- Column 3: Category Pill -->
                   <div class="shrink-0">
                     <span
-                      class="inline-flex items-center rounded-full border border-[#8fb8d8]/50 bg-[#fffdf3] px-3.5 py-0.5 text-xs font-bold text-[#4f5f70] transition-colors group-hover:border-[#8fb8d8] group-hover:bg-[#8fb8d8]/15 group-hover:text-[#344253]"
+                      class="inline-flex items-center rounded-full border border-[#8fb8d8]/50 bg-[#fffdf3] px-3.5 py-0.5 text-xs font-black text-[#4f5f70] transition-colors group-hover:border-[#8fb8d8] group-hover:bg-[#8fb8d8]/15 group-hover:text-[#344253]"
                     >
                       {post.category}
                     </span>
@@ -361,7 +358,7 @@
                 <!-- Mobile vertical row -->
                 <div class="flex flex-col md:hidden py-4 px-2 gap-1.5">
                   <div
-                    class="flex items-center justify-between text-xs text-[#627383]"
+                    class="flex items-center justify-between text-xs text-[#8a98a5]"
                   >
                     <time
                       datetime={post.published_at ?? post.created_at}
@@ -370,14 +367,14 @@
                       {formatDate(post.published_at ?? post.created_at)}
                     </time>
                     <span
-                      class="inline-flex items-center rounded-full border border-[#8fb8d8]/50 bg-[#fffdf3] px-2.5 py-0.5 text-[11px] font-bold text-[#4f5f70]"
+                      class="inline-flex items-center rounded-full border border-[#8fb8d8]/50 bg-[#fffdf3] px-2.5 py-0.5 text-[11px] font-black text-[#4f5f70]"
                     >
                       {post.category}
                     </span>
                   </div>
                   <a
                     href={`/blog/${post.slug}`}
-                    class="font-black text-base sm:text-lg text-[#344253] tracking-tight leading-snug group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8]"
+                    class="font-black text-base sm:text-lg text-[#4f5f70] tracking-tight leading-snug group-hover:underline decoration-2 underline-offset-4 decoration-[#8fb8d8]"
                   >
                     {post.title}
                   </a>
@@ -420,14 +417,14 @@
                 disabled={postsData.page <= 1}
                 onclick={() =>
                   applyFilter({ page: postsData.page - 1, scroll: true })}
-                class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#4f5f70]/25 bg-[#fffdf3] px-4 text-xs font-bold text-[#4f5f70] shadow-sm transition-all hover:border-[#8fb8d8] hover:bg-[#8fb8d8]/15 hover:text-[#344253] disabled:opacity-35 disabled:pointer-events-none active:scale-95"
+                class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#4f5f70]/30 bg-[#fffdf3] px-4 text-xs font-black text-[#4f5f70] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#4f5f70] hover:bg-[#4f5f70] hover:text-[#fffdf3] disabled:opacity-30 disabled:pointer-events-none active:scale-95 cursor-pointer"
               >
                 <IconArrow direction="left" size={13} />
                 <span>Newer</span>
               </button>
 
               <!-- Page Indicator -->
-              <span class="px-3 text-xs font-bold text-[#4f5f70]">
+              <span class="px-3 text-xs font-black text-[#4f5f70]">
                 {postsData.page} / {postsData.totalPages}
               </span>
 
@@ -437,7 +434,7 @@
                 disabled={postsData.page >= postsData.totalPages}
                 onclick={() =>
                   applyFilter({ page: postsData.page + 1, scroll: true })}
-                class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#4f5f70]/25 bg-[#fffdf3] px-4 text-xs font-bold text-[#4f5f70] shadow-sm transition-all hover:border-[#8fb8d8] hover:bg-[#8fb8d8]/15 hover:text-[#344253] disabled:opacity-35 disabled:pointer-events-none active:scale-95"
+                class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#4f5f70]/30 bg-[#fffdf3] px-4 text-xs font-black text-[#4f5f70] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#4f5f70] hover:bg-[#4f5f70] hover:text-[#fffdf3] disabled:opacity-30 disabled:pointer-events-none active:scale-95 cursor-pointer"
               >
                 <span>Older</span>
                 <IconArrow direction="right" size={13} />

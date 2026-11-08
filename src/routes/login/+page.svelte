@@ -16,9 +16,9 @@
         <img src="/renhet-logo-dark.png" width="208" height="105" alt="Renhet Studio" fetchpriority="high" />
       </picture>
     </a>
-    <p class="auth-kicker">Renhet Studio community</p>
-    <h1>Sign in to the discussion.</h1>
-    <p>Use Google or a one-time email link. New comments are reviewed before they become public.</p>
+    <p class="auth-kicker">Renhet Studio</p>
+    <h1>Sign in to your account.</h1>
+    <p>Use Google or a one-time email link to sign in to the studio.</p>
     <LoginForm nextPath={data.next} />
     <a class="auth-back" href="/blog">
       <IconArrow direction="left" size={13} />
@@ -28,6 +28,6 @@
   <aside class="auth-art" aria-hidden="true">
     <span>Make.</span>
     <span>Share.</span>
-    <span>Discuss.</span>
+    <span>Craft.</span>
   </aside>
 </main>

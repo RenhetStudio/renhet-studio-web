@@ -130,6 +130,23 @@ In production serverless environments, calling `auth.getUser()` on an anonymous 
 
 If custom auth cookie names are ever changed in `@supabase/ssr`, the prefix/naming filter must be updated accordingly.
 
+### Environment-switched discussion lifecycles in public content
+
+**Simple explanation**
+Public interactivity (such as blog comments and community login) can be safely disabled or reopened across production without breaking existing content or writing database migrations by controlling feature lifecycles with runtime environment variables.
+
+**How it works**
+`PUBLIC_ENABLE_COMMENTS` is evaluated dynamically in SvelteKit (`env.PUBLIC_ENABLE_COMMENTS === "true"`). If the variable is absent, empty, or "false", the public login prompts and comment submission forms are completely hidden from the UI, and the server action returns `fail(403)` if an unauthorized submission is attempted. Approved past comments remain visible in an editorial archive state without allowing new input.
+
+**Why it matters**
+Indie studios frequently toggle between active feedback periods (such as playtests or major releases) and quiet development stretches. Deactivating discussion via a standard environment variable prevents spam, moderation overhead, and unnecessary auth calls while preserving the ability to reopen comments instantly.
+
+**In this project**
+`src/routes/blog/[slug]/+page.server.ts` uses `env.PUBLIC_ENABLE_COMMENTS === "true"` to pass `commentsEnabled` to `+page.svelte`. When disabled, the discussion displays an editorial "Closed" pill, suppresses public `/login` invitations, and keeps all approved comments styled on the `#f6f1e8` paper canvas separated by `OrganicDivider`.
+
+**Tradeoffs / pitfalls**
+Always default feature flags to `false` when the variable is unset. Server actions must strictly enforce the flag on mutation endpoints rather than trusting client-side button hiding alone.
+
 ### Preserving client hydration on pages with interactive shell components
 
 **Simple explanation**
