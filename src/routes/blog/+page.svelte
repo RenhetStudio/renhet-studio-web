@@ -166,7 +166,7 @@
     {#await Promise.all([data.posts, data.globalLatestSlug])}
       <!-- Non-blocking pulse skeleton -->
       <div class="animate-pulse" aria-busy="true" aria-label="Loading stories">
-        <div class="py-6 sm:py-8 border-b border-[#4f5f70]/15">
+        <div class="pt-2 sm:pt-4 pb-2 sm:pb-3 border-b border-[#4f5f70]/15">
           <div class="h-4 w-20 rounded bg-[#4f5f70]/15 mb-3"></div>
           <div class="h-10 w-3/5 rounded bg-[#4f5f70]/15 mb-3"></div>
           <div class="h-4 w-2/5 rounded bg-[#4f5f70]/10"></div>
@@ -223,7 +223,7 @@
       {:else}
         <!-- Featured Post: Authentic Indie Editorial Layout without artificial card box -->
         {#if featured}
-          <article class="group relative py-6 sm:py-8 lg:py-10">
+          <article class="group relative pt-2 sm:pt-4 pb-2 sm:pb-3">
             <!-- Desktop Layout (3 Columns: Date ~15%, Content ~70%, Category ~15%) -->
             <div
               class="hidden md:grid md:grid-cols-[140px_1fr_auto] lg:grid-cols-[160px_1fr_auto] gap-6 items-start"
@@ -302,9 +302,11 @@
           </article>
 
           <!-- Organic Divider separating featured post from archive list -->
-          <div class="my-4 sm:my-6">
-            <OrganicDivider orientation="horizontal" seed="blog-archive-split" />
-          </div>
+          <OrganicDivider
+            orientation="horizontal"
+            seed="blog-archive-split"
+            class="my-2 sm:my-3 lg:my-4"
+          />
         {/if}
 
         <!-- Editorial List of Other Stories (Separated by subtle hairline dividers) -->

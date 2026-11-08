@@ -658,6 +658,8 @@ Renhet Studio's design language strictly avoids rigid borders and generic cards 
 
 When used in vertical mode inside CSS Grid or Flexbox, containers should specify `self-stretch` and explicit widths (e.g. `w-4` or `w-6`) to prevent zero-width collapses. Additionally, vertical dividers should be hidden on smaller viewports (`hidden lg:flex`) where multi-column layouts stack into single columns.
 
+For horizontal dividers, `OrganicDivider` includes a default fallback margin (`mt-24 mb-16`) intended for spacious top-level page sections when no classes are provided. When using `OrganicDivider` within tighter editorial streams (such as dividing a featured post from an archive list, or between discussion entries), **always pass explicit margin classes directly to the component** (e.g. `class="my-2 sm:my-3 lg:my-4"`). Omitting the class or placing margins only on an outer wrapper `<div>` causes the default `mt-24 mb-16` to fire, producing unintentional 160px+ vertical voids.
+
 ### Isolating CSS keyframe animations from SVG transform attributes
 
 **Simple explanation**

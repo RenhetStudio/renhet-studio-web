@@ -144,9 +144,11 @@
         </div>
 
         <!-- Procedural Organic Divider under Heading (replaces straight CSS border) -->
-        <div class="mt-2 mb-8">
-          <OrganicDivider orientation="horizontal" seed={`discussion-head-${data.post.slug}`} />
-        </div>
+        <OrganicDivider
+          orientation="horizontal"
+          seed={`discussion-head-${data.post.slug}`}
+          class="mt-2 mb-8"
+        />
 
         <!-- Form / Login when Discussion is enabled -->
         {#if data.user}
@@ -208,9 +210,11 @@
           <div class="space-y-6">
             {#each data.comments as comment, i (comment.id)}
               {#if i > 0}
-                <div class="my-4">
-                  <OrganicDivider orientation="horizontal" seed={`comment-sep-${comment.id}`} />
-                </div>
+                <OrganicDivider
+                  orientation="horizontal"
+                  seed={`comment-sep-${comment.id}`}
+                  class="my-4"
+                />
               {/if}
               <div class="py-2">
                 <div class="flex items-center justify-between gap-4 mb-2">
