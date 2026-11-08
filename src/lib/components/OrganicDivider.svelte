@@ -5,15 +5,27 @@
     class?: string;
     seed?: string | number;
     randomOnMount?: boolean;
+    orientation?: "horizontal" | "vertical";
+    color?: string;
+    opacity?: number | string;
+    style?: string;
   }
 
   let {
     class: className = "",
     seed = "default",
     randomOnMount = false,
+    orientation = "horizontal",
+    color = "#4F5F70",
+    opacity,
+    style: styleAttr = "",
   }: Props = $props();
 
   let nonce = $state<number | null>(null);
+
+  let resolvedOpacity = $derived(
+    opacity !== undefined ? opacity : orientation === "vertical" ? 0.12 : 0.09,
+  );
 
   // Aleatoriedad reproducible a partir de una semilla
   function createRandom(value: string | number) {
@@ -60,46 +72,67 @@
     return d;
   }
 
-  function generatePath(value: string | number) {
+  function generatePath(
+    value: string | number,
+    orientationMode: "horizontal" | "vertical",
+  ) {
     const random = createRandom(value);
 
-    const xs = [
+    const steps = [
       0, 25, 90, 160, 240, 340, 440, 540, 640, 740, 840, 940, 1040, 1120, 1175,
       1200,
     ];
 
     let drift = 0;
 
-    const center = xs.map((x) => {
+    const center = steps.map((coord) => {
       // Variación gradual, sin cambios bruscos
       drift = drift * 0.55 + (random() - 0.5) * 4;
 
       // Extremos estrechos y centro ligeramente más grueso
-      const envelope = Math.sin((Math.PI * x) / 1200);
+      const envelope = Math.sin((Math.PI * coord) / 1200);
       const thickness = envelope * (3.5 + random() * 2.8);
 
-      const y = 23.5 + drift;
+      const cross = 20 + drift;
 
-      return { x, y, thickness };
+      return { coord, cross, thickness };
     });
 
-    const top = center.map((p) => ({
-      x: p.x,
-      y: p.y - p.thickness,
-    }));
+    if (orientationMode === "horizontal") {
+      const top = center.map((p) => ({
+        x: p.coord,
+        y: p.cross - p.thickness,
+      }));
 
-    const bottom = center
-      .map((p) => ({
-        x: p.x,
-        y: p.y + p.thickness,
-      }))
-      .reverse();
+      const bottom = center
+        .map((p) => ({
+          x: p.coord,
+          y: p.cross + p.thickness,
+        }))
+        .reverse();
 
-    return smoothCurve(top, true) + " " + smoothCurve(bottom) + " Z";
+      return smoothCurve(top, true) + " " + smoothCurve(bottom) + " Z";
+    } else {
+      const left = center.map((p) => ({
+        x: p.cross - p.thickness,
+        y: p.coord,
+      }));
+
+      const right = center
+        .map((p) => ({
+          x: p.cross + p.thickness,
+          y: p.coord,
+        }))
+        .reverse();
+
+      return smoothCurve(left, true) + " " + smoothCurve(right) + " Z";
+    }
   }
 
   // La primera renderización coincide en servidor y cliente
-  let path = $derived(generatePath(nonce === null ? seed : `${seed}-${nonce}`));
+  let path = $derived(
+    generatePath(nonce === null ? seed : `${seed}-${nonce}`, orientation),
+  );
 
   onMount(() => {
     if (randomOnMount) {
@@ -108,19 +141,38 @@
   });
 </script>
 
-<div
-  class="pointer-events-none select-none overflow-hidden {className} mt-24 mb-16"
-  aria-hidden="true"
->
-  <svg
-    viewBox="0 0 1200 40"
-    width="100%"
-    height="36"
-    preserveAspectRatio="none"
-    class="block h-6 w-full sm:h-7 lg:h-9"
-    focusable="false"
-    xmlns="http://www.w3.org/2000/svg"
+{#if orientation === "horizontal"}
+  <div
+    class="pointer-events-none select-none overflow-hidden {className} {!className || (!className.includes('mt-') && !className.includes('my-') && !className.includes('m-')) ? 'mt-24 mb-16' : ''}"
+    style={styleAttr}
+    aria-hidden="true"
   >
-    <path d={path} fill="#4F5F70" fill-opacity="0.09" />
-  </svg>
-</div>
+    <svg
+      viewBox="0 0 1200 40"
+      width="100%"
+      height="36"
+      preserveAspectRatio="none"
+      class="block h-6 w-full sm:h-7 lg:h-9"
+      focusable="false"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d={path} fill={color} fill-opacity={resolvedOpacity} />
+    </svg>
+  </div>
+{:else}
+  <div
+    class="pointer-events-none select-none overflow-hidden {className.includes('absolute') ? '' : 'relative self-stretch'} {className}"
+    style={styleAttr}
+    aria-hidden="true"
+  >
+    <svg
+      viewBox="0 0 40 1200"
+      preserveAspectRatio="none"
+      class="absolute inset-0 h-full w-full"
+      focusable="false"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d={path} fill={color} fill-opacity={resolvedOpacity} />
+    </svg>
+  </div>
+{/if}

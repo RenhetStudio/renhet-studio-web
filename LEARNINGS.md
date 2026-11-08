@@ -597,6 +597,45 @@ In `src/routes/careers/+page.svelte`, the `<main>` tag had `overflow-x-hidden`, 
 
 If horizontal overflow clipping is strictly required on a specific section to avoid scrollbars from oversized background decorations, use `overflow-x: clip` instead of `overflow-x: hidden`. Unlike `hidden`, `overflow: clip` does not create an independent scroll container and therefore does not break `position: sticky`.
 
+### Multi-axis procedural organic dividers (`OrganicDivider`)
+
+**Simple explanation**
+
+Procedural SVG dividers can adapt to both horizontal section breaks and vertical column separators by mapping Bézier curves along either axis while preserving an organic ink-wash texture.
+
+**How it works**
+
+`OrganicDivider.svelte` accepts an `orientation` prop (`"horizontal" | "vertical"`). For horizontal dividers, sample coordinates advance along the X axis (`0..1200`) with thickness modulated across Y in a `viewBox="0 0 1200 40"`. For vertical dividers, coordinates advance along the Y axis (`0..1200`) with thickness and organic drift applied across X in a `viewBox="0 0 40 1200"`. Setting `preserveAspectRatio="none"` allows the SVG to stretch seamlessly along its main axis while conforming to CSS container width or height.
+
+**Why it matters**
+
+Renhet Studio's design language strictly avoids rigid borders and generic cards ("No Cards" rule in `SPECS.md`). Replacing straight CSS borders (`border-l`, `w-[1px] bg-[#d6d5ca]`) with procedural ink lines ensures consistent handmade texture across both horizontal and vertical editorial boundaries.
+
+**In this project**
+
+`OrganicDivider.svelte` supports `orientation="vertical"` with flexible seeds (`seed="crew-vertical"`, `seed="beelze-vertical"`). It replaces the previous hairline divider in `src/lib/components/home/TheCrew.svelte` (between the team cloud and context panel) and the column border in `src/routes/games/beelze-pub/+page.svelte` (between the headline and narrative description).
+
+**Tradeoffs / pitfalls**
+
+When used in vertical mode inside CSS Grid or Flexbox, containers should specify `self-stretch` and explicit widths (e.g. `w-4` or `w-6`) to prevent zero-width collapses. Additionally, vertical dividers should be hidden on smaller viewports (`hidden lg:flex`) where multi-column layouts stack into single columns.
+
+### Isolating CSS keyframe animations from SVG transform attributes
+
+**Simple explanation**
+When you animate an SVG element with a CSS keyframe using `transform`, CSS overrides and replaces the entire SVG `transform="..."` attribute on that element. If the element relies on SVG attributes like `scale(...)` or `translate(...)` to fit into a viewBox, the animation will reset those transformations, causing the element to blow up to its unscaled size or jump positions.
+
+**How it works**
+Separate static spatial positioning from dynamic entrance animations by nesting SVG `<g>` groups. The inner `<g>` holds the static geometry transformations (`transform="translate(x, y) scale(s)"`) while the outer `<g>` holds the CSS animation class (`anim-solid`, `.anim-split-left`, etc.). Since CSS keyframes only modify the outer group, the inner group's scale and coordinates remain intact throughout the entire animation cycle.
+
+**Why it matters**
+Handcrafted SVG illustrations and vector icons often require scaling and positioning relative to typography and viewport containers. Without group nesting, simple entrance transitions like `translateY(-12px)` unintentionally clear the SVG's scale factor, resulting in severe visual glitches and layout overflow.
+
+**In this project**
+`src/lib/components/error/ErrorIllustration.svelte` uses outer animated groups (`.anim-solid`, `.anim-dashed`, `.anim-split-left`, `.anim-split-right`) around inner geometrically-transformed groups to smoothly animate the displaced and cracked artisan splash symbols over the error numbers `404.` and `500.`.
+
+**Tradeoffs / pitfalls**
+Be cautious with `transform-origin` when mixing SVG and CSS transforms. Leaving `transform-origin` unspecified or assuming standard HTML CSS origins can cause rotation or scaling around the SVG canvas origin `(0, 0)`. Using nested groups isolates the translation deltas and ensures `prefers-reduced-motion: reduce` can cleanly disable outer animation transforms without disturbing layout geometry.
+
 # Security
 
 ### Validate return URLs by parsing them

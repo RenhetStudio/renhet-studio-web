@@ -2,6 +2,7 @@
   import SiteHeader from "$lib/components/SiteHeader.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import WaveDivider from "$lib/components/home/WaveDivider.svelte";
+  import OrganicDivider from "$lib/components/OrganicDivider.svelte";
       import IconArrow from "$lib/components/icons/IconArrow.svelte";
 
   const gallerySlides = [
@@ -251,7 +252,7 @@
         </p>
       </div>
 
-      <!-- Row 1: Header & Upper Description -->
+      <!-- Row 1: Header & Upper Description with Organic Vertical Divider -->
       <div
         class="grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-[52px]"
       >
@@ -265,8 +266,14 @@
           </h2>
         </div>
 
-        <!-- Right: Upper Description with vertical divider -->
-        <div class="lg:border-l lg:border-[#d6d5ca] lg:pl-12 lg:pt-2">
+        <!-- Right: Upper Description with Organic Vertical Divider -->
+        <div class="relative lg:pl-12 lg:pt-2">
+          <OrganicDivider
+            orientation="vertical"
+            seed="beelze-vertical"
+            randomOnMount
+            class="hidden lg:block absolute left-0 inset-y-0 w-2.5 -translate-x-1/2"
+          />
           <p
             class="max-w-[480px] text-base font-semibold leading-[1.46] text-[#627383] sm:text-lg lg:text-[20px]"
           >

@@ -265,14 +265,16 @@
         {/each}
       </div>
 
-      <!-- Vertical Hairline Divider (Desktop) -->
-      <div
-        class="hidden self-stretch bg-[#d6d5ca] lg:block lg:w-[1px] lg:min-h-[220px] transition-opacity duration-500 ease-out"
+      <!-- Organic Vertical Divider (Desktop) -->
+      <OrganicDivider
+        orientation="vertical"
+        seed="crew-vertical"
+        randomOnMount
+        class="hidden lg:block self-stretch w-2.5 transition-opacity duration-500 ease-out"
         style={shouldAnimate
           ? "opacity: 1; transition-delay: 150ms;"
           : "opacity: 0;"}
-        aria-hidden="true"
-      ></div>
+      />
 
       <!-- Contextual Panel (Desktop: 100% Card-free, pure editorial text directly on paper canvas) -->
       <aside
@@ -332,10 +334,21 @@
       </aside>
     </div>
 
-    <!-- Contextual Info (Mobile & Tablet: 100% Card-free, pure editorial typography below hairline) -->
+    <!-- Organic Divider (Mobile & Tablet) -->
+    <OrganicDivider
+      orientation="horizontal"
+      seed="crew-mobile-divider"
+      randomOnMount
+      class="lg:hidden mt-6 mb-4 transition-opacity duration-500 ease-out"
+      style={shouldAnimate
+        ? "opacity: 1; transition-delay: 175ms;"
+        : "opacity: 0;"}
+    />
+
+    <!-- Contextual Info (Mobile & Tablet: 100% Card-free, pure editorial typography below organic divider) -->
     <!-- min-h-[195px] prevents CLS when switching between 1-line and 2-line roles, or with/without portfolio link -->
     <div
-      class="mt-8 border-t border-[#d6d5ca] pt-6 lg:hidden min-h-[195px] flex flex-col justify-between transition-opacity duration-500 ease-out"
+      class="lg:hidden min-h-[195px] flex flex-col justify-between transition-opacity duration-500 ease-out"
       style={shouldAnimate
         ? "opacity: 1; transition-delay: 200ms;"
         : "opacity: 0;"}
