@@ -694,6 +694,40 @@ Isolated standalone layouts like 404 and 5xx error boundaries need to feel balan
 **Tradeoffs / pitfalls**
 Always provide responsive padding steps (`sm:`, `md:`) rather than a single fixed pixel value so short mobile screens and ultra-wide desktop monitors maintain comfortable clearances. On mobile, ensure stacked buttons define a uniform width (`w-full max-w-[220px] sm:w-auto`) to avoid awkward ragged edges when action labels differ in length.
 
+### Editorial authentication layouts & "no cards" framing
+
+**Simple explanation**
+Traditional SaaS login screens rely on high-contrast bordered floating card containers and stark split-screen marketing sidebars. In indie artisan design systems, authentication should integrate into the site's organic canvas, framed by typography, generous whitespace, and tactile controls without artificial card boxes.
+
+**How it works**
+The login view mounts within the universal site shell (`SiteHeader` at the top and `SiteFooter` with organic wave transitions at the bottom). Instead of wrapping form inputs in a rectangular floating card box with drop shadows, the form flows directly over the `#f6f1e8` paper canvas anchored by a subtle brand watermark (`renhet-symbol-dark.png` at 3.5% opacity). Inputs and buttons use the palette's cream (`#fffdf3`), warm border (`#d6d5ca`), and deep dark (`#344253`), with an official vector SVG icon (`IconGoogle`) rather than raw Unicode/text glyphs.
+
+**Why it matters**
+Enforcing the "No Cards" rule prevents the jarring feeling of landing on an alien template when leaving editorial content (like blog discussions) to sign in. Consistent global navigation and procedural audio remain accessible without fragmenting the design language.
+
+**In this project**
+`src/routes/login/+page.svelte` and `src/lib/components/LoginForm.svelte` use Paperlogy typography, warm paper tones, and responsive pill inputs. It replaces the old hardcoded 2-column SaaS layout and "Make. Share. Craft." gradient panel with a focused, cohesive experience.
+
+**Tradeoffs / pitfalls**
+Without a card container's background to separate form inputs from the page, inputs need clear, tactile borders (`border-2 border-[#d6d5ca]`) and defined focus rings (`focus:ring-4 focus:ring-[#8fb8d8]/20`) so interactive affordances remain unambiguous on the paper background.
+
+### bfcache restoration and independent OAuth button states
+
+**Simple explanation**
+When an OAuth flow redirects to an external provider (like Google) and the user hits the browser Back button, the page is restored from the Back/Forward Cache (bfcache) with its previous in-memory JavaScript state intact. If the button was set to a disabled/pending state, it remains permanently frozen unless unhooked on page restoration.
+
+**How it works**
+Listen for the `pageshow` and `focus` events on `window`. Whenever the page is restored from bfcache or regains focus, reset `pendingAction` back to `null`. Furthermore, use discrete action states (e.g. `pendingAction = "google" | "email" | null`) instead of a single shared boolean so that clicking one auth provider does not display another provider's progress label or disrupt unrelated button text.
+
+**Why it matters**
+Users regularly cancel or navigate back from third-party login screens. If the original page stays locked in a "connecting" state, the user is trapped and cannot re-try signing in or enter an email without manually hard-refreshing the browser.
+
+**In this project**
+`src/lib/components/LoginForm.svelte` binds discrete states (`pendingAction === "google"` vs `pendingAction === "email"`) and registers a `pageshow` + `focus` listener during `onMount`. It replaces raw ellipsis text (`…`) with a dedicated vector icon (`IconReload` with `animate-spin`) and proper flex gap spacing.
+
+**Tradeoffs / pitfalls**
+Do not rely exclusively on `window.addEventListener("pageshow")`; listening to `focus` also covers scenarios where the auth window opens or closes in an external tab or popup. Ensure listeners are cleaned up during component unmount.
+
 # Security
 
 ### Validate return URLs by parsing them
@@ -728,3 +762,21 @@ Spreadsheet cells beginning with `=`, `+`, `-`, or `@` can be interpreted as for
 
 **In this project**
 `integrations/google-apps-script/Code.gs` prefixes those values with an apostrophe before `appendRow`, preserving the submitted text as a literal value.
+
+### Role-gated authentication and registration cutoffs via environment toggles
+
+**Simple explanation**
+When public features like commenting or community discussions are deactivated, public registration and non-admin sign-ins should be completely closed without breaking author workflows or requiring custom database migrations.
+
+**How it works**
+When `PUBLIC_ENABLE_COMMENTS` is not enabled (`!== "true"`), OTP sign-in passes `shouldCreateUser: false` to prevent Supabase from registering new email accounts. In `src/routes/auth/callback/+server.ts`, after completing authentication (via OAuth or Magic Link), the server checks the user's role in the `profiles` table. If the role is not `author` or `admin`, the session is immediately terminated via `locals.supabase.auth.signOut()` and redirected to `/login?error=restricted`. Additionally, protected pages (`/account`, `/login`) automatically clear active reader sessions if comments are closed.
+
+**Why it matters**
+OAuth providers like Google automatically provision accounts upon first login. Relying purely on client-side button hiding allows unauthorized readers to sign in via OAuth callbacks or direct endpoints. Server-side role inspection at the callback boundary guarantees that only studio creators and admins can establish authenticated sessions.
+
+**In this project**
+Enforced in `src/routes/auth/callback/+server.ts`, `src/routes/account/+page.server.ts`, `src/routes/login/+page.server.ts`, and `src/lib/components/LoginForm.svelte`.
+
+**Tradeoffs / pitfalls**
+Remember to revoke the session via `auth.signOut()` before issuing the redirect in the auth callback; otherwise, session cookies remain in the browser for subsequent requests.
+

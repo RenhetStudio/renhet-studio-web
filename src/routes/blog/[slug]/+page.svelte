@@ -199,7 +199,7 @@
                 class="font-black text-[#4f5f70] underline underline-offset-4 decoration-[#8fb8d8] hover:text-[#344253]"
               >
                 Sign in
-              </a>{" "}
+              </a>
               to join the discussion.
             </p>
           </div>
