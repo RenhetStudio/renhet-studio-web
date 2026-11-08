@@ -837,3 +837,21 @@ Implemented in `supabase/migrations/202611080001_soft_delete_posts.sql`, `src/li
 
 **Tradeoffs / pitfalls**
 Remember to add partial unique constraints on unique columns like `slug` so that soft-deleted rows do not block new records with identical slugs. Ensure all public endpoints, feeds, and sitemaps include the `.is("deleted_at", null)` condition.
+
+
+### Preventing uncaught cookie mutations after SvelteKit response generation in `@supabase/ssr`
+
+**Simple explanation**
+When `@supabase/ssr` runs inside a SvelteKit server hook, background token refreshes can finish *after* SvelteKit has already generated and started streaming the HTTP response. Attempting to call `cookies.set(...)` at that point causes SvelteKit to throw, which crashes the entire Node.js server process if uncaught.
+
+**How it works**
+In `src/lib/supabase/server.ts`, wrap the `setAll` cookie handler with a `try...catch` block. When an un-awaited background token refresh fires `setAll` after `resolve(event)` has generated the response on public or static routes, the exception is safely caught and ignored rather than propagating into Node's unhandled promise rejection handler. Whenever the user accesses an authenticated route or performs a server action, `getCurrentUser()` or `getCurrentProfile()` is awaited during the page load lifecycle before the response starts, allowing `setAll` to persist the updated session cookies cleanly. In addition, configure `filterSerializedResponseHeaders` in `src/hooks.server.ts` to allow `content-range` and `x-supabase-api-*` headers through.
+
+**Why it matters**
+Without the `try...catch` block in `setAll`, any user opening the site with an expiring or stale Supabase cookie will cause SvelteKit to throw `Cannot use cookies.set(...) after the response has been generated`. Because this runs in an un-awaited background promise inside Supabase's auth state subscriber, it becomes an uncaught exception (`triggerUncaughtException`) that instantly terminates the server in development and production.
+
+**In this project**
+Implemented in `src/lib/supabase/server.ts` (`createClient`) and `src/hooks.server.ts` (`handle`).
+
+**Tradeoffs / pitfalls**
+Never call `await supabase.auth.getUser()` unconditionally inside `hooks.server.ts` on every request to prevent this; doing so forces a remote network roundtrip to Supabase on every single page view (including public readers browsing the homepage), degrading TTFB. Catching the late write in `setAll` keeps public routes ultra-fast while preserving cookie refresh on authenticated routes.

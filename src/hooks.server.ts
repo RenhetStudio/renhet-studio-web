@@ -9,7 +9,13 @@ export const handle: Handle = async ({ event, resolve }) => {
     : new Proxy({} as SupabaseClient, {
         get() { throw new Error("Missing required Supabase environment variables: PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY."); },
       });
-  const response = await resolve(event);
+
+  const response = await resolve(event, {
+    filterSerializedResponseHeaders(name) {
+      return name === "content-range" || name.startsWith("x-supabase-api-");
+    },
+  });
+
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("X-Frame-Options", "DENY");
