@@ -125,7 +125,7 @@
 
       <section id="comments" aria-labelledby="discussion-title">
         <!-- Section Heading -->
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
           <div>
             <h2
               id="discussion-title"
@@ -142,13 +142,6 @@
             </p>
           </div>
         </div>
-
-        <!-- Procedural Organic Divider under Heading (replaces straight CSS border) -->
-        <OrganicDivider
-          orientation="horizontal"
-          seed={`discussion-head-${data.post.slug}`}
-          class="mt-2 mb-8"
-        />
 
         <!-- Form / Login when Discussion is enabled -->
         {#if data.user}

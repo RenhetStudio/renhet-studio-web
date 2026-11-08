@@ -309,11 +309,17 @@
           />
         {/if}
 
+        {#if !featured && listPosts.length > 0}
+          <OrganicDivider
+            orientation="horizontal"
+            seed="blog-archive-top-split"
+            class="my-4 sm:my-6"
+          />
+        {/if}
+
         <!-- Editorial List of Other Stories (Separated by subtle hairline dividers) -->
         {#if listPosts.length > 0}
-          <div
-            class="divide-y divide-[#4f5f70]/15 {featured ? '' : 'border-t border-[#4f5f70]/15'}"
-          >
+          <div class="divide-y divide-[#4f5f70]/15">
             {#each listPosts as post (post.id)}
               <article
                 class="group relative transition-colors duration-200 hover:bg-[#fffdf3]/50"
@@ -393,9 +399,16 @@
           </div>
         {/if}
 
+        <!-- Organic Divider above pagination -->
+        <OrganicDivider
+          orientation="horizontal"
+          seed="blog-pagination-split"
+          class="mt-8 mb-6 sm:mt-10 sm:mb-8"
+        />
+
         <!-- Bottom Bar: Live Story Counter & Editorial Pagination Controls -->
         <div
-          class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#4f5f70]/15 pt-6 sm:pt-8"
+          class="flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <!-- Live Story Count -->
           <p class="text-sm font-bold text-[#627383]">
