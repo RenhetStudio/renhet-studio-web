@@ -134,9 +134,6 @@
     hoveredIndex !== null ? hoveredIndex : selectedIndex,
   );
   let activeMember = $derived(team[activeIndex]);
-  let activeNumber = $derived(
-    String(activeIndex + 1).padStart(2, "0") + " / 14",
-  );
 
   const onHover = (index: number) => {
     if (leaveTimeout) {
@@ -198,9 +195,9 @@
     <div
       class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto_340px] lg:gap-12 xl:grid-cols-[1fr_auto_380px] xl:gap-14"
     >
-      <!-- Typographic Names Cloud: min-h stabilizes vertical footprint across shuffle variations -->
+      <!-- Typographic Names Cloud: content-start ensures compact, natural line spacing without stretching -->
       <div
-        class="flex flex-wrap items-center gap-y-4 text-[clamp(1.75rem,2.8vw,2.4rem)] font-black leading-tight sm:gap-y-6 select-none min-h-[290px] sm:min-h-[240px] lg:min-h-[260px]"
+        class="flex flex-wrap content-start items-center gap-y-3 sm:gap-y-3.5 lg:gap-y-4 text-[clamp(1.75rem,2.8vw,2.4rem)] font-black leading-tight select-none min-h-0 lg:min-h-[240px]"
         role="region"
         aria-label="Renhet Studio team members"
       >
@@ -339,82 +336,74 @@
       orientation="horizontal"
       seed="crew-mobile-divider"
       randomOnMount
-      class="lg:hidden mt-6 mb-4 transition-opacity duration-500 ease-out"
+      class="lg:hidden mt-5 mb-4 sm:mt-6 sm:mb-5 transition-opacity duration-500 ease-out"
       style={shouldAnimate
         ? "opacity: 1; transition-delay: 175ms;"
         : "opacity: 0;"}
     />
 
-    <!-- Contextual Info (Mobile & Tablet: 100% Card-free, pure editorial typography below organic divider) -->
-    <!-- min-h-[195px] prevents CLS when switching between 1-line and 2-line roles, or with/without portfolio link -->
+    <!-- Contextual Info (Mobile & Tablet: 100% Card-free, aligned with names, concise editorial metadata) -->
     <div
-      class="lg:hidden min-h-[195px] flex flex-col justify-between transition-opacity duration-500 ease-out"
+      class="lg:hidden px-2.5 min-h-[96px] flex flex-col justify-start transition-opacity duration-500 ease-out"
       style={shouldAnimate
         ? "opacity: 1; transition-delay: 200ms;"
         : "opacity: 0;"}
       aria-live="polite"
     >
-      <div>
-        <div
-          class="mb-1.5 flex items-center justify-between text-[11px] font-mono font-bold text-[#718191]"
-        >
-          <span>{activeNumber}</span>
-          <span
-            class="font-sans font-bold uppercase tracking-wider text-[#718191]/80"
-            >Tap a name</span
-          >
-        </div>
-
-        <h3 class="text-2xl font-black tracking-tight text-[#4f5f70] m-0">
+      <div class="transition-opacity duration-200 ease-out">
+        <h3 class="text-2xl sm:text-3xl font-black tracking-tight text-[#4f5f70] m-0">
           {activeMember.name}
         </h3>
 
         <p
-          class="mt-1 min-h-[38px] text-sm font-semibold leading-snug text-[#627383] m-0"
+          class="mt-1 text-sm sm:text-base font-semibold leading-snug text-[#627383] m-0"
         >
           {activeMember.role}
         </p>
 
         <div
-          class="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-[#718191]"
+          class="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs sm:text-sm font-semibold text-[#718191]"
         >
-          <svg
-            class="h-3.5 w-3.5 text-[#718191] shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z"
-            />
-          </svg>
-          <span>{activeMember.country}</span>
-        </div>
-      </div>
+          <div class="flex items-center gap-1.5">
+            <svg
+              class="h-3.5 w-3.5 text-[#718191] shrink-0"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z"
+              />
+            </svg>
+            <span>{activeMember.country}</span>
+          </div>
 
-      <!-- Reserved slot for portfolio link -->
-      <div class="mt-4 min-h-[26px]">
-        {#if activeMember.href}
-          <a
-            href={activeMember.href}
-            target="_blank"
-            rel="noreferrer"
-            class="inline-flex items-center gap-1.5 border-b border-[#4f5f70]/40 pb-0.5 text-xs font-bold uppercase tracking-wider text-[#4f5f70] transition-colors hover:border-[#4f5f70] hover:text-[#344253]"
-            aria-label={`View ${activeMember.name}'s portfolio`}
-          >
-            <span>View portfolio</span>
-            <IconArrow size={11} direction="up-right" />
-          </a>
-        {/if}
+          {#if activeMember.href}
+            <span class="text-[#718191]/40 select-none" aria-hidden="true">·</span>
+            <a
+              href={activeMember.href}
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center gap-1.5 border-b border-[#4f5f70]/40 pb-0.5 text-xs font-bold uppercase tracking-wider text-[#4f5f70] transition-colors hover:border-[#4f5f70] hover:text-[#344253]"
+              aria-label={`View ${activeMember.name}'s portfolio`}
+            >
+              <span>View portfolio</span>
+              <IconArrow size={11} direction="up-right" />
+            </a>
+          {/if}
+        </div>
       </div>
     </div>
 
-    <!-- Organic section divider -->
-    <OrganicDivider randomOnMount />
+    <!-- Organic section divider: compact margin on mobile to avoid dead whitespace -->
+    <OrganicDivider
+      randomOnMount
+      class="mt-8 mb-8 sm:mt-12 sm:mb-10 lg:mt-24 lg:mb-16"
+    />
   </div>
 </section>
 
