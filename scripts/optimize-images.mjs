@@ -5,7 +5,7 @@ import sharp from "sharp";
 const output = "public/optimized";
 const images = [
   { source: "public/renhet-logo-white.png", name: "renhet-logo-white", widths: [88, 176, 360, 720] },
-  { source: "public/renhet-symbol-white.png", name: "renhet-symbol-white", widths: [36, 72] },
+  { source: "public/renhet-symbol-white.png", name: "renhet-symbol-white", widths: [36, 72, 240, 480] },
   { source: "public/renhet-logo-dark.png", name: "renhet-logo-dark", widths: [208, 416] },
   { source: "public/beelze-pub/logo.png", name: "beelze-pub-logo", widths: [420, 556] },
   { source: "public/beelze-pub/beelze-pub-keyart.png", name: "beelze-pub-keyart", widths: [480, 800, 1200] },
