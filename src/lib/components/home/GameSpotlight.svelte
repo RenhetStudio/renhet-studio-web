@@ -57,7 +57,7 @@
       <a
         href="/games/beelze-pub"
         class="block transition-transform duration-300 hover:scale-105"
-        aria-label="Explore Beelze Pub game page"
+        aria-label="About the game"
       >
         <picture class="block w-full max-w-[420px]">
           <source

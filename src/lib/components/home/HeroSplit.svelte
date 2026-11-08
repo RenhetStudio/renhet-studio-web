@@ -328,7 +328,7 @@
     <!-- Beelze Pub Panel (#game) -->
     <a
       href="#game"
-      aria-label="Explore Beelze Pub"
+      aria-label="About the game"
       class="panel-game group relative flex h-full min-h-0 flex-col items-center justify-end bg-transparent px-4 pt-3 pb-12 text-[#fffdf3] no-underline sm:px-8 sm:pb-16 xl:min-h-0 xl:pt-20 xl:pb-24 {activePanel ===
       'game'
         ? 'z-30'
@@ -390,7 +390,7 @@
           ? 'opacity-40'
           : 'opacity-100'}"
       >
-        <span>Explore Beelze Pub</span>
+        <span>About the game</span>
         <IconArrow direction="down" size={13} />
       </div>
     </a>
