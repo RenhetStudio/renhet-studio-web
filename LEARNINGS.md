@@ -636,6 +636,23 @@ Handcrafted SVG illustrations and vector icons often require scaling and positio
 **Tradeoffs / pitfalls**
 Be cautious with `transform-origin` when mixing SVG and CSS transforms. Leaving `transform-origin` unspecified or assuming standard HTML CSS origins can cause rotation or scaling around the SVG canvas origin `(0, 0)`. Using nested groups isolates the translation deltas and ensures `prefers-reduced-motion: reduce` can cleanly disable outer animation transforms without disturbing layout geometry.
 
+### Visual vertical centering with floating fixed navbars
+
+**Simple explanation**
+When a floating navbar is positioned with `position: fixed` or `sticky`, it occupies visual space at the top of the viewport without consuming space in normal flex/grid document flow. Centering content naively in the remaining document flow (`justify-center` or equal `py`) causes it to appear visibly pushed toward the top of the screen because the navbar overlays the top margin.
+
+**How it works**
+Compensate for the fixed navbar's visual height (~80-96px in Renhet Studio) by balancing the top padding of the flex container against its bottom padding: `padding-top = navbarVisualHeight + padding-bottom`. When the flex child expands with `flex-1` and `my-auto`, the browser centers the content strictly within the visible stage between the bottom edge of the navbar and the top edge of the footer, yielding identical visual breathing room above and below.
+
+**Why it matters**
+Isolated standalone layouts like 404 and 5xx error boundaries need to feel balanced and intentional without requiring awkward full-screen hero wrappers or manual viewport height hacks that break across different screen aspect ratios.
+
+**In this project**
+`src/lib/components/error/ErrorContent.svelte` applies `flex-1 my-auto` with compensated top padding (`pt-36 sm:pt-44 md:pt-52` vs `pb-14 sm:pb-18 md:pb-24`) to center the artisan error art block and recovery buttons perfectly between `SiteHeader` and `SiteFooter`.
+
+**Tradeoffs / pitfalls**
+Always provide responsive padding steps (`sm:`, `md:`) rather than a single fixed pixel value so short mobile screens and ultra-wide desktop monitors maintain comfortable clearances. On mobile, ensure stacked buttons define a uniform width (`w-full max-w-[220px] sm:w-auto`) to avoid awkward ragged edges when action labels differ in length.
+
 # Security
 
 ### Validate return URLs by parsing them
