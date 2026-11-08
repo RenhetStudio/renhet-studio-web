@@ -2,14 +2,33 @@ import { error, fail } from "@sveltejs/kit";
 import { commentSchema } from "$lib/blog/validation";
 import { getPostComments, getPublishedPost } from "$lib/blog/data";
 import { renderRichContent } from "$lib/blog/rich-content";
-import { getCurrentProfile, getCurrentUser, requireUser } from "$lib/supabase/auth";
+import { getCurrentProfile, requireUser } from "$lib/supabase/auth";
 import type { Actions, PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, cookies, setHeaders }) => {
   const post = await getPublishedPost(params.slug);
   if (!post) error(404, "Story not found");
-  const [comments, user, profile] = await Promise.all([getPostComments(locals.supabase, post.id), getCurrentUser(locals), getCurrentProfile(locals)]);
-  return { post, comments, user: Boolean(user), profile, contentHtml: renderRichContent(post.content) };
+
+  const hasAuthCookie = cookies.getAll().some((c) => c.name.startsWith("sb-") && c.name.includes("-auth-token"));
+
+  if (!hasAuthCookie) {
+    setHeaders({
+      "Cache-Control": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400",
+    });
+  }
+
+  const [comments, profile] = await Promise.all([
+    getPostComments(locals.supabase, post.id).catch(() => []),
+    hasAuthCookie ? getCurrentProfile(locals).catch(() => null) : null,
+  ]);
+
+  return {
+    post,
+    comments,
+    user: Boolean(profile),
+    profile,
+    contentHtml: renderRichContent(post.content),
+  };
 };
 
 export const actions = {

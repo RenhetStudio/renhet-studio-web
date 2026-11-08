@@ -108,6 +108,28 @@ Caching makes repeat visits fast, but cannot remove the first cold request to an
 
 The delayed section still depends on the upstream service. Keep its loading state clear, and avoid assuming that an option which has not arrived yet can be selected or submitted.
 
+### Non-blocking navigation and selective auth cookie detection in public routes
+
+**Simple explanation**
+
+Checking for generic cookies (`cookies.getAll().length > 0`) to determine whether to query authentication breaks CDN caching and adds hundreds of milliseconds of blocking auth latency for anonymous public visitors.
+
+**How it works**
+
+Inspect only framework-specific auth cookies (such as `sb-*-auth-token` for Supabase SSR) rather than all browser cookies (which include analytics, cookie banners, Vercel preview tokens). If no auth cookie is present, skip all remote auth API calls (`auth.getUser()`) and immediately set public CDN cache headers (`s-maxage=300, stale-while-revalidate=86400`). Furthermore, stream dynamic post queries as unawaited promises so SvelteKit navigates in 0ms without waiting for upstream databases.
+
+**Why it matters**
+
+In production serverless environments, calling `auth.getUser()` on an anonymous visitor incurs a slow outbound network hop across the internet to the Supabase auth API. Awaiting it in a server `load` halts SvelteKit's client-side navigation.
+
+**In this project**
+
+`src/routes/blog/+page.server.ts` and `src/routes/blog/[slug]/+page.server.ts` inspect `sb-*-auth-token`. Anonymous readers bypass `getCurrentProfile` completely, allowing instant navigation and full Edge CDN caching. In `+page.svelte`, an animated skeleton renders immediately during streaming.
+
+**Tradeoffs / pitfalls**
+
+If custom auth cookie names are ever changed in `@supabase/ssr`, the prefix/naming filter must be updated accordingly.
+
 ### Preserving client hydration on pages with interactive shell components
 
 **Simple explanation**
