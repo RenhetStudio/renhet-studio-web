@@ -302,24 +302,47 @@
 
           <div class="divide-y divide-[#4f5f70]/12">
             {#each data.deletedPosts as deletedPost (deletedPost.id)}
-              <div class="py-3 flex items-center justify-between gap-4">
+              <div class="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="min-w-0 flex-1">
-                  <span class="line-through text-sm font-bold text-[#8a98a5]">
+                  <span class="line-through text-sm font-bold text-[#8a98a5] break-words">
                     {deletedPost.title}
                   </span>
-                  <span class="ml-2 text-xs font-mono text-[#8a98a5]/70">
+                  <span class="block sm:inline sm:ml-2 text-xs font-mono text-[#8a98a5]/70">
                     /{deletedPost.slug}
                   </span>
                 </div>
-                <form method="POST" action="?/restore" use:enhance>
-                  <input type="hidden" name="id" value={deletedPost.id} />
-                  <button
-                    type="submit"
-                    class="rounded-full border border-[#8fb8d8] bg-[#fffdf3] px-3.5 py-1 text-xs font-black text-[#4f5f70] transition-colors hover:bg-[#8fb8d8]/20 cursor-pointer"
+                <div class="flex items-center gap-2 shrink-0">
+                  <form method="POST" action="?/restore" use:enhance>
+                    <input type="hidden" name="id" value={deletedPost.id} />
+                    <button
+                      type="submit"
+                      class="rounded-full border border-[#8fb8d8] bg-[#fffdf3] px-3.5 py-1 text-xs font-black text-[#4f5f70] transition-colors hover:bg-[#8fb8d8]/20 cursor-pointer"
+                    >
+                      Restore as draft
+                    </button>
+                  </form>
+                  <form
+                    method="POST"
+                    action="?/destroy"
+                    use:enhance={({ cancel }) => {
+                      if (
+                        !confirm(
+                          `Permanently delete "${deletedPost.title}"? This cannot be undone.`
+                        )
+                      ) {
+                        cancel();
+                      }
+                    }}
                   >
-                    Restore story
-                  </button>
-                </form>
+                    <input type="hidden" name="id" value={deletedPost.id} />
+                    <button
+                      type="submit"
+                      class="rounded-full border border-rose-300 bg-[#fffdf3] px-3 py-1 text-xs font-black text-rose-800 transition-colors hover:bg-rose-50 cursor-pointer"
+                    >
+                      Delete permanently
+                    </button>
+                  </form>
+                </div>
               </div>
             {/each}
           </div>

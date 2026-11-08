@@ -32,7 +32,7 @@ export const actions = {
     if (!/^[0-9a-f-]{36}$/i.test(id)) return fail(400);
     const { error } = await locals.supabase
       .from("posts")
-      .update({ deleted_at: new Date().toISOString() })
+      .update({ deleted_at: new Date().toISOString(), status: "draft" })
       .eq("id", id);
     if (error) return fail(400, { message: error.message });
     clearPublishedPostsCache();
@@ -44,10 +44,22 @@ export const actions = {
     if (!/^[0-9a-f-]{36}$/i.test(id)) return fail(400);
     const { error } = await locals.supabase
       .from("posts")
-      .update({ deleted_at: null })
+      .update({ deleted_at: null, status: "draft" })
       .eq("id", id);
     if (error) return fail(400, { message: error.message });
     clearPublishedPostsCache();
-    return { ok: true, message: "Story restored" };
+    return { ok: true, message: "Story restored as draft" };
+  },
+  destroy: async ({ request, locals }) => {
+    await requireAuthor(locals);
+    const id = String((await request.formData()).get("id") ?? "");
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return fail(400);
+    const { error } = await locals.supabase
+      .from("posts")
+      .delete()
+      .eq("id", id);
+    if (error) return fail(400, { message: error.message });
+    clearPublishedPostsCache();
+    return { ok: true, message: "Story permanently deleted" };
   },
 } satisfies Actions;

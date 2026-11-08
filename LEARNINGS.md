@@ -824,8 +824,10 @@ Destructive database `DELETE` operations permanently remove rows, which cannot b
 The `posts` table includes a `deleted_at timestamptz default null` column and an index on `(deleted_at)`.
 1. **Public queries and RLS:** Public queries filter `.is("deleted_at", null)`. Row-Level Security policies restrict published visibility to rows where `deleted_at is null`.
 2. **Partial unique indexes:** The global unique constraint on `slug` is converted to a partial unique index `where deleted_at is null`, allowing authors to reuse a URL slug if an older story was deleted.
-3. **Soft-delete mutation:** Instead of calling `delete()`, the dashboard delete action calls `.update({ deleted_at: new Date().toISOString() })`.
-4. **Editorial Trash and Restore:** In `src/routes/blog/dashboard/+page.server.ts`, the dashboard server load separates `posts` into active (`!p.deleted_at`) and `deletedPosts` (`Boolean(p.deleted_at)`). If `deletedPosts` exist, a subtle Trash section renders with a "Restore story" button that sets `deleted_at = null`, moving the story back to the active table in one click.
+3. **Soft-delete mutation:** Instead of calling `delete()`, the dashboard delete action calls `.update({ deleted_at: new Date().toISOString(), status: 'draft' })`.
+4. **Editorial Trash and Safe Restoration:** In `src/routes/blog/dashboard/+page.server.ts`, the dashboard server load separates `posts` into active (`!p.deleted_at`) and `deletedPosts` (`Boolean(p.deleted_at)`). If `deletedPosts` exist, a subtle Trash section renders with:
+   - "Restore as draft": resets `deleted_at = null` and sets `status = 'draft'` so the story never accidentally goes live to readers until re-reviewed.
+   - "Delete permanently": calls `destroy` with a browser confirmation intercepted by `use:enhance`'s `cancel()`, permanently removing the row and cascading comments.
 
 **Why it matters**
 Accidental post deletions can happen due to misclicks or UI issues. Without expensive managed PITR backups, hard deletions in cloud-hosted PostgreSQL are catastrophic. Soft deletes guarantee zero data loss and empower authors to recover content without database intervention.
