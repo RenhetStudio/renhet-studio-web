@@ -62,3 +62,4 @@ The database schema and policies live in `supabase/migrations/202606220001_blog.
 ## Deployment
 
 Local `npm run build` creates a Node server in `build/`; start it with `npm start`. Vercel runs the same build with `VERCEL=1`, selecting the Vercel adapter. `vercel.json` also pins the SvelteKit framework and build command, overriding any old Next.js project preset. Configure `PUBLIC_SITE_URL`, `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `GOOGLE_APPS_SCRIPT_URL`, and `GOOGLE_APPS_SCRIPT_SECRET` in the Vercel project before deploying; old `NEXT_PUBLIC_` names do not supply SvelteKit's public variables.
+
