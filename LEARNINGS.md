@@ -2,6 +2,28 @@
 
 ## Web Development
 
+### Explicit public sitemap entries and real modification dates
+
+**Simple explanation**
+
+Keep the sitemap readable and list public pages explicitly alongside published articles.
+
+**How it works**
+
+The sitemap endpoint renders an indented XML `urlset` from static pages and published posts. Article slugs are URL-encoded and XML values are escaped. Static pages provide explicit modification dates based on their Git history; articles use their stored `updated_at` value. Each entry also has an explicit priority.
+
+**Why it matters**
+
+An explicit list prevents private routes from entering the sitemap and makes missing public pages easy to spot. Real modification dates avoid claiming that unchanged pages were updated on every request.
+
+**In this project**
+
+`src/routes/sitemap.xml/+server.ts` includes home, Beelze Pub, blog, and careers, followed by published articles. It uses `loc`, `lastmod`, and `priority`, and retains the shared cache policy for dynamic blog content.
+
+**Tradeoffs / pitfalls**
+
+Add new public pages to `publicPages` and update their dates when page content changes. Do not use the request date as `lastmod`. Article coverage still depends on the existing published-post query and its default limit.
+
 ### SvelteKit adapters match the hosting runtime
 
 **Simple explanation**
