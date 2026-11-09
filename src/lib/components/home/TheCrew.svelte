@@ -58,7 +58,7 @@
       name: "Maurice",
       role: "UI/UX Designer",
       country: "USA",
-      href: "https://www.linkedin.com/in/mauricebirchard/",
+      href: "https://moninja92.github.io/index.html",
     },
     {
       name: "Daniël",
