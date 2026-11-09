@@ -1,13 +1,32 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
   import OrganicDivider from "$lib/components/OrganicDivider.svelte";
+  import CountryFlag from "$lib/components/home/CountryFlag.svelte";
 
   interface CrewMember {
     name: string;
     role: string;
     country: string;
     href?: string;
+  }
+
+  const COUNTRY_CODES: Record<string, string[]> = {
+    Spain: ["es"],
+    "Czech Republic": ["cz"],
+    "Spain / Portugal": ["es", "pt"],
+    USA: ["us"],
+    "The Netherlands": ["nl"],
+    Ukraine: ["ua"],
+    Finland: ["fi"],
+    Australia: ["au"],
+    England: ["england"],
+    Italy: ["it"],
+  };
+
+  function getCountryCodes(country: string): string[] {
+    return COUNTRY_CODES[country] ?? [];
   }
 
   const initialTeam: CrewMember[] = [
@@ -64,7 +83,7 @@
     {
       name: "Freya",
       role: "Marketer & Writer",
-      country: "UK",
+      country: "England",
       href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
     },
     {
@@ -273,60 +292,68 @@
           : "opacity: 0;"}
       />
 
-      <!-- Contextual Panel (Desktop: 100% Card-free, pure editorial text directly on paper canvas) -->
+      <!-- Contextual Panel (Desktop: 100% Card-free, vertically centered beside names cloud) -->
       <aside
-        class="hidden lg:flex relative min-h-[200px] w-full flex-col justify-start pt-1 transition-opacity duration-500 ease-out"
+        class="hidden lg:flex relative self-stretch w-full flex-col justify-center transition-opacity duration-500 ease-out"
         style={shouldAnimate
           ? "opacity: 1; transition-delay: 200ms;"
           : "opacity: 0;"}
         aria-live="polite"
       >
-        <div class="transition-opacity duration-200 ease-out">
-          <h3 class="text-3xl font-black tracking-tight text-[#4f5f70] m-0">
-            {activeMember.name}
-          </h3>
-
-          <p
-            class="mt-2 min-h-[48px] text-base font-semibold leading-snug text-[#627383] m-0"
-          >
-            {activeMember.role}
-          </p>
-
-          <div
-            class="mt-3.5 flex items-center gap-1.5 text-sm font-semibold text-[#718191]"
-          >
-            <svg
-              class="h-4 w-4 shrink-0 text-[#718191]"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
+        <div class="crew-detail-grid w-full">
+          {#key activeMember.name}
+            <div
+              in:fade={{ duration: 150, delay: 50 }}
+              out:fade={{ duration: 90 }}
+              class="crew-detail-content flex flex-col items-start w-full"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z"
-              />
-            </svg>
-            <span>{activeMember.country}</span>
-          </div>
+              <!-- Name + Slash + Country Flag & Label -->
+              <div class="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                <h3
+                  class="text-[clamp(1.75rem,2.2vw,2.3rem)] font-black leading-none tracking-tight text-[#4f5f70] m-0"
+                >
+                  {activeMember.name}
+                </h3>
+                <span
+                  class="text-base font-bold text-[#8a98a5]/50 select-none"
+                  aria-hidden="true"
+                >
+                  /
+                </span>
+                <span
+                  class="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#718191]"
+                >
+                  {#each getCountryCodes(activeMember.country) as code}
+                    <CountryFlag country={code} class="h-2.5 w-3.5" />
+                  {/each}
+                  <span>{activeMember.country}</span>
+                </span>
+              </div>
 
-          <!-- Reserved slot for portfolio link to prevent height shifts -->
-          <div class="mt-5 min-h-[26px]">
-            {#if activeMember.href}
-              <a
-                href={activeMember.href}
-                target="_blank"
-                rel="noreferrer"
-                class="group inline-flex items-center gap-1.5 border-b border-[#4f5f70]/40 pb-0.5 text-xs font-bold uppercase tracking-wider text-[#4f5f70] transition-colors hover:border-[#4f5f70] hover:text-[#344253]"
-                aria-label={`View ${activeMember.name}'s portfolio (opens in new tab)`}
+              <!-- Role Description (Reserved height prevents CLS across 1 vs 2 line titles) -->
+              <p
+                class="mt-2 min-h-[44px] text-[15px] sm:text-base font-semibold leading-snug text-[#627383] m-0"
               >
-                <span>View portfolio</span>
-                <IconArrow size={11} direction="up-right" />
-              </a>
-            {/if}
-          </div>
+                {activeMember.role}
+              </p>
+
+              <!-- Discreet Portfolio Text Link (Reserved height to prevent layout shift) -->
+              <div class="mt-3.5 min-h-[26px] flex items-center">
+                {#if activeMember.href}
+                  <a
+                    href={activeMember.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="group inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#4f5f70] underline underline-offset-4 decoration-[#8fb8d8] transition-colors hover:text-[#344253] hover:decoration-[#4f5f70]"
+                    aria-label={`View ${activeMember.name}'s portfolio (opens in new tab)`}
+                  >
+                    <span>View portfolio</span>
+                    <IconArrow size={11} direction="up-right" />
+                  </a>
+                {/if}
+              </div>
+            </div>
+          {/key}
         </div>
       </aside>
     </div>
@@ -336,66 +363,76 @@
       orientation="horizontal"
       seed="crew-mobile-divider"
       randomOnMount
-      class="lg:hidden mt-5 mb-4 sm:mt-6 sm:mb-5 transition-opacity duration-500 ease-out"
+      class="lg:hidden mt-6 mb-5 sm:mt-8 sm:mb-6 transition-opacity duration-500 ease-out"
       style={shouldAnimate
         ? "opacity: 1; transition-delay: 175ms;"
         : "opacity: 0;"}
     />
 
-    <!-- Contextual Info (Mobile & Tablet: 100% Card-free, aligned with names, concise editorial metadata) -->
+    <!-- Contextual Info (Mobile & Tablet: 100% Card-free, left-aligned matching 'The crew.' gutter) -->
     <div
-      class="lg:hidden px-2.5 min-h-[96px] flex flex-col justify-start transition-opacity duration-500 ease-out"
+      class="lg:hidden w-full min-h-[120px] flex flex-col items-start justify-start text-left transition-opacity duration-500 ease-out"
       style={shouldAnimate
         ? "opacity: 1; transition-delay: 200ms;"
         : "opacity: 0;"}
       aria-live="polite"
     >
-      <div class="transition-opacity duration-200 ease-out">
-        <h3 class="text-2xl sm:text-3xl font-black tracking-tight text-[#4f5f70] m-0">
-          {activeMember.name}
-        </h3>
-
-        <p
-          class="mt-1 text-sm sm:text-base font-semibold leading-snug text-[#627383] m-0"
-        >
-          {activeMember.role}
-        </p>
-
-        <div
-          class="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs sm:text-sm font-semibold text-[#718191]"
-        >
-          <div class="flex items-center gap-1.5">
-            <svg
-              class="h-3.5 w-3.5 text-[#718191] shrink-0"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
+      <div class="crew-detail-grid w-full">
+        {#key activeMember.name}
+          <div
+            in:fade={{ duration: 150, delay: 50 }}
+            out:fade={{ duration: 90 }}
+            class="crew-detail-content flex flex-col items-start text-left w-full"
+          >
+            <!-- Name + Slash + Country Flag & Label -->
+            <div
+              class="flex flex-wrap items-baseline justify-start gap-x-2.5 gap-y-1"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 21c-4.418 0-8-5.373-8-12a8 8 0 1116 0c0 6.627-3.582 12-8 12zM12 11a2 2 0 100-4 2 2 0 000 4z"
-              />
-            </svg>
-            <span>{activeMember.country}</span>
+              <h3
+                class="text-2xl sm:text-[28px] font-black tracking-tight text-[#4f5f70] leading-tight m-0"
+              >
+                {activeMember.name}
+              </h3>
+              <span
+                class="text-sm font-bold text-[#8a98a5]/50 select-none"
+                aria-hidden="true"
+              >
+                /
+              </span>
+              <span
+                class="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#718191]"
+              >
+                {#each getCountryCodes(activeMember.country) as code}
+                  <CountryFlag country={code} class="h-2.5 w-3.5" />
+                {/each}
+                <span>{activeMember.country}</span>
+              </span>
+            </div>
+
+            <!-- Role -->
+            <p
+              class="mt-1.5 text-sm sm:text-[15px] font-semibold leading-snug text-[#627383] m-0 text-left"
+            >
+              {activeMember.role}
+            </p>
+
+            <!-- Discreet Portfolio Link -->
+            <div class="mt-3 min-h-[26px] flex items-center justify-start">
+              {#if activeMember.href}
+                <a
+                  href={activeMember.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="group inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#4f5f70] underline underline-offset-4 decoration-[#8fb8d8] transition-colors hover:text-[#344253] hover:decoration-[#4f5f70]"
+                  aria-label={`View ${activeMember.name}'s portfolio`}
+                >
+                  <span>View portfolio</span>
+                  <IconArrow size={11} direction="up-right" />
+                </a>
+              {/if}
+            </div>
           </div>
-
-          {#if activeMember.href}
-            <span class="text-[#718191]/40 select-none" aria-hidden="true">·</span>
-            <a
-              href={activeMember.href}
-              target="_blank"
-              rel="noreferrer"
-              class="inline-flex items-center gap-1.5 border-b border-[#4f5f70]/40 pb-0.5 text-xs font-bold uppercase tracking-wider text-[#4f5f70] transition-colors hover:border-[#4f5f70] hover:text-[#344253]"
-              aria-label={`View ${activeMember.name}'s portfolio`}
-            >
-              <span>View portfolio</span>
-              <IconArrow size={11} direction="up-right" />
-            </a>
-          {/if}
-        </div>
+        {/key}
       </div>
     </div>
 
@@ -413,6 +450,17 @@
       opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
       transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
+  }
+
+  .crew-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .crew-detail-grid > :global(*) {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
   }
 
   @media (prefers-reduced-motion: reduce) {

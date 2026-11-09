@@ -78,6 +78,13 @@
       <circle cx="950" cy="180" r="25" fill="#ffffff" />
       <circle cx="1050" cy="270" r="25" fill="#ffffff" />
     </svg>
+  {:else if country === "england" || country === "gb-eng" || country === "en"}
+    <!-- England (St George's Cross) -->
+    <svg viewBox="0 0 750 500" class="h-2.5 w-3.5 object-cover" xmlns="http://www.w3.org/2000/svg">
+      <rect width="750" height="500" fill="#ffffff" />
+      <rect x="325" width="100" height="500" fill="#ce1124" />
+      <rect y="200" width="750" height="100" fill="#ce1124" />
+    </svg>
   {:else if country === "gb"}
     <!-- UK -->
     <svg viewBox="0 0 1200 600" class="h-2.5 w-3.5 object-cover" xmlns="http://www.w3.org/2000/svg">
@@ -99,4 +106,3 @@
     <span class="inline-block h-2.5 w-3.5 bg-white/30"></span>
   {/if}
 </span>
-
