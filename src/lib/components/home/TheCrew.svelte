@@ -79,7 +79,12 @@
       country: "Australia",
       href: "https://www.artstation.com/naoface",
     },
-    { name: "Ole", role: "Concept Artist", country: "The Netherlands" },
+    {
+      name: "Ole",
+      role: "Concept Artist",
+      country: "The Netherlands",
+      href: "https://www.artstation.com/olewisse",
+    },
     {
       name: "Freya",
       role: "Marketer & Writer",
