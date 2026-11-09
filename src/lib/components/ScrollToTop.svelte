@@ -9,12 +9,28 @@
   let floatingBtnEl: HTMLDivElement | null = $state(null);
   let isAnimating = false;
 
+  let animTimeout: ReturnType<typeof setTimeout> | null = null;
+  let animCleanup: (() => void) | null = null;
+
+  function cancelActiveAnimation() {
+    if (animTimeout) {
+      clearTimeout(animTimeout);
+      animTimeout = null;
+    }
+    if (animCleanup) {
+      animCleanup();
+      animCleanup = null;
+    }
+    isAnimating = false;
+  }
+
   function cleanupFloating() {
     if (!floatingBtnEl) return;
     floatingBtnEl.style.transition = "";
     floatingBtnEl.style.transform = "";
     floatingBtnEl.style.opacity = "";
     floatingBtnEl.style.visibility = "";
+    floatingBtnEl.style.pointerEvents = "";
   }
 
   function cleanupFooter(btn: HTMLElement | null) {
@@ -29,16 +45,18 @@
     const footerBtn = document.getElementById("footer-scroll-to-top");
     if (!footerBtn) return false;
     const rect = footerBtn.getBoundingClientRect();
-    return rect.top < window.innerHeight - 10 && rect.bottom > 0;
+    return rect.top < window.innerHeight && rect.bottom > 0;
   }
 
   function dock(animated = true) {
-    if (scrollDockState.isDocked) return;
+    if (scrollDockState.isDocked && !isAnimating) return;
     const footerBtn = document.getElementById("footer-scroll-to-top");
     if (!footerBtn || !floatingBtnEl) {
       scrollDockState.isDocked = true;
       return;
     }
+
+    cancelActiveAnimation();
 
     const prefersReducedMotion =
       typeof window !== "undefined" &&
@@ -62,11 +80,10 @@
     const dx = first.left - last.left;
     const dy = first.top - last.top;
 
-    // The floating button vanishes INSTANTLY in frame 0 (no ghost fadeout)
     scrollDockState.isDocked = true;
-    floatingBtnEl.style.transition = "none";
-    floatingBtnEl.style.opacity = "0";
-    floatingBtnEl.style.visibility = "hidden";
+    floatingBtnEl.classList.remove("is-visible");
+    floatingBtnEl.classList.add("is-docked");
+    cleanupFloating();
 
     isAnimating = true;
     footerBtn.style.transition = "none";
@@ -76,32 +93,49 @@
     footerBtn.getBoundingClientRect(); // force reflow
 
     const currentFooter = footerBtn;
+    let onEnd: ((e?: TransitionEvent) => void) | null = null;
+
     requestAnimationFrame(() => {
-      currentFooter.style.transition =
-        "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)";
-      currentFooter.style.transform = "translate3d(0, 0, 0)";
+      requestAnimationFrame(() => {
+        if (!currentFooter) return;
+        currentFooter.style.transition =
+          "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)";
+        currentFooter.style.transform = "translate3d(0, 0, 0)";
 
-      const onEnd = (e?: TransitionEvent) => {
-        if (e && e.propertyName !== "transform") return;
-        currentFooter.removeEventListener("transitionend", onEnd);
-        cleanupFooter(currentFooter);
-        cleanupFloating();
-        isAnimating = false;
-        verifyState();
-      };
+        onEnd = (e?: TransitionEvent) => {
+          if (e && e.propertyName !== "transform") return;
+          if (animCleanup) animCleanup();
+          animCleanup = null;
+          if (animTimeout) {
+            clearTimeout(animTimeout);
+            animTimeout = null;
+          }
+          cleanupFooter(currentFooter);
+          cleanupFloating();
+          isAnimating = false;
+          verifyState();
+        };
 
-      currentFooter.addEventListener("transitionend", onEnd);
-      setTimeout(onEnd, 420);
+        animCleanup = () => {
+          if (onEnd) currentFooter.removeEventListener("transitionend", onEnd);
+        };
+        currentFooter.addEventListener("transitionend", onEnd);
+        animTimeout = setTimeout(() => {
+          if (onEnd) onEnd();
+        }, 420);
+      });
     });
   }
 
   function undock(animated = true) {
-    if (!scrollDockState.isDocked) return;
+    if (!scrollDockState.isDocked && !isAnimating) return;
     const footerBtn = document.getElementById("footer-scroll-to-top");
     if (!footerBtn || !floatingBtnEl) {
       scrollDockState.isDocked = false;
       return;
     }
+
+    cancelActiveAnimation();
 
     const prefersReducedMotion =
       typeof window !== "undefined" &&
@@ -124,34 +158,55 @@
     scrollDockState.isDocked = false;
     cleanupFooter(footerBtn);
 
+    floatingBtnEl.classList.remove("is-docked", "is-hidden");
+    floatingBtnEl.classList.add("is-visible");
+    cleanupFloating();
+
     const last = floatingBtnEl.getBoundingClientRect();
+    const startTop = Math.min(first.top, window.innerHeight + 30);
     const dx = first.left - last.left;
-    const dy = first.top - last.top;
+    const dy = startTop - last.top;
 
     isAnimating = true;
     floatingBtnEl.style.visibility = "visible";
     floatingBtnEl.style.opacity = "1";
+    floatingBtnEl.style.pointerEvents = "auto";
     floatingBtnEl.style.transition = "none";
     floatingBtnEl.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
     floatingBtnEl.getBoundingClientRect(); // force reflow
 
     const currentFloating = floatingBtnEl;
+    let onEnd: ((e?: TransitionEvent) => void) | null = null;
+
     requestAnimationFrame(() => {
-      if (!currentFloating) return;
-      currentFloating.style.transition =
-        "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)";
-      currentFloating.style.transform = "translate3d(0, 0, 0)";
+      requestAnimationFrame(() => {
+        if (!currentFloating) return;
+        currentFloating.style.transition =
+          "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)";
+        currentFloating.style.transform = "translate3d(0, 0, 0)";
 
-      const onEnd = (e?: TransitionEvent) => {
-        if (e && e.propertyName !== "transform") return;
-        currentFloating.removeEventListener("transitionend", onEnd);
-        cleanupFloating();
-        isAnimating = false;
-        verifyState();
-      };
+        onEnd = (e?: TransitionEvent) => {
+          if (e && e.propertyName !== "transform") return;
+          if (animCleanup) animCleanup();
+          animCleanup = null;
+          if (animTimeout) {
+            clearTimeout(animTimeout);
+            animTimeout = null;
+          }
+          cleanupFloating();
+          isAnimating = false;
+          verifyState();
+        };
 
-      currentFloating.addEventListener("transitionend", onEnd);
-      setTimeout(onEnd, 420);
+        animCleanup = () => {
+          if (onEnd)
+            currentFloating.removeEventListener("transitionend", onEnd);
+        };
+        currentFloating.addEventListener("transitionend", onEnd);
+        animTimeout = setTimeout(() => {
+          if (onEnd) onEnd();
+        }, 420);
+      });
     });
   }
 
@@ -166,7 +221,6 @@
   }
 
   onMount(() => {
-    // Initial check on page load / refresh
     scrollY = window.scrollY;
     if (checkFooterIntersection()) {
       scrollDockState.isDocked = true;
@@ -178,7 +232,7 @@
     if (footerBtn) {
       observer = new IntersectionObserver(
         (entries) => {
-          if (scrollDockState.isScrollingToTop) return;
+          if (scrollDockState.isScrollingToTop || isAnimating) return;
           const isIntersecting = entries[0]?.isIntersecting ?? false;
           if (isIntersecting && !scrollDockState.isDocked) {
             dock(true);
@@ -186,7 +240,7 @@
             undock(true);
           }
         },
-        { threshold: 0.1 }
+        { threshold: 0 },
       );
       observer.observe(footerBtn);
     }
@@ -211,19 +265,21 @@
       observer?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      cancelActiveAnimation();
     };
   });
 
   afterNavigate(() => {
+    cancelActiveAnimation();
     scrollDockState.isDocked = false;
     scrollDockState.isScrollingToTop = false;
-    isAnimating = false;
     cleanupFloating();
     const footerBtn = document.getElementById("footer-scroll-to-top");
     cleanupFooter(footerBtn);
   });
 
   const scrollToTop = () => {
+    cancelActiveAnimation();
     scrollDockState.isScrollingToTop = true;
     scrollDockState.isDocked = false;
 
@@ -285,11 +341,11 @@
 
   /* Docked state: Must vanish INSTANTLY in frame 0 (no ghost fadeout or slide) */
   .scroll-floating-container.is-docked {
-    opacity: 0 !important;
-    transform: translate3d(0, 0, 0) scale(1) !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
-    transition: none !important;
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+    pointer-events: none;
+    visibility: hidden;
+    transition: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
