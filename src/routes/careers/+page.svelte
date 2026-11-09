@@ -1,4 +1,6 @@
 <script lang="ts">
+  import SocialMeta from "$lib/components/SocialMeta.svelte";
+  import { SITE_URL } from "$lib/blog/config";
   import { enhance } from "$app/forms";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
@@ -17,20 +19,14 @@
     name="description"
     content="Join Renhet Studio and help us build friendly, detailed game worlds."
   />
-  <link rel="canonical" href="https://www.renhetstudio.com/careers" />
-  <meta property="og:title" content="Careers | Renhet Studio" />
-  <meta
-    property="og:description"
-    content="Make warm worlds with a tiny, international crew. We care about thoughtful craft, kind collaboration, and games full of personality."
-  />
-  <meta property="og:url" content="https://www.renhetstudio.com/careers" />
-  <meta property="og:type" content="website" />
-  <meta
-    property="og:image"
-    content="https://www.renhetstudio.com/renhet-logo-dark.png"
-  />
-  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href={`${SITE_URL}/careers`} />
 </svelte:head>
+
+<SocialMeta
+  title="Careers | Renhet Studio"
+  description="Make warm worlds with a tiny, international crew. We care about thoughtful craft, kind collaboration, and games full of personality."
+  path="/careers"
+/>
 
 <main class="min-h-screen w-full max-w-full bg-[#f6f1e8] text-[#4f5f70]">
   <!-- Floating Site Header (renders solid immediately on non-hero pages) -->

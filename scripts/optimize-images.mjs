@@ -23,3 +23,18 @@ for (const { source, name, widths } of images) {
     ]);
   }
 }
+
+// Social crawlers need a directly fetchable image, without picture/srcset negotiation.
+await mkdir("public/social", { recursive: true });
+const logo = await sharp("public/renhet-logo-dark.png")
+  .resize({ width: 820 })
+  .toBuffer();
+await sharp({ create: { width: 1200, height: 630, channels: 3, background: "#f6f1e8" } })
+  .composite([{ input: logo, gravity: "centre" }])
+  .jpeg({ quality: 88 })
+  .toFile("public/social/renhet-studio.jpg");
+await sharp("public/beelze-pub/beelze-pub-keyart.png")
+  .resize(1200, 630, { fit: "contain", background: "#344253" })
+  .flatten({ background: "#344253" })
+  .jpeg({ quality: 88 })
+  .toFile("public/social/beelze-pub.jpg");

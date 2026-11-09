@@ -234,6 +234,23 @@ Images often dominate a page's transferred bytes. Optimizing them at build time 
 
 Generated variants increase build output and build work. Always provide accurate `sizes`, explicit dimensions where appropriate, and meaningful alternative text; otherwise the browser may download a larger variant than necessary or accessibility can regress. Static image files also avoid development server image middleware returning an incorrect MIME type.
 
+### Server-rendered social previews and independent crawler caches
+
+**Simple explanation**
+A social network builds a link preview by fetching the page's HTML and then its advertised image. It can keep that preview after the website has changed.
+
+**How it works**
+Render Open Graph and Twitter Card tags in `svelte:head` during SSR. Use absolute URLs for both the canonical page and the image. A crawler does not need to execute application JavaScript or understand `picture`/`srcset`. Declare image dimensions only when they are known; arbitrary article covers may have different sizes.
+
+**Why it matters**
+A working image in a browser does not prove that a social crawler can fetch it. Check HTTP status, MIME type, robots rules, and the raw HTML with the crawler's user agent before changing tags. An older description in a preview is evidence of stale data, but it does not establish why the original image fetch failed.
+
+**In this project**
+`SocialMeta.svelte` emits one consistent Open Graph and Twitter tag set for home, careers, the game, the blog index, and public articles. `scripts/optimize-images.mjs` generates opaque 1200 by 630 JPEGs in `public/social` from the existing studio logo and game art. Articles use their cover when supplied, or the studio image otherwise. Private pages retain `noindex` and do not receive public social metadata.
+
+**Tradeoffs / pitfalls**
+Explicit Twitter fields avoid depending on Open Graph fallback, but cannot force X to refresh a cached card. A deployment and a platform recrawl are separate steps. Test a fresh share URL after deployment when diagnosing caching, without changing the canonical URL. Public article covers still need to be accessible, appropriately sized, and in a crawler-supported format. Keep generation in the build pipeline so referenced assets cannot be accidentally omitted from deployment.
+
 ### Unified hero detection with data-hero and dynamic scroll exit transitions
 
 **Simple explanation**

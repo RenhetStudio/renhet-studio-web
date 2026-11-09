@@ -1,6 +1,7 @@
 <script lang="ts">
+  import SocialMeta from "$lib/components/SocialMeta.svelte";
   import { goto } from "$app/navigation";
-  import { BLOG_CATEGORIES, BLOG_NAME, BLOG_TAGLINE } from "$lib/blog/config";
+  import { BLOG_CATEGORIES, BLOG_NAME, BLOG_TAGLINE, SITE_URL } from "$lib/blog/config";
   import BlogShell from "$lib/components/BlogShell.svelte";
   import IconChevronDown from "$lib/components/icons/IconChevronDown.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
@@ -74,8 +75,14 @@
 <svelte:head>
   <title>{BLOG_NAME} | Renhet Studio</title>
   <meta name="description" content={BLOG_TAGLINE} />
-  <link rel="canonical" href="https://www.renhetstudio.com/blog" />
+  <link rel="canonical" href={`${SITE_URL}/blog`} />
 </svelte:head>
+
+<SocialMeta
+  title={`${BLOG_NAME} | Renhet Studio`}
+  description={BLOG_TAGLINE}
+  path="/blog"
+/>
 
 <BlogShell profile={data.profile}>
   <div

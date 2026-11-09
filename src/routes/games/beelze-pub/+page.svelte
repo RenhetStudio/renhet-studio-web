@@ -1,4 +1,6 @@
 <script lang="ts">
+  import SocialMeta from "$lib/components/SocialMeta.svelte";
+  import { SITE_URL } from "$lib/blog/config";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import WaveDivider from "$lib/components/home/WaveDivider.svelte";
@@ -101,23 +103,21 @@
     name="description"
     content="Play Beelze Pub free on Itch.io. Mix drinks, balance customer emotions, and keep the beach-hut bar running as Skelly in Renhet Studio's debut cocktail sim."
   />
-  <link rel="canonical" href="https://www.renhetstudio.com/games/beelze-pub" />
-  <meta property="og:title" content="Beelze Pub | Renhet Studio" />
-  <meta
-    property="og:description"
-    content="The boss is away for the weekend. Mix drinks, serve customers, and survive the rush as Skelly in Beelze Pub."
-  />
-  <meta
-    property="og:url"
-    content="https://www.renhetstudio.com/games/beelze-pub"
-  />
-  <meta property="og:type" content="website" />
-  <meta
-    property="og:image"
-    content="https://www.renhetstudio.com/beelze-pub/beelze-pub-keyart.png"
-  />
-  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href={`${SITE_URL}/games/beelze-pub`} />
 </svelte:head>
+
+<SocialMeta
+  title="Beelze Pub | Renhet Studio"
+  description="The boss is away for the weekend. Mix drinks, serve customers, and survive the rush as Skelly in Beelze Pub."
+  path="/games/beelze-pub"
+  image={{
+    src: "/social/beelze-pub.jpg",
+    alt: "Beelze Pub key art with the game logo and beach bar",
+    width: 1200,
+    height: 630,
+    type: "image/jpeg",
+  }}
+/>
 
 <main
   class="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f6f1e8] text-[#4f5f70]"

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import SocialMeta from "$lib/components/SocialMeta.svelte";
+  import { SITE_URL } from "$lib/blog/config";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import HeroSplit from "$lib/components/home/HeroSplit.svelte";
@@ -12,17 +14,14 @@
     name="description"
     content="Renhet Studio is an independent international game studio making warm, handmade things. Play our debut game, Beelze Pub, free on Itch.io."
   />
-  <link rel="canonical" href="https://www.renhetstudio.com/" />
-  <meta property="og:title" content="Renhet Studio" />
-  <meta
-    property="og:description"
-    content="An independent international game studio making warm, handmade things. Play our debut game, Beelze Pub, free on Itch.io."
-  />
-  <meta property="og:url" content="https://www.renhetstudio.com" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://www.renhetstudio.com/renhet-logo-dark.png" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href={`${SITE_URL}/`} />
 </svelte:head>
+
+<SocialMeta
+  title="Renhet Studio"
+  description="An independent international game studio making warm, handmade things. Play our debut game, Beelze Pub, free on Itch.io."
+  path="/"
+/>
 
 <main
   class="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f6f1e8] text-[#4f5f70]"

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SocialMeta from "$lib/components/SocialMeta.svelte";
   import { SITE_URL } from "$lib/blog/config";
   import BlogShell from "$lib/components/BlogShell.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
@@ -27,18 +28,22 @@
   <title>{data.post.title} | Renhet Studio</title>
   <meta name="description" content={data.post.excerpt} />
   <link rel="canonical" href={`${SITE_URL}/blog/${data.post.slug}`} />
-  <meta property="og:title" content={data.post.title} />
-  <meta property="og:description" content={data.post.excerpt} />
-  <meta property="og:url" content={`${SITE_URL}/blog/${data.post.slug}`} />
-  <meta property="og:type" content="article" />
   <meta property="article:published_time" content={publishedDate} />
   <meta property="article:modified_time" content={data.post.updated_at} />
-  <meta
-    property="og:image"
-    content={data.post.cover_image_url ?? `${SITE_URL}/renhet-logo-dark.png`}
-  />
-  <meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
+
+<SocialMeta
+  title={data.post.title}
+  description={data.post.excerpt}
+  path={`/blog/${data.post.slug}`}
+  type="article"
+  image={data.post.cover_image_url
+    ? {
+        src: data.post.cover_image_url,
+        alt: data.post.cover_image_alt || data.post.title,
+      }
+    : undefined}
+/>
 
 <BlogShell profile={data.profile}>
   <div
