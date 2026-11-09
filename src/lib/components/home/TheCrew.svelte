@@ -12,7 +12,6 @@
     href?: string;
   }
 
-  // Country codes
   const COUNTRY_CODES: Record<string, string[]> = {
     Spain: ["es"],
     "Czech Republic": ["cz"],
