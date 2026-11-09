@@ -148,7 +148,7 @@
           <form method="POST" action="?/comment" class="mb-10">
             <input type="hidden" name="postId" value={data.post.id} />
             <input type="hidden" name="slug" value={data.post.slug} />
-            <div class="form-honeypot" aria-hidden="true" style="position: absolute; left: -10000px;">
+            <div class="form-honeypot" aria-hidden="true">
               <label>Website <input name="website" tabindex="-1" autocomplete="off" /></label>
             </div>
 

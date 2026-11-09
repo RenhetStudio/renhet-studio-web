@@ -14,7 +14,11 @@ const config = {
         "default-src": ["self"],
         "script-src": ["self"],
         "style-src": ["self"],
-        "style-src-attr": ["none"],
+        // SvelteKit's generated #svelte-announcer uses this exact inline style.
+        "style-src-attr": [
+          "unsafe-hashes",
+          "sha256-S8qMpvofolR8Mpjy4kQvEm7m1q8clzU4dfDH0AmvZjo=",
+        ],
         "img-src": ["self", "data:", "blob:", "https://*.supabase.co"],
         "media-src": ["self", "blob:", "https://*.supabase.co"],
         "font-src": ["self", "data:"],

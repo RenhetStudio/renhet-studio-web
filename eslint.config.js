@@ -16,6 +16,7 @@ export default tseslint.config(
     files: ["**/*.svelte"],
     languageOptions: { parserOptions: { parser: tseslint.parser } },
     rules: {
+      "svelte/no-inline-styles": "error",
       "svelte/no-at-html-tags": "off",
       "svelte/no-navigation-without-resolve": "off",
       "svelte/require-each-key": "off",

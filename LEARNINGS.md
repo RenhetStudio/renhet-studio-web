@@ -770,10 +770,16 @@ Checking `startsWith("/")` and rejecting `//` alone misses backslash variants. U
 Content Security Policy restricts where scripts, styles, media, frames, and network connections may come from. SvelteKit can generate the correct nonce or hash policy for each rendering mode while a server hook adds the remaining response security headers.
 
 **How it works**
-`svelte.config.js` owns the CSP directives. `src/hooks.server.ts` adds HSTS, frame, content-type, referrer, opener, and permissions policies. Dynamic presentation uses classes or validated `data-*` attributes because `style-src-attr 'none'` blocks inline style attributes.
+`svelte.config.js` owns the CSP directives. `src/hooks.server.ts` adds HSTS, frame, content-type, referrer, opener, and permissions policies. Dynamic presentation uses classes or validated `data-*` attributes because the production `style-src-attr` policy blocks unapproved inline style attributes. Keep static declarations in stylesheet rules too, including SVG icon transforms and the application wrapper. Toggle classes for selection, opacity, and transforms; use `:nth-child()` rules for a finite staggered roster. SVG presentation attributes such as `fill` and `fill-opacity` do not require inline CSS.
+
+**Why it matters**
+Shared components can emit the same violation on every route, while SSR style attributes fail before hydration. Fix application components rather than broadly permitting `unsafe-inline`. Framework-generated markup may require one exact hash when no supported styling hook exists.
+
+**In this project**
+`SiteHeader.svelte` switches sound icon classes, `TheCrew.svelte` uses CSS for reveal and selection states, `OrganicDivider.svelte` accepts classes rather than a raw style string, and `src/app.html` uses the `contents` utility. The comment honeypot uses its existing stylesheet rule. `eslint.config.js` enforces `svelte/no-inline-styles`. `svelte.config.js` permits only the exact SHA-256 hash of the visually hidden style generated for SvelteKit's `#svelte-announcer`, with `unsafe-hashes` to enable attribute hash matching. This preserves screen-reader navigation announcements without modifying framework output.
 
 **Tradeoffs / pitfalls**
-Strict CSP can break new third-party embeds or inline styles unless their exact origins and rendering strategy are reviewed. Keep the allowlist narrow and verify response headers after deployment.
+Strict CSP can break new third-party embeds or inline styles unless their exact origins and rendering strategy are reviewed. Keep the allowlist narrow and verify response headers after deployment. `element.style.transform = value` and `style.setProperty()` are allowed CSSOM property updates, unlike setting the whole `style` attribute or `cssText` ([MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/style-src-attr)). Keep these direct updates for measured coordinates in cursors, parallax, navbar hero distance, and FLIP docking. The installed Svelte 5 transition runtime uses Web Animations, so `fade` and `fly` can remain. Check the production build in a browser on initial load, hydration, and interactions; development alone does not prove CSP compatibility. Extend the roster's stagger rules when adding members beyond its current twelve positions. Recheck the announcer hash after SvelteKit upgrades; whitespace changes its digest. That same exact style is permitted on any element, so keep this allowlist limited to the framework's fixed visually hidden declaration. Remove the exception when SvelteKit emits CSP-compatible announcer markup.
 
 ### Spreadsheet formula injection
 

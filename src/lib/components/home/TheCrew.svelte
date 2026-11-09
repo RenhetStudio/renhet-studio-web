@@ -227,19 +227,14 @@
 
           <div
             class="crew-member-item inline-flex items-center"
-            style={shouldAnimate
-              ? `opacity: 1; transform: translate3d(0, 0, 0); transition-delay: ${i * 45}ms;`
-              : "opacity: 0; transform: translate3d(0, 16px, 0); pointer-events: none;"}
+            class:is-revealed={shouldAnimate}
           >
             <button
               id={`crew-btn-${i}`}
               type="button"
               class="group relative cursor-pointer rounded-md px-2.5 py-0.5 text-left font-black transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f5f70]/50"
-              style:background-color={isCurrent
-                ? "rgba(79, 95, 112, 0.08)"
-                : isPinned
-                  ? "rgba(79, 95, 112, 0.04)"
-                  : "transparent"}
+              class:crew-current={isCurrent}
+              class:crew-pinned={isPinned}
               onmouseenter={() => onHover(i)}
               onmouseleave={onLeave}
               onfocus={() => onHover(i)}
@@ -252,9 +247,7 @@
               <!-- Name text with smooth contrast adjustment -->
               <span
                 class="relative z-10 text-[#4f5f70] transition-opacity duration-200"
-                style:opacity={isCurrent || hoveredIndex === null
-                  ? "1"
-                  : "0.45"}
+                class:crew-dimmed={!isCurrent && hoveredIndex !== null}
               >
                 {member.name}
               </span>
@@ -262,9 +255,8 @@
               <!-- Sliding underline -->
               <span
                 class="pointer-events-none absolute -bottom-0.5 left-2 right-2 h-[2px] origin-left bg-[#4f5f70] transition-transform duration-200 ease-out"
-                style:transform={isCurrent || isPinned
-                  ? "scaleX(1)"
-                  : "scaleX(0)"}
+                class:crew-underlined={isCurrent || isPinned}
+                class:crew-underline-hidden={!isCurrent && !isPinned}
                 aria-hidden="true"
               ></span>
             </button>
@@ -287,18 +279,12 @@
         orientation="vertical"
         seed="crew-vertical"
         randomOnMount
-        class="hidden lg:block self-stretch w-2.5 transition-opacity duration-500 ease-out"
-        style={shouldAnimate
-          ? "opacity: 1; transition-delay: 150ms;"
-          : "opacity: 0;"}
+        class="hidden lg:block self-stretch w-2.5 transition-opacity duration-500 ease-out {shouldAnimate ? 'opacity-100 delay-[150ms]' : 'opacity-0'}"
       />
 
       <!-- Contextual Panel (Desktop: 100% Card-free, vertically centered beside names cloud) -->
       <aside
-        class="hidden lg:flex relative self-stretch w-full flex-col justify-center transition-opacity duration-500 ease-out"
-        style={shouldAnimate
-          ? "opacity: 1; transition-delay: 200ms;"
-          : "opacity: 0;"}
+        class="hidden lg:flex relative self-stretch w-full flex-col justify-center transition-opacity duration-500 ease-out {shouldAnimate ? 'opacity-100 delay-[200ms]' : 'opacity-0'}"
         aria-live="polite"
       >
         <div class="crew-detail-grid w-full">
@@ -364,18 +350,12 @@
       orientation="horizontal"
       seed="crew-mobile-divider"
       randomOnMount
-      class="lg:hidden mt-6 mb-5 sm:mt-8 sm:mb-6 transition-opacity duration-500 ease-out"
-      style={shouldAnimate
-        ? "opacity: 1; transition-delay: 175ms;"
-        : "opacity: 0;"}
+      class="lg:hidden mt-6 mb-5 sm:mt-8 sm:mb-6 transition-opacity duration-500 ease-out {shouldAnimate ? 'opacity-100 delay-[175ms]' : 'opacity-0'}"
     />
 
     <!-- Contextual Info (Mobile & Tablet: 100% Card-free, left-aligned matching 'The crew.' gutter) -->
     <div
-      class="lg:hidden w-full min-h-[120px] flex flex-col items-start justify-start text-left transition-opacity duration-500 ease-out"
-      style={shouldAnimate
-        ? "opacity: 1; transition-delay: 200ms;"
-        : "opacity: 0;"}
+      class="lg:hidden w-full min-h-[120px] flex flex-col items-start justify-start text-left transition-opacity duration-500 ease-out {shouldAnimate ? 'opacity-100 delay-[200ms]' : 'opacity-0'}"
       aria-live="polite"
     >
       <div class="crew-detail-grid w-full">
@@ -447,11 +427,38 @@
 
 <style>
   .crew-member-item {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    pointer-events: none;
     transition:
       opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
       transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
   }
+
+  .crew-member-item.is-revealed {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    pointer-events: auto;
+  }
+  .crew-member-item.is-revealed:nth-child(2) { transition-delay: 45ms; }
+  .crew-member-item.is-revealed:nth-child(3) { transition-delay: 90ms; }
+  .crew-member-item.is-revealed:nth-child(4) { transition-delay: 135ms; }
+  .crew-member-item.is-revealed:nth-child(5) { transition-delay: 180ms; }
+  .crew-member-item.is-revealed:nth-child(6) { transition-delay: 225ms; }
+  .crew-member-item.is-revealed:nth-child(7) { transition-delay: 270ms; }
+  .crew-member-item.is-revealed:nth-child(8) { transition-delay: 315ms; }
+  .crew-member-item.is-revealed:nth-child(9) { transition-delay: 360ms; }
+  .crew-member-item.is-revealed:nth-child(10) { transition-delay: 405ms; }
+  .crew-member-item.is-revealed:nth-child(11) { transition-delay: 450ms; }
+  .crew-member-item.is-revealed:nth-child(12) { transition-delay: 495ms; }
+
+  .crew-pinned { background-color: rgba(79, 95, 112, 0.04); }
+  .crew-current { background-color: rgba(79, 95, 112, 0.08); }
+  .crew-dimmed { opacity: 0.45; }
+  .crew-underlined { transform: scaleX(1); }
+  .crew-underline-hidden { transform: scaleX(0); }
+
 
   .crew-detail-grid {
     display: grid;
@@ -469,6 +476,7 @@
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;
+      pointer-events: auto;
     }
   }
 </style>

@@ -248,6 +248,7 @@
       <!-- Mute/Sound Toggle — single SVG with CSS-animated elements (no swap) -->
       <button
         type="button"
+        class:is-muted={isMuted}
         class="sound-toggle inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#fffdf3]/30 bg-[#fffdf3]/10 text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/25 active:scale-95"
         onclick={toggleSound}
         aria-label={isMuted ? "Enable sound effects" : "Mute sound effects"}
@@ -271,21 +272,21 @@
           <!-- Sound waves — fade + scale in from left when unmuted -->
           <path
             d="M15.54 8.46a5 5 0 0 1 0 7.07"
-            style="transform-origin: 15.54px 12px; transition: opacity 240ms ease, transform 280ms cubic-bezier(0.16,1,0.3,1); opacity: {isMuted ? 0 : 1}; transform: {isMuted ? 'scaleX(0.3)' : 'scaleX(1)'};"
+            class="sound-wave sound-wave-near"
           />
           <path
             d="M19.07 4.93a10 10 0 0 1 0 14.14"
-            style="transform-origin: 19.07px 12px; transition: opacity 240ms ease, transform 280ms cubic-bezier(0.16,1,0.3,1) 40ms; opacity: {isMuted ? 0 : 1}; transform: {isMuted ? 'scaleX(0.3)' : 'scaleX(1)'};"
+            class="sound-wave sound-wave-far"
           />
 
           <!-- Mute X lines — rotate in from center when muted -->
           <line
             x1="22" y1="9" x2="16" y2="15"
-            style="transform-origin: 19px 12px; transition: opacity 220ms ease, transform 260ms cubic-bezier(0.16,1,0.3,1); opacity: {isMuted ? 1 : 0}; transform: {isMuted ? 'rotate(0deg) scale(1)' : 'rotate(-45deg) scale(0.3)'};"
+            class="sound-cross sound-cross-first"
           />
           <line
             x1="16" y1="9" x2="22" y2="15"
-            style="transform-origin: 19px 12px; transition: opacity 220ms ease, transform 260ms cubic-bezier(0.16,1,0.3,1) 30ms; opacity: {isMuted ? 1 : 0}; transform: {isMuted ? 'rotate(0deg) scale(1)' : 'rotate(45deg) scale(0.3)'};"
+            class="sound-cross sound-cross-second"
           />
         </svg>
       </button>
@@ -520,6 +521,26 @@
 </nav>
 
 <style>
+  .sound-wave {
+    opacity: 1;
+    transform: scaleX(1);
+    transition: opacity 240ms ease, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sound-wave-near { transform-origin: 15.54px 12px; }
+  .sound-wave-far { transform-origin: 19.07px 12px; transition-delay: 0ms, 40ms; }
+  .is-muted .sound-wave { opacity: 0; transform: scaleX(0.3); }
+
+  .sound-cross {
+    opacity: 0;
+    transform-origin: 19px 12px;
+    transition: opacity 220ms ease, transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sound-cross-first { transform: rotate(-45deg) scale(0.3); }
+  .sound-cross-second { transform: rotate(45deg) scale(0.3); transition-delay: 0ms, 30ms; }
+  .is-muted .sound-cross { opacity: 1; transform: rotate(0deg) scale(1); }
+
   @supports (animation-timeline: scroll()) {
     :global(:root:has([data-hero])) .nav-pill-dynamic {
       animation: nav-pill-scroll linear both;

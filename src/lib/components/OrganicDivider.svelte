@@ -8,7 +8,6 @@
     orientation?: "horizontal" | "vertical";
     color?: string;
     opacity?: number | string;
-    style?: string;
   }
 
   let {
@@ -18,7 +17,6 @@
     orientation = "horizontal",
     color = "#4F5F70",
     opacity,
-    style: styleAttr = "",
   }: Props = $props();
 
   let nonce = $state<number | null>(null);
@@ -144,7 +142,6 @@
 {#if orientation === "horizontal"}
   <div
     class="pointer-events-none select-none overflow-hidden {className} {!className || (!className.includes('mt-') && !className.includes('my-') && !className.includes('m-')) ? 'mt-24 mb-16' : ''}"
-    style={styleAttr}
     aria-hidden="true"
   >
     <svg
@@ -162,7 +159,6 @@
 {:else}
   <div
     class="pointer-events-none select-none overflow-hidden {className.includes('absolute') ? '' : 'relative self-stretch'} {className}"
-    style={styleAttr}
     aria-hidden="true"
   >
     <svg
