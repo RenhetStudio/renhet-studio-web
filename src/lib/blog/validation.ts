@@ -32,7 +32,8 @@ export const postSchema = z.object({
     .trim()
     .min(1)
     .max(180)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase words separated by hyphens"),
+    .transform((val) => val.toLowerCase().replace(/^-+|-+$/g, "").replace(/-{2,}/g, "-"))
+    .pipe(z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase words separated by hyphens")),
   excerpt: z.string().trim().max(320),
   category: z.enum(BLOG_CATEGORIES),
   content: z.string().min(1).max(1_000_000).transform((value, context) => {

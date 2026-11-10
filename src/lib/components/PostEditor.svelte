@@ -34,6 +34,21 @@
       .replace(/(^-|-$)/g, "")
       .slice(0, 180);
 
+  const sanitizeSlugInput = (value: string) =>
+    value
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]+/g, "")
+      .replace(/^-+/g, "")
+      .replace(/-{2,}/g, "-")
+      .slice(0, 180);
+
+  const cleanSlug = () => {
+    slug = slug.replace(/^-+|-+$/g, "");
+  };
+
   const localDate = (value: string | null) => {
     if (!value) return "";
     const date = new Date(value);
@@ -43,7 +58,7 @@
   };
 </script>
 
-<form method="POST" class="post-editor-form">
+<form method="POST" class="post-editor-form" onsubmit={cleanSlug}>
   <input type="hidden" name="content" value={JSON.stringify(content)} />
 
   <!-- Editor Sticky Header: Aesthetic indie topbar -->
@@ -109,10 +124,11 @@
         <input
           name="slug"
           bind:value={slug}
-          oninput={() => {
+          oninput={(event) => {
             slugTouched = true;
-            slug = slugify(slug);
+            slug = sanitizeSlugInput(event.currentTarget.value);
           }}
+          onblur={cleanSlug}
           required
         />
       </label>
