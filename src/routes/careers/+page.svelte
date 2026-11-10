@@ -34,7 +34,7 @@
 
   <!-- 1. Editorial Split Header -->
   <section
-    class="px-5 pt-28 pb-14 sm:px-8 sm:pt-36 sm:pb-16 md:pt-40 md:pb-20 lg:px-10"
+    class="px-5 pt-28 pb-4 sm:px-8 sm:pt-36 sm:pb-6 md:pt-40 md:pb-8 lg:px-10"
     aria-labelledby="careers-title"
   >
     <div class="mx-auto max-w-[1440px]">
@@ -91,43 +91,73 @@
       </div>
 
       <!-- Organic section divider -->
-      <OrganicDivider randomOnMount />
+      <OrganicDivider randomOnMount class="mt-12 mb-0 sm:mt-16 sm:mb-0" />
     </div>
   </section>
 
   <!-- 2. Openings Section (Framed by organic divider, zero duplicate borders) -->
   <section
     id="openings"
-    class="px-5 pt-8 pb-14 sm:px-8 sm:pt-10 sm:pb-16 md:pt-12 md:pb-20 lg:px-10"
+    class="px-5 pt-4 pb-14 sm:px-8 sm:pt-6 sm:pb-16 md:pt-8 md:pb-20 lg:px-10"
     aria-labelledby="openings-title"
   >
     <div class="mx-auto max-w-[1440px]">
-      <div class="mb-10 max-w-3xl">
+      <div class="mb-8 sm:mb-10 max-w-3xl">
         <h2
           id="openings-title"
           class="text-[clamp(2.6rem,6vw,5.5rem)] font-black leading-[0.92] tracking-tight text-[#4f5f70]"
         >
           Find your place.
         </h2>
-        <p
-          class="mt-4 text-base font-bold leading-relaxed text-[#627383] sm:text-lg"
-        >
-          Roles appear here as soon as they are published. No perfect match? Our
-          open application is always active.
-        </p>
       </div>
 
       <!-- Published Roles List or Clean Empty State -->
       {#await data.positions}
-        <div class="border-t border-[#d6d5ca] py-10">
-          <p class="text-base font-bold text-[#627383]" role="status">
-            Loading open roles…
-          </p>
+        <!-- Non-blocking pulse skeleton matching blog editorial style -->
+        <div
+          class="animate-pulse"
+          aria-busy="true"
+          aria-label="Loading open roles"
+        >
+          <span class="sr-only">Loading open roles…</span>
+          {#each [1, 2, 3] as i (i)}
+            <div
+              class="grid grid-cols-[2.5rem_minmax(0,1fr)_2rem] sm:grid-cols-[4rem_minmax(0,1fr)_minmax(12rem,0.6fr)_2.5rem] items-center gap-4 py-6 sm:py-7 border-b border-[#d6d5ca] -mx-2 sm:-mx-4 px-2 sm:px-4"
+            >
+              <!-- Index placeholder (01, 02, 03) -->
+              <div class="h-3.5 w-6 rounded bg-[#4f5f70]/15"></div>
+
+              <!-- Title & department stacked -->
+              <div class="flex flex-col gap-2">
+                <div
+                  class="h-6 sm:h-7 rounded bg-[#4f5f70]/15"
+                  style="width: {i === 1 ? '58%' : i === 2 ? '74%' : '48%'};"
+                ></div>
+                <div
+                  class="h-3.5 sm:h-4 rounded bg-[#4f5f70]/10"
+                  style="width: {i === 1 ? '110px' : i === 2 ? '140px' : '95px'};"
+                ></div>
+              </div>
+
+              <!-- Location & Type (desktop) -->
+              <div class="hidden sm:flex sm:justify-end">
+                <div
+                  class="h-4 rounded bg-[#4f5f70]/10"
+                  style="width: {i === 1 ? '130px' : i === 2 ? '110px' : '145px'};"
+                ></div>
+              </div>
+
+              <!-- Plus toggle icon placeholder -->
+              <div class="flex justify-end">
+                <div class="h-5 w-5 rounded bg-[#4f5f70]/15"></div>
+              </div>
+            </div>
+          {/each}
         </div>
       {:then positions}
         {#if positions.length === 0}
           <!-- Clean, editorial empty state with direct CTA to open application below -->
-          <div class="border-t border-[#d6d5ca] pt-10 sm:pt-12">
+          <div>
             <div
               class="flex flex-col justify-between gap-8 lg:flex-row lg:items-center"
             >
@@ -166,7 +196,7 @@
           </div>
         {:else}
           <!-- Published Roles Accordion -->
-          <div class="border-t border-[#d6d5ca]">
+          <div>
             {#each positions as position, index}
               <details class="group border-b border-[#d6d5ca]">
                 <summary
