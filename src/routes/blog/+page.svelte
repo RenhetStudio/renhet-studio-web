@@ -311,12 +311,14 @@
             />
           </article>
 
-          <!-- Organic Divider separating featured post from archive list -->
-          <OrganicDivider
-            orientation="horizontal"
-            seed="blog-archive-split"
-            class="my-2 sm:my-3 lg:my-4"
-          />
+          {#if listPosts.length > 0}
+            <!-- Organic Divider separating featured post from archive list -->
+            <OrganicDivider
+              orientation="horizontal"
+              seed="blog-archive-split"
+              class="my-2 sm:my-3 lg:my-4"
+            />
+          {/if}
         {/if}
 
         {#if !featured && listPosts.length > 0}
