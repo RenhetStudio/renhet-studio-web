@@ -65,8 +65,8 @@ Para garantizar que la web respire autenticidad, artesanía y alma indie real, s
 
 ### 5.1. Barra de Navegación Flotante Reactiva (`SiteHeader`)
 * **Diseño Dinámico según Posición de Scroll:**
-  * **Con el Hero a la vista:** La navbar adopta un acabado refinado de cristal esmerilado con desenfoque de fondo ligero y eficiente (`bg-[#627383]/80`, `backdrop-blur-md` a 12px, borde tenue, sombra sutil) y muestra la versión compacta del isotipo (`renhet-symbol-white.png`), cediendo todo el protagonismo al gran logotipo central del Hero sin interferencias ni transparencias excesivas.
-  * **Al scrollear pasando el Hero:** La navbar se solidifica (`bg-[#627383]/94`, sombra elevada, desenfoque de fondo constante a 12px) y el isotipo se transforma de manera fluida (mediante una transición de escala y desplazamiento) en el logotipo completo con texto (`renhet-logo-white.png`), manteniéndolo visible durante el resto de la navegación.
+  * **Con el Hero a la vista:** La navbar adopta un acabado refinado de cristal esmerilado translúcido con desenfoque de fondo ligero y eficiente (`bg-[#627383]/45`, `backdrop-blur-md` a 12px, borde tenue, sombra sutil) y muestra la versión compacta del isotipo (`renhet-symbol-white.png`), cediendo todo el protagonismo al gran logotipo central del Hero y desenfocando suavemente el fondo.
+  * **Al scrollear pasando el Hero:** La navbar se solidifica (`bg-[#627383]/92`, sombra elevada, desenfoque de fondo constante a 12px) y el isotipo se transforma de manera fluida (mediante una transición de escala y desplazamiento) en el logotipo completo con texto (`renhet-logo-white.png`), creando un contraste visual nítido y evidente durante el resto de la navegación.
 * **Control de Audio:**
   * Dispone de un botón con icono SVG accesible en la cabecera con micro-animación de escala para silenciar/activar el sonido en cualquier momento, persistiendo la preferencia en `localStorage`.
 

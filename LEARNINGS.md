@@ -932,16 +932,34 @@ Never call `await supabase.auth.getUser()` unconditionally inside `hooks.server.
 ### Low-overhead frosted glass navbars without scroll-scrubbed blur interpolation
 
 **Simple explanation**
-Animating `backdrop-filter: blur(...)` dynamically along a scroll timeline forces the GPU to recompute the blur convolution kernel on every single scroll frame. Using a constant blur radius and only interpolating background opacity delivers a smooth frosted-glass look with minimal GPU overhead.
+Animating `backdrop-filter: blur(...)` dynamically along a scroll timeline forces the GPU to recompute the blur convolution kernel on every single scroll frame. Using a constant blur radius and only interpolating background opacity delivers a smooth frosted-glass look with high contrast transitions and minimal GPU overhead.
 
 **How it works**
-Define a static, moderate blur radius (`backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);`) on the navbar container rather than interpolating between different blur values inside `@keyframes nav-pill-scroll`. In the scroll-driven animation timeline, interpolate only compositor-friendly properties: `background-color` (e.g., from `rgba(98, 115, 131, 0.80)` to `rgba(98, 115, 131, 0.94)`), `border-color`, and `box-shadow`. Increasing the base color opacity from thin values (like 45%) to ~80% provides sufficient contrast against both dark and light hero content so that underlying elements never create visual noise or legibility issues.
+Define a static, moderate blur radius (`backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);`) on the navbar container rather than interpolating between different blur values inside `@keyframes nav-pill-scroll`. In the scroll-driven animation timeline, interpolate only compositor-friendly properties: `background-color` (e.g., from translucent `rgba(98, 115, 131, 0.45)` to solid `rgba(98, 115, 131, 0.92)`), `border-color`, and `box-shadow`. Keeping the translucent 45% base opacity ensures the contrast change when leaving the hero is dramatic and satisfying, while the 12px blur smoothly softens background elements into an elegant frosted glass aesthetic.
 
 **Why it matters**
-Blurring large surface areas on GPU with high radiuses (e.g., 24px-32px) or continuously recalculating blur radiuses on scroll produces compositor frame drops and battery drain on mobile devices and integrated GPUs. A fixed 12px blur paired with 80% background opacity achieves a tactile frosted glass aesthetic without excessive transparency or scroll performance penalties.
+Continuously recalculating or interpolating blur radiuses on scroll produces compositor frame drops and battery drain on mobile devices and integrated GPUs. A fixed 12px blur paired with background opacity interpolation achieves tactile frosted glass without scroll performance penalties or losing the visual impact of the transition out of the hero.
 
 **In this project**
-Applied to `.nav-pill-dynamic` in `src/lib/components/SiteHeader.svelte`, replacing continuous blur interpolation (`blur(12px)` to `blur(24px)`) with a constant 12px blur and higher initial opacity (`bg-[#627383]/80`).
+Applied to `.nav-pill-dynamic` in `src/lib/components/SiteHeader.svelte`, maintaining `bg-[#627383]/45` in hero and transitioning to `bg-[#627383]/92` with a constant 12px blur (`backdrop-blur-md`).
 
 **Tradeoffs / pitfalls**
-Avoid setting background opacity too low (under 65%) with frosted glass; low opacity lets high-contrast edges and text bleed through the blur, degrading typography legibility. Keep blur radiuses between 8px and 16px to maintain high FPS across mobile and low-power devices.
+Keep blur radiuses moderate (10px–14px) and constant to avoid GPU re-rasterization during scroll while maintaining a natural, subtle frosted glass effect.
+
+
+### Chromium `backdrop-filter` failure caused by persistent `view-transition-name` on parent containers
+
+**Simple explanation**
+Applying `view-transition-name` to a parent container permanently breaks `backdrop-filter: blur(...)` on all child elements in Chromium (Chrome, Edge), causing the blur to render completely invisible (0% blur).
+
+**How it works**
+In the CSS View Transitions specification and Blink's compositor, any element carrying an active `view-transition-name` is promoted into an isolated paint surface (a new backdrop root with paint containment). When a child element attempts to use `backdrop-filter`, it can only sample pixels within its nearest backdrop root. Because the parent container has no background of its own and sits in an isolated layer, the child's backdrop filter samples an empty buffer, rendering as completely transparent without any blur effect.
+
+**Why it matters**
+Persistent rules like `.nav-shell { view-transition-name: site-header; }` in a global stylesheet will silently disable frosted-glass effects across the entire website for all Chromium users, regardless of how high the blur radius is configured.
+
+**In this project**
+Removed `.nav-shell { view-transition-name: site-header; }` from `src/app/globals.css`. This removes the isolated backdrop root, restoring the native `backdrop-filter: blur(20px)` on `.nav-pill-dynamic` across the entire document.
+
+**Tradeoffs / pitfalls**
+Never declare `view-transition-name` permanently on ancestors of elements that rely on `backdrop-filter`. If an element needs to be excluded from root route cross-fades, assign `view-transition-name` dynamically only during the navigation lifecycle in JavaScript, or let the element participate in the gentle root dissolve.

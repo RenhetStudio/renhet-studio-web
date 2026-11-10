@@ -255,15 +255,11 @@ a {
   animation: route-arrive 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.nav-shell { view-transition-name: site-header; }
 .cursor-dot { view-transition-name: cursor-dot; }
 .cursor-ring { view-transition-name: cursor-ring; }
 
-::view-transition-group(site-header),
 ::view-transition-group(cursor-dot),
 ::view-transition-group(cursor-ring),
-::view-transition-old(site-header),
-::view-transition-new(site-header),
 ::view-transition-old(cursor-dot),
 ::view-transition-new(cursor-dot),
 ::view-transition-old(cursor-ring),
@@ -272,13 +268,11 @@ a {
 }
 
 /* Transparent shell elements must not retain the outgoing snapshot underneath. */
-::view-transition-old(site-header),
 ::view-transition-old(cursor-dot),
 ::view-transition-old(cursor-ring) {
   display: none;
 }
 
-::view-transition-new(site-header),
 ::view-transition-new(cursor-dot),
 ::view-transition-new(cursor-ring) {
   mix-blend-mode: normal;
