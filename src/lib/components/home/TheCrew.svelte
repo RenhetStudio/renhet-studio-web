@@ -49,6 +49,12 @@
       href: "https://www.pablogozalvez.com/",
     },
     {
+      name: "Todd",
+      role: "Narrative Designer",
+      country: "USA",
+      href: "https://nat20.mal.plus/technical-portfolio/",
+    },
+    {
       name: "Paulo",
       role: "Game Designer & Technical Artist",
       country: "Spain / Portugal",
@@ -456,6 +462,7 @@
   .crew-member-item.is-revealed:nth-child(10) { transition-delay: 405ms; }
   .crew-member-item.is-revealed:nth-child(11) { transition-delay: 450ms; }
   .crew-member-item.is-revealed:nth-child(12) { transition-delay: 495ms; }
+  .crew-member-item.is-revealed:nth-child(13) { transition-delay: 540ms; }
 
   .crew-pinned { background-color: rgba(79, 95, 112, 0.04); }
   .crew-current { background-color: rgba(79, 95, 112, 0.08); }
