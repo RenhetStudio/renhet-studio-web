@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fly, fade } from "svelte/transition";
-  import { page } from "$app/state";
-  import { afterNavigate } from "$app/navigation";
+  import { navigating, page } from "$app/state";
+  import { afterNavigate, onNavigate } from "$app/navigation";
   import type { UserProfile } from "$lib/blog/types";
   import { sound } from "$lib/audio/soundEffects";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
@@ -76,6 +76,11 @@
     const rect = hero.getBoundingClientRect();
     isHeroInView = rect.bottom > 80;
   };
+
+  onNavigate(() => {
+    isUserMenuOpen = false;
+    isMobileMenuOpen = false;
+  });
 
   afterNavigate(() => {
     checkHeroVisibility();
@@ -160,7 +165,7 @@
 {#if isMobileMenuOpen}
   <button
     type="button"
-    transition:fade={{ duration: 180 }}
+    transition:fade={{ duration: navigating.to ? 0 : 180 }}
     class="fixed inset-0 z-40 bg-black/25 backdrop-blur-[2px] md:hidden"
     aria-label="Close navigation menu"
     onclick={() => (isMobileMenuOpen = false)}
@@ -346,7 +351,7 @@
 
           {#if isUserMenuOpen}
             <div
-              transition:fly={{ y: -6, duration: 180 }}
+              transition:fly={{ y: -6, duration: navigating.to ? 0 : 180 }}
               class="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-2xl border-2 border-[#fffdf3] bg-[#4f5f70]/95 p-1.5 text-[#fffdf3] shadow-[0_16px_40px_rgba(30,40,55,0.35)] ring-1 ring-[#fffdf3]/30 backdrop-blur-xl"
               role="menu"
               aria-label="Account options"
@@ -425,7 +430,7 @@
   <!-- Mobile Dropdown Menu -->
   {#if isMobileMenuOpen}
     <div
-      transition:fly={{ y: -8, duration: 240 }}
+      transition:fly={{ y: -8, duration: navigating.to ? 0 : 240 }}
       class="mx-auto mt-2 w-full max-w-5xl overflow-hidden rounded-3xl border-2 p-2.5 text-[#fffdf3] shadow-[0_16px_48px_rgba(30,40,55,0.35)] backdrop-blur-xl md:hidden {isHeroInView
         ? 'border-[#fffdf3]/35 bg-[#627383]/85 ring-1 ring-[#fffdf3]/25'
         : 'border-[#fffdf3] bg-[#627383]/95 ring-1 ring-[#fffdf3]/40'}"

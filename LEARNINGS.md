@@ -2,6 +2,30 @@
 
 ## Web Development
 
+### Native route transitions without remounting the application shell
+
+**Simple explanation**
+
+The browser can capture the old and new pages and animate between them while SvelteKit keeps ownership of routing, focus, and scroll restoration.
+
+**How it works**
+
+Register `onNavigate` in the root layout. Start `document.startViewTransition`, release the navigation inside its update callback, and await `navigation.complete` before the browser captures the destination. Resolve the navigation gate immediately, rather than waiting for the animation to finish. CSS animates the root snapshots with opacity and a small vertical translation.
+
+**Why it matters**
+
+This avoids keyed wrappers that remount global providers or transforms on real layout containers that disturb fixed and sticky positioning. Native snapshots animate without changing document layout.
+
+**In this project**
+
+`src/routes/+layout.svelte` handles pathname changes only. `src/app/globals.css` dissolves the old page over 180ms and settles the new page over 360ms with an 8px movement, matching Renhet's gentle paper aesthetic. Named snapshots keep `SiteHeader` and the custom cursor out of the page movement. `SiteHeader.svelte` closes menus in `onNavigate` with zero-duration exits during navigation; the root layout waits for `tick()` before capture.
+
+**Tradeoffs / pitfalls**
+
+Browsers without View Transitions navigate normally, and reduced-motion users skip the API. Same-page anchors and search/filter query changes do not trigger the effect. Each `view-transition-name` must be unique in the rendered document. `tick()` flushes state changes but does not wait for animated outros, so menus need immediate exits when navigating. Streamed content can arrive after the destination capture and retains its existing loading behavior. Full document loads and external navigation are outside this client-side hook.
+
+For transparent shell elements, `animation: none` alone leaves the static old snapshot visible beneath the live new view. An outgoing logo can therefore show through until the entire route transition ends. Hide `::view-transition-old(site-header)` (and the cursor equivalents) and use `mix-blend-mode: normal` on their new views. This preserves the destination's live logo and scroll-driven styling without an overlapping stale capture.
+
 ### Explicit public sitemap entries and real modification dates
 
 **Simple explanation**
