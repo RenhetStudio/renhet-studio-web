@@ -175,8 +175,8 @@
 <nav class="nav-shell fixed inset-x-0 top-4 z-50 px-4" aria-label="Primary navigation">
   <div
     class="nav-pill-dynamic relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] sm:px-6 {isHeroInView
-      ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md'
-      : 'border-[#fffdf3] bg-[#627383]/92 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-xl'}"
+      ? 'border-[#fffdf3]/40 bg-[#627383]/80 shadow-[0_4px_24px_rgba(0,0,0,0.14)] backdrop-blur-md'
+      : 'border-[#fffdf3] bg-[#627383]/94 shadow-[0_12px_40px_rgba(50,62,75,0.22)] ring-1 ring-[#fffdf3]/40 backdrop-blur-md'}"
   >
     <!-- Logo with smooth morph between compact symbol and full wordmark (space reserved to prevent navbar layout shift) -->
     <a
@@ -546,6 +546,11 @@
   .sound-cross-second { transform: rotate(45deg) scale(0.3); transition-delay: 0ms, 30ms; }
   .is-muted .sound-cross { opacity: 1; transform: rotate(0deg) scale(1); }
 
+  .nav-pill-dynamic {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
   @supports (animation-timeline: scroll()) {
     :global(:root:has([data-hero])) .nav-pill-dynamic {
       animation: nav-pill-scroll linear both;
@@ -574,18 +579,14 @@
 
     @keyframes nav-pill-scroll {
       0% {
-        border-color: rgba(255, 253, 243, 0.35);
-        background-color: rgba(98, 115, 131, 0.45);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        border-color: rgba(255, 253, 243, 0.4);
+        background-color: rgba(98, 115, 131, 0.8);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.14);
       }
       100% {
         border-color: #fffdf3;
-        background-color: rgba(98, 115, 131, 0.92);
+        background-color: rgba(98, 115, 131, 0.94);
         box-shadow: 0 12px 40px rgba(50, 62, 75, 0.22), 0 0 0 1px rgba(255, 253, 243, 0.4);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
       }
     }
 
@@ -618,10 +619,10 @@
 
   :global(:root:not(:has([data-hero]))) .nav-pill-dynamic {
     border-color: #fffdf3;
-    background-color: rgba(98, 115, 131, 0.92);
+    background-color: rgba(98, 115, 131, 0.94);
     box-shadow: 0 12px 40px rgba(50, 62, 75, 0.22), 0 0 0 1px rgba(255, 253, 243, 0.4);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   :global(:root:not(:has([data-hero]))) .nav-symbol-icon {

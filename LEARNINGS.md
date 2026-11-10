@@ -927,3 +927,21 @@ Implemented in `src/lib/supabase/server.ts` (`createClient`) and `src/hooks.serv
 
 **Tradeoffs / pitfalls**
 Never call `await supabase.auth.getUser()` unconditionally inside `hooks.server.ts` on every request to prevent this; doing so forces a remote network roundtrip to Supabase on every single page view (including public readers browsing the homepage), degrading TTFB. Catching the late write in `setAll` keeps public routes ultra-fast while preserving cookie refresh on authenticated routes.
+
+
+### Low-overhead frosted glass navbars without scroll-scrubbed blur interpolation
+
+**Simple explanation**
+Animating `backdrop-filter: blur(...)` dynamically along a scroll timeline forces the GPU to recompute the blur convolution kernel on every single scroll frame. Using a constant blur radius and only interpolating background opacity delivers a smooth frosted-glass look with minimal GPU overhead.
+
+**How it works**
+Define a static, moderate blur radius (`backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);`) on the navbar container rather than interpolating between different blur values inside `@keyframes nav-pill-scroll`. In the scroll-driven animation timeline, interpolate only compositor-friendly properties: `background-color` (e.g., from `rgba(98, 115, 131, 0.80)` to `rgba(98, 115, 131, 0.94)`), `border-color`, and `box-shadow`. Increasing the base color opacity from thin values (like 45%) to ~80% provides sufficient contrast against both dark and light hero content so that underlying elements never create visual noise or legibility issues.
+
+**Why it matters**
+Blurring large surface areas on GPU with high radiuses (e.g., 24px-32px) or continuously recalculating blur radiuses on scroll produces compositor frame drops and battery drain on mobile devices and integrated GPUs. A fixed 12px blur paired with 80% background opacity achieves a tactile frosted glass aesthetic without excessive transparency or scroll performance penalties.
+
+**In this project**
+Applied to `.nav-pill-dynamic` in `src/lib/components/SiteHeader.svelte`, replacing continuous blur interpolation (`blur(12px)` to `blur(24px)`) with a constant 12px blur and higher initial opacity (`bg-[#627383]/80`).
+
+**Tradeoffs / pitfalls**
+Avoid setting background opacity too low (under 65%) with frosted glass; low opacity lets high-contrast edges and text bleed through the blur, degrading typography legibility. Keep blur radiuses between 8px and 16px to maintain high FPS across mobile and low-power devices.
