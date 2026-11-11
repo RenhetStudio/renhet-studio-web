@@ -963,3 +963,21 @@ Removed `.nav-shell { view-transition-name: site-header; }` from `src/app/global
 
 **Tradeoffs / pitfalls**
 Never declare `view-transition-name` permanently on ancestors of elements that rely on `backdrop-filter`. If an element needs to be excluded from root route cross-fades, assign `view-transition-name` dynamically only during the navigation lifecycle in JavaScript, or let the element participate in the gentle root dissolve.
+
+
+### Preventing sticky split-panel hover states on touch and mobile devices
+
+**Simple explanation**
+On touchscreens without hover capabilities, tapping an interactive panel fires simulated `mouseenter` events without any subsequent `mouseleave`. Guarding expansion state with media query pointer detection keeps split layouts balanced in a 50/50 state on mobile and avoids sticky distorted sections.
+
+**How it works**
+Query pointer and hover capabilities using `window.matchMedia("(hover: hover) and (pointer: fine)")` and listen for `change` events. When `canHover` is false, interaction handlers (`handlePanelEnter`, `onMouseMove`) immediately exit without modifying active panel states or transform positions, leaving the split panels in their neutral equilibrium. In addition, move CSS micro-interaction hover transforms (`group-hover:scale-...`, etc.) inside `@media (hover: hover) and (pointer: fine)` so that tap events do not trigger sticky CSS `:hover` states on touch devices.
+
+**Why it matters**
+Without this guard, tapping a panel on a mobile phone or tablet to navigate down into a section locks the clicked panel into its expanded/highlighted state and the other into its shrunken/dimmed state. When the user scrolls back up, the hero remains stuck in an asymmetric distortion rather than its intended balanced composition.
+
+**In this project**
+Implemented in `src/lib/components/home/HeroSplit.svelte`. `canHover` guards `handlePanelEnter`, `handlePanelLeave`, and `onMouseMove`. Scoped CSS hover rules for `.studio-logo-extrusion`, `.studio-slogan-wrap`, and `.hero-cta-button` are restricted to `@media (hover: hover) and (pointer: fine)`.
+
+**Tradeoffs / pitfalls**
+Do not rely exclusively on viewport width media queries (e.g. `max-width: 768px`) to disable hover states. Large touch devices like iPad Pro and touchscreen laptops have desktop-class viewport widths but lack true hover pointers. Testing `(hover: hover) and (pointer: fine)` accurately detects the presence of a primary pointing device across all screen dimensions.

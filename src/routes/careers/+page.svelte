@@ -135,7 +135,11 @@
                 ></div>
                 <div
                   class="h-3.5 sm:h-4 rounded bg-[#4f5f70]/10"
-                  style="width: {i === 1 ? '110px' : i === 2 ? '140px' : '95px'};"
+                  style="width: {i === 1
+                    ? '110px'
+                    : i === 2
+                      ? '140px'
+                      : '95px'};"
                 ></div>
               </div>
 
@@ -143,7 +147,11 @@
               <div class="hidden sm:flex sm:justify-end">
                 <div
                   class="h-4 rounded bg-[#4f5f70]/10"
-                  style="width: {i === 1 ? '130px' : i === 2 ? '110px' : '145px'};"
+                  style="width: {i === 1
+                    ? '130px'
+                    : i === 2
+                      ? '110px'
+                      : '145px'};"
                 ></div>
               </div>
 
@@ -168,7 +176,6 @@
                   >
                     Open Application
                   </span>
-                  
                 </div>
                 <h3
                   class="mt-3 text-2xl font-black text-[#4f5f70] sm:text-3xl md:text-4xl"

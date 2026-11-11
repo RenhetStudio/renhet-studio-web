@@ -5,6 +5,7 @@
 
   let activePanel = $state<"studio" | "game" | null>(null);
   let isReducedMotion = $state(false);
+  let canHover = $state(false);
 
   // Wave divider morphing contour paths (viewBox 0 0 1000 1000)
   const sNeutral =
@@ -58,7 +59,18 @@
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    if (typeof window !== "undefined") {
+    const hoverMql = window.matchMedia("(hover: hover) and (pointer: fine)");
+    canHover = hoverMql.matches;
+
+    const onHoverChange = (e: MediaQueryListEvent) => {
+      canHover = e.matches;
+      if (!e.matches) {
+        activePanel = null;
+      }
+    };
+    hoverMql.addEventListener("change", onHoverChange);
+
+    if (canHover && typeof window !== "undefined") {
       const p = new URLSearchParams(window.location.search).get("panel");
       if (p === "game" || p === "studio") {
         activePanel = p;
@@ -73,11 +85,12 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
+      hoverMql.removeEventListener("change", onHoverChange);
     };
   });
 
   const onMouseMove = (e: MouseEvent) => {
-    if (isReducedMotion) return;
+    if (isReducedMotion || !canHover) return;
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -87,12 +100,17 @@
   };
 
   const handlePanelEnter = (panel: "studio" | "game") => {
+    if (!canHover) return;
     if (activePanel !== panel) {
       activePanel = panel;
     }
   };
 
   const handlePanelLeave = () => {
+    if (!canHover) {
+      activePanel = null;
+      return;
+    }
     if (
       typeof window !== "undefined" &&
       new URLSearchParams(window.location.search).has("panel")
@@ -265,11 +283,11 @@
           alt="Renhet Studio"
           width="1024"
           height="516"
-          class="studio-logo-extrusion relative z-10 w-[80%] max-w-[280px] sm:max-w-[340px] md:max-w-[380px] xl:w-[84%] xl:max-w-[490px] 2xl:max-w-[540px] -rotate-1 object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-rotate-2 group-hover:scale-[1.03]"
+          class="studio-logo-extrusion relative z-10 w-[80%] max-w-[280px] sm:max-w-[340px] md:max-w-[380px] xl:w-[84%] xl:max-w-[490px] 2xl:max-w-[540px] -rotate-1 object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
         />
 
         <div
-          class="relative z-20 -mt-1 sm:-mt-2 xl:-mt-3 flex flex-col items-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+          class="studio-slogan-wrap relative z-20 -mt-1 sm:-mt-2 xl:-mt-3 flex flex-col items-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
         >
           <h1
             class="studio-slogan-extrusion text-center font-brand tracking-normal text-[#fffdf3]"
@@ -285,7 +303,7 @@
 
       <!-- Studio CTA button -->
       <div
-        class="hero-cta-button relative z-30 inline-flex h-8 sm:h-9 xl:h-10 w-[172px] sm:w-[190px] xl:w-[205px] items-center justify-center gap-2 rounded-full border border-[#fffdf3]/20 bg-[#344253]/45 text-xs sm:text-sm font-bold tracking-tight text-[#fffdf3] shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:border-[#fffdf3]/40 group-hover:bg-[#344253]/65 {activePanel ===
+        class="hero-cta-button relative z-30 inline-flex h-8 sm:h-9 xl:h-10 w-[172px] sm:w-[190px] xl:w-[205px] items-center justify-center gap-2 rounded-full border border-[#fffdf3]/20 bg-[#344253]/45 text-xs sm:text-sm font-bold tracking-tight text-[#fffdf3] shadow-sm backdrop-blur-sm transition-all duration-300 {activePanel ===
         'game'
           ? 'opacity-40'
           : 'opacity-100'}"
@@ -385,7 +403,7 @@
 
       <!-- Beelze Pub CTA button -->
       <div
-        class="hero-cta-button relative z-30 inline-flex h-8 sm:h-9 xl:h-10 w-[172px] sm:w-[190px] xl:w-[205px] items-center justify-center gap-2 rounded-full border border-[#fffdf3]/20 bg-[#1e2632]/50 text-xs sm:text-sm font-bold tracking-tight text-[#fffdf3] shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:border-[#fffdf3]/40 group-hover:bg-[#1e2632]/70 {activePanel ===
+        class="hero-cta-button relative z-30 inline-flex h-8 sm:h-9 xl:h-10 w-[172px] sm:w-[190px] xl:w-[205px] items-center justify-center gap-2 rounded-full border border-[#fffdf3]/20 bg-[#1e2632]/50 text-xs sm:text-sm font-bold tracking-tight text-[#fffdf3] shadow-sm backdrop-blur-sm transition-all duration-300 {activePanel ===
         'studio'
           ? 'opacity-40'
           : 'opacity-100'}"
@@ -413,6 +431,26 @@
     filter: drop-shadow(0 1.5px 0 #34425355) drop-shadow(0 -0.5px 0 #34425335)
       drop-shadow(1px 0 0 #34425345) drop-shadow(-1px 0 0 #34425345)
       drop-shadow(0 6px 14px rgba(30, 38, 50, 0.2));
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .panel-studio:hover .studio-logo-extrusion {
+      transform: rotate(-2deg) scale(1.03);
+    }
+
+    .panel-studio:hover .studio-slogan-wrap {
+      transform: scale(1.03);
+    }
+
+    .panel-studio:hover .hero-cta-button {
+      border-color: rgba(255, 253, 243, 0.4);
+      background-color: rgba(52, 66, 83, 0.65);
+    }
+
+    .panel-game:hover .hero-cta-button {
+      border-color: rgba(255, 253, 243, 0.4);
+      background-color: rgba(30, 38, 50, 0.7);
+    }
   }
 
   .hero-split-container {
