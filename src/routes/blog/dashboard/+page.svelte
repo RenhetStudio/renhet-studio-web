@@ -107,7 +107,7 @@
       {:else}
         <!-- Desktop Table Header -->
         <div
-          class="hidden md:grid md:grid-cols-[minmax(0,1fr)_180px_130px_120px_auto] lg:grid-cols-[minmax(0,1fr)_200px_140px_130px_auto] gap-4 lg:gap-6 py-3 px-3 text-xs font-black uppercase tracking-wider text-[#8a98a5] border-b border-[#4f5f70]/15"
+          class="hidden md:grid md:grid-cols-[minmax(0,1fr)_170px_130px_120px_260px] lg:grid-cols-[minmax(0,1fr)_190px_140px_130px_260px] gap-4 lg:gap-6 py-3 px-3 -mx-3 text-xs font-black uppercase tracking-wider text-[#8a98a5] border-b border-[#4f5f70]/15"
         >
           <div>Story</div>
           <div>Category</div>
@@ -121,7 +121,7 @@
           {#each data.posts as post (post.id)}
             <!-- Desktop Row -->
             <div
-              class="hidden md:grid md:grid-cols-[minmax(0,1fr)_180px_130px_120px_auto] lg:grid-cols-[minmax(0,1fr)_200px_140px_130px_auto] gap-4 lg:gap-6 py-4.5 px-3 items-center transition-colors hover:bg-[#fffdf3]/60 rounded-xl -mx-3"
+              class="hidden md:grid md:grid-cols-[minmax(0,1fr)_170px_130px_120px_260px] lg:grid-cols-[minmax(0,1fr)_190px_140px_130px_260px] gap-4 lg:gap-6 py-4.5 px-3 -mx-3 items-center transition-colors hover:bg-[#fffdf3]/60 rounded-xl"
             >
               <div class="min-w-0 pr-4">
                 <a

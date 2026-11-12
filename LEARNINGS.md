@@ -1066,12 +1066,14 @@ In dashboard data tables with variable text badges (e.g. category pills like "Re
 
 **How it works**
 
-1. **Collision-free CSS Grid Specification:**
-   - Instead of uniform fixed widths (`1fr 130px 130px 130px auto`), desktop columns use:
-     - `md:grid-cols-[minmax(0,1fr)_180px_130px_120px_auto]`
-     - `lg:grid-cols-[minmax(0,1fr)_200px_140px_130px_auto]`
-   - The Category column expands from `130px` to `180px` (md) and `200px` (lg). Category "Recommendations" (~135px wide) gets 45–65px of breathing room.
-   - The Story title column uses `minmax(0, 1fr)` paired with `truncate` on the slug and `line-clamp-2` on the title to guarantee long article titles never push neighboring columns.
+1. **Collision-free CSS Grid Specification with Synchronized Fixed Tracks:**
+   - When a table is constructed from independent row grid containers (e.g. `<div class="grid">` for the header and one `<div class="grid">` per row), never use `auto` on the last column (`Actions`) while using `1fr` on the first column (`Story`).
+   - In the header, `Actions` is a simple text label (~55px wide), while in each row it contains multiple buttons (`Edit`, `Preview`, `Delete` totaling ~260px). Because each row evaluates `auto` independently, `1fr` in the header expands by ~200px, pushing all subsequent columns (`Category`, `Status`, `Updated`, `Actions`) ~200px to the right of the row cells, creating a severe column desynchronization where Category appears under Story, Status under Category, Date under Status, and Action buttons under Updated.
+   - Sizing every non-flexible column explicitly with identical widths in both header and rows guarantees pixel-perfect column alignment:
+     - `md:grid-cols-[minmax(0,1fr)_170px_130px_120px_260px]`
+     - `lg:grid-cols-[minmax(0,1fr)_190px_140px_130px_260px]`
+   - The Category column provides 170px–190px of space, ensuring "Recommendations" (~135px wide) has 35–55px of breathing room without overflowing.
+   - Both header and row share identical padding and margin offsets (`px-3 -mx-3`) so their horizontal boundaries align to the exact subpixel.
 2. **Tactile Artisan Pills with Embedded Status Dots:**
    - Previous status badges relied on generic saturated Tailwind greens, blues, and ambers.
    - Refined to warm Renhet tones:
