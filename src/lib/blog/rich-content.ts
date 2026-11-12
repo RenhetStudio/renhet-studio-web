@@ -56,7 +56,7 @@ function renderNode(node: JSONContent): string {
   const align = alignAttr(node);
   switch (node.type) {
     case "doc": return children;
-    case "paragraph": return `<p${align}>${children}</p>`;
+    case "paragraph": return `<p${align}>${children.trim() ? children : "<br>"}</p>`;
     case "heading": {
       const level = Math.min(3, Math.max(1, Number(node.attrs?.level) || 2));
       return `<h${level}${align}>${children}</h${level}>`;
@@ -64,9 +64,12 @@ function renderNode(node: JSONContent): string {
     case "bulletList": return `<ul>${children}</ul>`;
     case "orderedList": return `<ol>${children}</ol>`;
     case "listItem": return `<li>${children}</li>`;
-    case "taskList": return `<ul class="content-task-list">${children}</ul>`;
-    case "taskItem": return `<li class="content-task-item"><input type="checkbox" ${node.attrs?.checked ? "checked " : ""}disabled aria-label="Checklist item"><div>${children}</div></li>`;
-    case "blockquote": return `<blockquote>${children}</blockquote>`;
+    case "taskList": return `<ul class="content-task-list" data-type="taskList">${children}</ul>`;
+    case "taskItem": {
+      const isChecked = Boolean(node.attrs?.checked);
+      return `<li class="content-task-item" data-type="taskItem" data-checked="${isChecked}"><label contenteditable="false"><input type="checkbox" ${isChecked ? "checked " : ""}disabled aria-label="Checklist item"><span></span></label><div>${children}</div></li>`;
+    }
+    case "blockquote": return `<blockquote${align}>${children}</blockquote>`;
     case "codeBlock": return `<pre><code>${children}</code></pre>`;
     case "horizontalRule": return "<hr>";
     case "sectionGap": {

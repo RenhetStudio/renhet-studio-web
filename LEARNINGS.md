@@ -981,3 +981,78 @@ Implemented in `src/lib/components/home/HeroSplit.svelte`. `canHover` guards `ha
 
 **Tradeoffs / pitfalls**
 Do not rely exclusively on viewport width media queries (e.g. `max-width: 768px`) to disable hover states. Large touch devices like iPad Pro and touchscreen laptops have desktop-class viewport widths but lack true hover pointers. Testing `(hover: hover) and (pointer: fine)` accurately detects the presence of a primary pointing device across all screen dimensions.
+
+
+### Contextual dual-state editor toolbar with clean functional clusters and popover menus
+
+**Simple explanation**
+
+Dense rich text editors often overwhelm authors with 30+ visible buttons split across multiple rows, many of which are disabled or irrelevant depending on whether the author is typing paragraphs or positioning images. A contextual dual-state toolbar presents a streamlined single row for prose editing that morphs into a dedicated media control center whenever an image, video, or embed is selected.
+
+**How it works**
+
+1. **State 1 — Normal Writing Toolbar:**
+   - **History cluster:** Dedicated vector SVG buttons for `Undo` (<kbd>Ctrl+Z</kbd>) and `Redo` (<kbd>Ctrl+Y</kbd>) powered by reactive `editor.can().undo()` / `editor.can().redo()` state.
+   - **Paragraph ▾ Dropdown:** Shows the active block format (`Paragraph`, `H1`, `H2`, `H3`, `Quote`) and opens a tidy popover with checkmarks.
+   - **Inline formatting:** Snappy buttons for `B`, `I`, `U`, `S`, `Code`, and `Mark` (highlight).
+   - **Lists ▾ Dropdown:** Unified menu grouping Bullet list, Numbered list, and Checklist with active selection indicators.
+   - **Alignment:** Segmented controls for `Left`, `Center`, `Right`, and `Justify`.
+   - **+ Insert ▾ Dropdown:** Cascading flyout submenus (`Link`, `Upload >`, `From url >`, `Table >`, `Separator >`).
+   - **Media Drawer Toggle:** Tactile button showing total post media count badge.
+2. **State 2 — Contextual Media Selected Toolbar:**
+   - Automatically activates when `selectedMedia` is truthy (`editor.isActive(type)` or `NodeSelection`).
+   - Replaces the text toolbar with:
+     - `[Wrap L | No Wrap | Wrap R | Row]` segmented layout buttons.
+     - `[Width Slider: 10% - 100%]` with tabular numeric percentage badge.
+     - `[Replace ▾]` menu (upload replacement file or edit source URL) and `[Delete]` (<kbd>Ctrl+Z</kbd> undoable).
+     - Dedicated `[Deselect]` close button to return to text editing.
+3. **Parity and English Localization:** All labels, tooltips, placeholders, and aria attributes are in English, matching Renhet Studio's design conventions.
+
+**Why it matters**
+
+Writers spend 90% of their time writing words and 10% adjusting media. Surfacing image wrap and width sliders only when media is focused eliminates visual noise while writing, while grouping dozens of insertion tools into a single categorized `+ Insert` dropdown cuts vertical toolbar height by half.
+
+**In this project**
+
+Implemented in [RichEditor.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/RichEditor.svelte), [globals.css](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/app/globals.css), [IconUndo.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconUndo.svelte), and [IconRedo.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconRedo.svelte).
+
+**Tradeoffs / pitfalls**
+
+Ensure outside clicks (`handleWindowPointerDown`) and keyboard dismissals (<kbd>Escape</kbd>) close open toolbar menus without cancelling active text selections or blocking ProseMirror pointer transactions.
+
+
+### Cascading flyout submenus and floating contextual table menu in rich text editor
+
+**Simple explanation**
+
+An insert dropdown with flat scrolling lists creates visual clutter and friction. Cascading hover submenus group related media, links, tables, and dividers into intuitive flyout branches. Moving destructive and contextual table controls out of the sticky toolbar into a floating bubble menu attached directly to the active table cell streamlines UX and prevents accidental deletions.
+
+**How it works**
+
+1. **Cascading Flyout Submenus with Viewport Edge Detection:**
+   - The `+ Insert ▾` dropdown presents 5 concise categories: `Link`, `Upload >`, `From url >`, `Table (clickable) >`, and `Separator >`.
+   - Hovering over a category triggers its flyout submenu via CSS (`:hover`) and Svelte rune state (`activeSubmenu`).
+   - A dynamic boundary check (`rect.right + 220 > window.innerWidth`) evaluates whether the submenu will collide with the viewport edge. If space is tight on the right, it applies `.open-left`, flying out to the left instead of clipping.
+   - An invisible CSS pseudo-element bridge (`::before`) connects the parent trigger to the submenu across visual spacing gaps, preventing accidental menu closure during diagonal mouse travel.
+2. **Clickable Hybrid Parent for Tables:**
+   - The `Table (clickable) >` row acts as a dual trigger: clicking the "Table" label directly inserts a default 3×3 table with headers, while clicking or hovering the chevron icon reveals options to insert a new table, add a row, or add a column.
+3. **Floating Contextual Table Menu:**
+   - When the cursor enters any table (`editor.isActive("table") && selection.empty`), a floating bubble menu appears anchored directly over the active cell (`rect = (cellEl ?? tableEl).getBoundingClientRect()`).
+   - If text inside a cell is selected (`!selection.empty`), the text formatting bubble menu takes precedence to allow inline bold/italic editing without visual collision.
+   - All buttons in the table floating menu intercept `pointerdown` via `event.preventDefault()` so the editor retains ProseMirror cell focus during row and column operations.
+   - Actions provided: `+ Row Above`, `+ Row Below`, `Delete Row`, `+ Col Left`, `+ Col Right`, `Delete Col`, `Header` (toggle header row), and `Delete table` styled in danger red with `IconTrash`.
+   - Deleting the table or last row/column instantly updates `editor.isActive("table")`, dismissing the floating menu cleanly.
+
+**Why it matters**
+
+Placing table controls in a sticky toolbar requires the author to look away from their data. Contextual floating menus put row/column manipulation and deletion right at the user's cursor. Separating upload sources (file upload vs URL embedding) into hover submenus reduces cognitive load while keeping every capability immediately accessible.
+
+**In this project**
+
+- Implemented in [RichEditor.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/RichEditor.svelte) with Svelte 5 runes (`$state`, `$derived`, `$props`).
+- Styled in [globals.css](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/app/globals.css) with `.editor-dropdown-subitem-wrap`, `.editor-dropdown-submenu`, and `.editor-floating-table-menu`.
+- Supported by [IconChevronRight.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconChevronRight.svelte), [IconVideo.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconVideo.svelte), and [IconTrash.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconTrash.svelte).
+
+**Tradeoffs / pitfalls**
+
+When using cascading submenus inside a parent popover, the parent popover must not have `overflow-y: auto` or `overflow: hidden`, or absolute child menus will be clipped. Ensure `onBlur` checks `relatedTarget?.closest("[data-floating-table-menu]")` so clicking table buttons does not prematurely close the menu before commands execute.
