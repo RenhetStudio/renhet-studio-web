@@ -1124,3 +1124,33 @@ Implemented in [src/lib/components/PostEditor.svelte](file:///c:/Users/Pablo/Des
 **Tradeoffs / pitfalls**
 
 Remember that every `:not([type="..."])` pseudo-class contributes to CSS specificity. When writing broad form-reset selectors, always verify they do not accidentally target bespoke hero or monumental headline inputs.
+
+
+### Exact visual parity between article preview and published post views
+
+**Simple explanation**
+
+An editorial preview page must render with the exact same container dimensions, margins, typography, and ProseMirror content wrappers as the published article view (`/blog/[slug]`). Retaining legacy classes (e.g. `.post-page`, `.post-header`) or full-width banner overlays on preview routes distorts font clamps and line wraps, defeating the purpose of a preview.
+
+**How it works**
+
+1. Mirror the published post DOM structure in `src/routes/blog/preview/[id]/+page.svelte`:
+   - Exact outer container: `mx-auto max-w-[880px] px-5 sm:px-8 lg:px-10 pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-24`.
+   - Category pill (`border-[#8fb8d8]/60 bg-[#fffdf3]`) and date indicator.
+   - Monumental article title: `text-[clamp(2.5rem,6vw,4.8rem)] font-black leading-[0.92] tracking-tight text-[#4f5f70]`.
+   - Subtitle / excerpt: `mt-4 sm:mt-6 text-lg sm:text-xl md:text-[22px] font-bold leading-relaxed text-[#627383]`.
+   - Cover image frame: `w-full rounded-[24px] object-cover shadow-sm` with centered caption.
+   - Body prose: Identical `<div class="rich-content">{@html data.contentHtml}</div>`.
+2. Replace intrusive legacy yellow banners (`.preview-banner`) with a subtle artisan preview pill (`border-[#8fb8d8]/50 bg-[#eef5fa] text-[#2d506b]`) and a tactile "Return to editor" back arrow integrated into the header.
+
+**Why it matters**
+
+Writers rely on preview to verify how titles break, how images wrap with prose, and how tables align before publishing. If preview uses different container widths or stylesheets than the live article, authors cannot trust the preview.
+
+**In this project**
+
+Implemented in [src/routes/blog/preview/[id]/+page.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/routes/blog/preview/[id]/+page.svelte).
+
+**Tradeoffs / pitfalls**
+
+Preview routes should only differ from published articles by excluding public discussion/comment submission forms and providing quick navigation back to the author's editor. Never alter the container width (`max-w-[880px]`) or rich content typography.
