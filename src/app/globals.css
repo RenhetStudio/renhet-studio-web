@@ -1626,34 +1626,20 @@ a {
   box-sizing: border-box;
 }
 
-.editor-fields .editor-title-field input,
 .editor-title-field input {
-  background: transparent !important;
-  border: 0 !important;
-  border-bottom: 2px solid #c9c7bf !important;
-  border-radius: 0 !important;
-  font-size: clamp(2.5rem, 6vw, 6rem) !important;
-  font-weight: 900 !important;
-  letter-spacing: -.055em !important;
-  line-height: .95 !important;
-  padding: .5rem 0 1rem !important;
-  height: auto !important;
-  color: #344253 !important;
-  width: 100% !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.editor-fields .editor-title-field input:focus,
-.editor-title-field input:focus {
-  border-bottom-color: #4f5f70 !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.editor-fields .editor-title-field input::placeholder,
-.editor-title-field input::placeholder {
-  color: #c9c7bf !important;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid #c9c7bf;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -.055em;
+  line-height: .95;
+  padding: .5rem 0 1rem;
+  width: 100%;
+  color: inherit;
+  outline: none;
 }
 
 .editor-settings-grid {
