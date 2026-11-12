@@ -1099,3 +1099,28 @@ Implemented in [src/routes/blog/dashboard/+page.svelte](file:///c:/Users/Pablo/D
 **Tradeoffs / pitfalls**
 
 When designing data grids with custom pills, always test against the longest possible category name (e.g. `Recommendations`) rather than short samples (`News`, `Dev`). Using `minmax(0, 1fr)` on the flexible content column is critical in CSS Grid to allow flex items to shrink below their intrinsic content width.
+
+
+### Preserving monumental editorial title input against form field specificity overrides
+
+**Simple explanation**
+
+In rich editor form views, global or scoped stylesheets often apply baseline input styles (e.g. rounded cream cards with 2px borders and `font: inherit`) across all inputs inside `.editor-fields`. Using attribute `:not()` selectors increases rule specificity and inadvertently strips the monumental font sizing (`clamp(2.5rem, 6vw, 6rem)`), line-height, and transparent borderless appearance of the main title field.
+
+**How it works**
+
+1. Exclude the title field explicitly from general input resets in CSS: `.editor-fields input:not([type="checkbox"]):not([type="hidden"]):not([name="title"])`.
+2. Target `.editor-fields .editor-title-field input` with full property declarations (`background: transparent`, `border-radius: 0`, `font-size: clamp(2.5rem, 6vw, 6rem)`, `font-weight: 900`, `border-bottom: 2px solid #c9c7bf`, `padding: .5rem 0 1rem`).
+3. Pair the stylesheet with utility classes directly on `<input name="title">` (`text-[clamp(2.5rem,6vw,5.5rem)] font-black leading-[0.95] tracking-tight`) to guarantee the monumental styling remains resilient across all Vite/Tailwind build pipeline optimizations.
+
+**Why it matters**
+
+The title of an article in an indie publication editor sets the tone for the entire authoring experience. Downgrading it to a generic 16px text input box inside a rounded card damages the tactile, magazine-grade feel of the workspace.
+
+**In this project**
+
+Implemented in [src/lib/components/PostEditor.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/PostEditor.svelte) and [src/app/globals.css](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/app/globals.css).
+
+**Tradeoffs / pitfalls**
+
+Remember that every `:not([type="..."])` pseudo-class contributes to CSS specificity. When writing broad form-reset selectors, always verify they do not accidentally target bespoke hero or monumental headline inputs.

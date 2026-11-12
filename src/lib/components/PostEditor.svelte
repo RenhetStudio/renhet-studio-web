@@ -299,8 +299,10 @@
   </header>
 
   <div class="editor-fields mx-auto max-w-[1500px]">
-    <label class="editor-title-field">
-      <span>Title</span>
+    <label class="editor-title-field block w-full">
+      <span class="block text-xs font-black uppercase tracking-widest text-[#8a98a5] mb-2">
+        Title
+      </span>
       <input
         name="title"
         bind:value={title}
@@ -308,8 +310,9 @@
           if (!slugTouched) slug = slugify(event.currentTarget.value);
         }}
         maxlength="160"
-        placeholder="A clear, useful title"
+        placeholder="A clear, useful title…"
         required
+        class="w-full !bg-transparent !border-0 !border-b-2 !border-[#c9c7bf] !rounded-none !px-0 !pt-2 !pb-4 text-[clamp(2.5rem,6vw,5.5rem)] font-black tracking-tight leading-[0.95] text-[#344253] placeholder:text-[#c9c7bf] outline-none transition-colors focus:!border-b-[#4f5f70] focus:outline-none focus:ring-0"
       />
     </label>
 
