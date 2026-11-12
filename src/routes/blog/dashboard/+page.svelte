@@ -4,6 +4,9 @@
   import OrganicDivider from "$lib/components/OrganicDivider.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
   import IconPlus from "$lib/components/icons/IconPlus.svelte";
+  import IconEdit from "$lib/components/icons/IconEdit.svelte";
+  import IconExternal from "$lib/components/icons/IconExternal.svelte";
+  import IconTrash from "$lib/components/icons/IconTrash.svelte";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
@@ -104,7 +107,7 @@
       {:else}
         <!-- Desktop Table Header -->
         <div
-          class="hidden md:grid md:grid-cols-[1fr_130px_130px_130px_auto] gap-4 py-3 text-xs font-black uppercase tracking-wider text-[#8a98a5] border-b border-[#4f5f70]/15"
+          class="hidden md:grid md:grid-cols-[minmax(0,1fr)_180px_130px_120px_auto] lg:grid-cols-[minmax(0,1fr)_200px_140px_130px_auto] gap-4 lg:gap-6 py-3 px-3 text-xs font-black uppercase tracking-wider text-[#8a98a5] border-b border-[#4f5f70]/15"
         >
           <div>Story</div>
           <div>Category</div>
@@ -118,23 +121,24 @@
           {#each data.posts as post (post.id)}
             <!-- Desktop Row -->
             <div
-              class="hidden md:grid md:grid-cols-[1fr_130px_130px_130px_auto] gap-4 py-4.5 items-center transition-colors hover:bg-[#fffdf3]/40"
+              class="hidden md:grid md:grid-cols-[minmax(0,1fr)_180px_130px_120px_auto] lg:grid-cols-[minmax(0,1fr)_200px_140px_130px_auto] gap-4 lg:gap-6 py-4.5 px-3 items-center transition-colors hover:bg-[#fffdf3]/60 rounded-xl -mx-3"
             >
-              <div class="pr-4">
+              <div class="min-w-0 pr-4">
                 <a
                   href={`/blog/dashboard/posts/${post.id}`}
-                  class="font-black text-base lg:text-lg text-[#4f5f70] hover:text-[#344253] hover:underline decoration-2 decoration-[#8fb8d8] transition-colors"
+                  class="font-black text-base lg:text-lg text-[#344253] hover:text-[#4f5f70] hover:underline decoration-2 decoration-[#8fb8d8] transition-colors line-clamp-2"
                 >
                   {post.title}
                 </a>
-                <span class="block text-xs font-mono text-[#8a98a5] mt-0.5">
+                <span class="block text-xs font-mono text-[#8a98a5] mt-0.5 truncate">
                   /{post.slug}
                 </span>
               </div>
 
               <div>
                 <span
-                  class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-3 py-0.5 text-xs font-black text-[#4f5f70]"
+                  class="inline-flex max-w-full items-center truncate rounded-full border border-[#4f5f70]/15 bg-[#fffdf3] px-3.5 py-1 text-xs font-black text-[#4f5f70]"
+                  title={post.category}
                 >
                   {post.category}
                 </span>
@@ -144,22 +148,25 @@
                 {#if post.status === "published"}
                   {#if post.published_at && new Date(post.published_at) > new Date()}
                     <span
-                      class="inline-flex items-center rounded-full border border-sky-300 bg-sky-50 px-2.5 py-0.5 text-xs font-black text-sky-800"
+                      class="inline-flex items-center gap-1.5 rounded-full border border-[#8fb8d8]/50 bg-[#eef5fa] px-3 py-1 text-xs font-black text-[#2d506b]"
                     >
-                      Scheduled
+                      <span class="h-1.5 w-1.5 rounded-full bg-[#5a8bb0]" aria-hidden="true"></span>
+                      <span>Scheduled</span>
                     </span>
                   {:else}
                     <span
-                      class="inline-flex items-center rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-xs font-black text-emerald-800"
+                      class="inline-flex items-center gap-1.5 rounded-full border border-[#6b8f71]/35 bg-[#f0f5f1] px-3 py-1 text-xs font-black text-[#2e5337]"
                     >
-                      Published
+                      <span class="h-1.5 w-1.5 rounded-full bg-[#4a7c59]" aria-hidden="true"></span>
+                      <span>Published</span>
                     </span>
                   {/if}
                 {:else}
                   <span
-                    class="inline-flex items-center rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] px-2.5 py-0.5 text-xs font-black text-[#627383]"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-[#d6d5ca] bg-[#f6f1e8] px-3 py-1 text-xs font-black text-[#5a6a7a]"
                   >
-                    Draft
+                    <span class="h-1.5 w-1.5 rounded-full bg-[#9aa6b2]" aria-hidden="true"></span>
+                    <span>Draft</span>
                   </span>
                 {/if}
               </div>
@@ -173,17 +180,21 @@
               <div class="flex items-center justify-end gap-2">
                 <a
                   href={`/blog/dashboard/posts/${post.id}`}
-                  class="rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] px-3.5 py-1 text-xs font-black text-[#4f5f70] transition-all hover:border-[#8fb8d8] hover:bg-[#8fb8d8]/15"
+                  class="inline-flex items-center gap-1.5 rounded-full border border-[#4f5f70]/25 bg-[#fffdf3] px-3.5 py-1.5 text-xs font-bold text-[#344253] transition-all hover:border-[#4f5f70] hover:bg-[#4f5f70] hover:text-[#fffdf3] hover:shadow-xs active:scale-[0.98] cursor-pointer"
+                  title="Edit post in rich editor"
                 >
-                  Edit
+                  <IconEdit size={11} strokeWidth={2.4} />
+                  <span>Edit</span>
                 </a>
                 <a
                   href={`/blog/preview/${post.id}`}
                   target="_blank"
                   rel="noreferrer"
-                  class="rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] px-3.5 py-1 text-xs font-black text-[#627383] transition-all hover:border-[#8fb8d8] hover:text-[#344253]"
+                  class="inline-flex items-center gap-1.5 rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] px-3.5 py-1.5 text-xs font-bold text-[#627383] transition-all hover:border-[#8fb8d8] hover:bg-[#8fb8d8]/15 hover:text-[#344253] cursor-pointer"
+                  title="Open live preview in new tab"
                 >
-                  Preview
+                  <IconExternal size={11} />
+                  <span>Preview</span>
                 </a>
                 <form
                   method="POST"
@@ -197,59 +208,82 @@
                   <input type="hidden" name="id" value={post.id} />
                   <button
                     type="submit"
-                    class="rounded-full px-2.5 py-1 text-xs font-black text-rose-700 transition-colors hover:bg-rose-50 hover:text-rose-900 cursor-pointer"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-[#8b4b50]/25 bg-transparent px-3 py-1.5 text-xs font-bold text-[#8b4b50] transition-all hover:border-[#8b4b50] hover:bg-[#8b4b50]/10 hover:text-[#70383b] cursor-pointer"
+                    title="Move post to trash"
                   >
-                    Delete
+                    <IconTrash size={11} strokeWidth={2.4} />
+                    <span>Delete</span>
                   </button>
                 </form>
               </div>
             </div>
 
             <!-- Mobile Row (Clean cardless responsive stack) -->
-            <div class="flex flex-col md:hidden py-4 space-y-2">
+            <div class="flex flex-col md:hidden py-4.5 space-y-2.5">
               <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                   <span
-                    class="inline-flex items-center rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-2.5 py-0.5 text-[11px] font-black text-[#4f5f70]"
+                    class="inline-flex items-center rounded-full border border-[#4f5f70]/15 bg-[#fffdf3] px-2.5 py-0.5 text-[11px] font-black text-[#4f5f70]"
                   >
                     {post.category}
                   </span>
                   {#if post.status === "published"}
-                    <span
-                      class="inline-flex items-center rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-[11px] font-black text-emerald-800"
-                    >
-                      Published
-                    </span>
+                    {#if post.published_at && new Date(post.published_at) > new Date()}
+                      <span
+                        class="inline-flex items-center gap-1.5 rounded-full border border-[#8fb8d8]/50 bg-[#eef5fa] px-2.5 py-0.5 text-[11px] font-black text-[#2d506b]"
+                      >
+                        <span class="h-1.5 w-1.5 rounded-full bg-[#5a8bb0]" aria-hidden="true"></span>
+                        <span>Scheduled</span>
+                      </span>
+                    {:else}
+                      <span
+                        class="inline-flex items-center gap-1.5 rounded-full border border-[#6b8f71]/35 bg-[#f0f5f1] px-2.5 py-0.5 text-[11px] font-black text-[#2e5337]"
+                      >
+                        <span class="h-1.5 w-1.5 rounded-full bg-[#4a7c59]" aria-hidden="true"></span>
+                        <span>Published</span>
+                      </span>
+                    {/if}
                   {:else}
                     <span
-                      class="inline-flex items-center rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] px-2 py-0.5 text-[11px] font-black text-[#627383]"
+                      class="inline-flex items-center gap-1.5 rounded-full border border-[#d6d5ca] bg-[#f6f1e8] px-2.5 py-0.5 text-[11px] font-black text-[#5a6a7a]"
                     >
-                      Draft
+                      <span class="h-1.5 w-1.5 rounded-full bg-[#9aa6b2]" aria-hidden="true"></span>
+                      <span>Draft</span>
                     </span>
                   {/if}
                 </div>
-                <time class="text-xs font-bold text-[#8a98a5]">
+                <time class="text-xs font-bold text-[#8a98a5] shrink-0">
                   {formatDate(post.updated_at)}
                 </time>
               </div>
 
               <a
                 href={`/blog/dashboard/posts/${post.id}`}
-                class="font-black text-lg text-[#4f5f70] leading-snug"
+                class="font-black text-lg text-[#344253] leading-snug hover:text-[#4f5f70] transition-colors"
               >
                 {post.title}
               </a>
 
-              <div class="flex items-center justify-between pt-1">
-                <span class="text-xs font-mono text-[#8a98a5]">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                <span class="text-xs font-mono text-[#8a98a5] truncate">
                   /{post.slug}
                 </span>
                 <div class="flex items-center gap-2">
                   <a
                     href={`/blog/dashboard/posts/${post.id}`}
-                    class="rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] px-3 py-1 text-xs font-black text-[#4f5f70]"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-[#4f5f70]/25 bg-[#fffdf3] px-3.5 py-1 text-xs font-bold text-[#344253] transition-all hover:bg-[#4f5f70] hover:text-[#fffdf3]"
                   >
-                    Edit
+                    <IconEdit size={11} strokeWidth={2.4} />
+                    <span>Edit</span>
+                  </a>
+                  <a
+                    href={`/blog/preview/${post.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-[#4f5f70]/20 bg-[#fffdf3] px-3.5 py-1 text-xs font-bold text-[#627383] transition-all hover:border-[#8fb8d8] hover:text-[#344253]"
+                  >
+                    <IconExternal size={11} />
+                    <span>Preview</span>
                   </a>
                   <form
                     method="POST"
@@ -263,9 +297,10 @@
                     <input type="hidden" name="id" value={post.id} />
                     <button
                       type="submit"
-                      class="rounded-full px-2 py-1 text-xs font-black text-rose-700 cursor-pointer"
+                      class="inline-flex items-center gap-1.5 rounded-full border border-[#8b4b50]/25 bg-transparent px-3 py-1 text-xs font-bold text-[#8b4b50] transition-all hover:bg-[#8b4b50]/10 hover:text-[#70383b] cursor-pointer"
                     >
-                      Delete
+                      <IconTrash size={11} strokeWidth={2.4} />
+                      <span>Delete</span>
                     </button>
                   </form>
                 </div>
@@ -290,7 +325,7 @@
                 Trash
               </h3>
               <span
-                class="inline-flex shrink-0 whitespace-nowrap items-center rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-black text-amber-900"
+                class="inline-flex shrink-0 whitespace-nowrap items-center rounded-full border border-[#d6d5ca] bg-[#f6f1e8] px-2.5 py-0.5 text-xs font-black text-[#718191]"
               >
                 {data.deletedPosts.length} {data.deletedPosts.length === 1 ? "story" : "stories"}
               </span>
@@ -316,7 +351,7 @@
                     <input type="hidden" name="id" value={deletedPost.id} />
                     <button
                       type="submit"
-                      class="rounded-full border border-[#8fb8d8] bg-[#fffdf3] px-3.5 py-1 text-xs font-black text-[#4f5f70] transition-colors hover:bg-[#8fb8d8]/20 cursor-pointer"
+                      class="inline-flex items-center gap-1.5 rounded-full border border-[#8fb8d8]/60 bg-[#fffdf3] px-3.5 py-1 text-xs font-bold text-[#344253] transition-colors hover:bg-[#8fb8d8]/20 cursor-pointer"
                     >
                       Restore as draft
                     </button>
@@ -337,9 +372,10 @@
                     <input type="hidden" name="id" value={deletedPost.id} />
                     <button
                       type="submit"
-                      class="rounded-full border border-rose-300 bg-[#fffdf3] px-3 py-1 text-xs font-black text-rose-800 transition-colors hover:bg-rose-50 cursor-pointer"
+                      class="inline-flex items-center gap-1.5 rounded-full border border-[#8b4b50]/30 bg-[#fffdf3] px-3.5 py-1 text-xs font-bold text-[#8b4b50] transition-colors hover:bg-[#8b4b50]/15 hover:text-[#70383b] cursor-pointer"
                     >
-                      Delete permanently
+                      <IconTrash size={11} strokeWidth={2.4} />
+                      <span>Delete permanently</span>
                     </button>
                   </form>
                 </div>
@@ -410,7 +446,7 @@
                   <input type="hidden" name="status" value="rejected" />
                   <button
                     type="submit"
-                    class="inline-flex h-[38px] items-center justify-center rounded-full border border-rose-300 bg-[#fffdf3] px-5 text-xs font-black text-rose-800 transition-all hover:bg-rose-50 cursor-pointer"
+                    class="inline-flex h-[38px] items-center justify-center rounded-full border border-[#8b4b50]/35 bg-[#fffdf3] px-5 text-xs font-black text-[#8b4b50] transition-all hover:bg-[#8b4b50]/10 hover:text-[#70383b] cursor-pointer"
                   >
                     Reject
                   </button>

@@ -1056,3 +1056,44 @@ Placing table controls in a sticky toolbar requires the author to look away from
 **Tradeoffs / pitfalls**
 
 When using cascading submenus inside a parent popover, the parent popover must not have `overflow-y: auto` or `overflow: hidden`, or absolute child menus will be clipped. Ensure `onBlur` checks `relatedTarget?.closest("[data-floating-table-menu]")` so clicking table buttons does not prematurely close the menu before commands execute.
+
+
+### Editorial dashboard table layout with collision-free column sizing and tactile artisan pills
+
+**Simple explanation**
+
+In dashboard data tables with variable text badges (e.g. category pills like "Recommendations" alongside status pills like "Draft"), fixed narrow columns (`130px`) or unconstrained flex rows cause pills to collide or overlap. Replacing rigid columns with responsive minmax boundaries and harmonizing badges with warm earthy palettes and status dots elevates readability without clutter.
+
+**How it works**
+
+1. **Collision-free CSS Grid Specification:**
+   - Instead of uniform fixed widths (`1fr 130px 130px 130px auto`), desktop columns use:
+     - `md:grid-cols-[minmax(0,1fr)_180px_130px_120px_auto]`
+     - `lg:grid-cols-[minmax(0,1fr)_200px_140px_130px_auto]`
+   - The Category column expands from `130px` to `180px` (md) and `200px` (lg). Category "Recommendations" (~135px wide) gets 45–65px of breathing room.
+   - The Story title column uses `minmax(0, 1fr)` paired with `truncate` on the slug and `line-clamp-2` on the title to guarantee long article titles never push neighboring columns.
+2. **Tactile Artisan Pills with Embedded Status Dots:**
+   - Previous status badges relied on generic saturated Tailwind greens, blues, and ambers.
+   - Refined to warm Renhet tones:
+     - `Published`: sage border (`#6b8f71`/35) on pale sage (`#f0f5f1`) with deep forest text (`#2e5337`) and an emerald dot (`#4a7c59`).
+     - `Draft`: warm stone border (`#d6d5ca`) on paper canvas (`#f6f1e8`) with slate text (`#5a6a7a`) and a pebble dot (`#9aa6b2`).
+     - `Scheduled`: pond blue border (`#8fb8d8`/50) on sky mist (`#eef5fa`) with navy slate text (`#2d506b`) and a pond blue dot (`#5a8bb0`).
+     - `Category`: crisp cream pill (`#fffdf3`) with subtle slate border (`#4f5f70`/15) and charcoal text (`#4f5f70`).
+3. **Harmonized Action Buttons with Vector Icons:**
+   - Standardized table actions as tactile artisan pills with dedicated vector SVG icons (`IconEdit`, `IconExternal`, `IconTrash`).
+   - `Edit`: Cream background with slate border, transitioning to solid slate `#4f5f70` with `#fffdf3` text on hover.
+   - `Preview`: Cream background with slate border, transitioning to pond blue accent on hover.
+   - `Delete`: Bordered muted rose (`#8b4b50`/25) with vector trash icon, transitioning to soft rose tint on hover.
+   - Applied identical styling across the desktop table, mobile cardless stack, trash bin actions, and comment moderation reject button.
+
+**Why it matters**
+
+Editorial dashboards should look as carefully crafted as the publications they manage. Saturated default UI colors make internal tools look generic and disjointed from the brand identity. Proper grid sizing prevents broken overlapping text when post categories have long names.
+
+**In this project**
+
+Implemented in [src/routes/blog/dashboard/+page.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/routes/blog/dashboard/+page.svelte).
+
+**Tradeoffs / pitfalls**
+
+When designing data grids with custom pills, always test against the longest possible category name (e.g. `Recommendations`) rather than short samples (`News`, `Dev`). Using `minmax(0, 1fr)` on the flexible content column is critical in CSS Grid to allow flex items to shrink below their intrinsic content width.
