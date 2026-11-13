@@ -76,7 +76,7 @@
       name: "Denys",
       role: "Sound Designer",
       country: "Ukraine",
-      href: "hhttps://drive.google.com/drive/u/1/folders/1hYqGeZpLc1AuZjs3jruR8Or21f5AaH4B",
+      href: "https://denis2003136.wixsite.com/revasound",
     },
     { name: "Anton", role: "3D Artist", country: "Finland" },
     {
@@ -96,12 +96,6 @@
       role: "Marketer & Writer",
       country: "England",
       href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
-    },
-    {
-      name: "Luca",
-      role: "Marketer",
-      country: "Italy",
-      href: "https://drive.google.com/file/d/1heCc9AVpGwAMI5p9Fi_N91vu-Nn-2FFq/view?usp=drivesdk",
     },
   ];
 
