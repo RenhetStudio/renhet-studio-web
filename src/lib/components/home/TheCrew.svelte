@@ -206,22 +206,25 @@
 >
   <div class="mx-auto max-w-[1440px]">
     <!-- Header: Dominant title -->
-    <div class="mb-8 sm:mb-10">
+    <div class="mb-8 flex flex-col items-start gap-2 sm:mb-10">
       <h2
         id="crew-title"
         class="text-[clamp(3.5rem,8vw,7.5rem)] font-black leading-[0.88] tracking-tight text-[#4f5f70]"
       >
         The crew.
       </h2>
+      <p class="text-lg font-bold leading-relaxed text-[#627383] sm:text-xl md:text-[22px]">
+        Making games with something to say.
+      </p>
     </div>
 
     <!-- Main Editorial Layout: Typographic Names Cloud (72%) + Hairline + Context Panel (28%) — NO CARDS -->
     <div
-      class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto_340px] lg:gap-12 xl:grid-cols-[1fr_auto_380px] xl:gap-14"
+      class="grid grid-cols-1 items-start gap-8 lg:items-stretch lg:grid-cols-[1fr_auto_340px] lg:gap-12 xl:grid-cols-[1fr_auto_380px] xl:gap-14"
     >
-      <!-- Typographic Names Cloud: content-start ensures compact, natural line spacing without stretching -->
+      <!-- Typographic Names Cloud: vertically centered within the desktop layout -->
       <div
-        class="flex flex-wrap content-start items-center gap-y-3 sm:gap-y-3.5 lg:gap-y-4 text-[clamp(1.75rem,2.8vw,2.4rem)] font-black leading-tight select-none min-h-0 lg:min-h-[240px]"
+        class="flex flex-wrap content-start items-center gap-y-3 sm:gap-y-3.5 lg:content-center lg:gap-y-4 text-[clamp(1.75rem,2.8vw,2.4rem)] font-black leading-tight select-none min-h-0 lg:min-h-[240px]"
         role="region"
         aria-label="Renhet Studio team members"
       >

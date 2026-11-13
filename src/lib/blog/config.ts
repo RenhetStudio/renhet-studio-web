@@ -1,7 +1,7 @@
 import { env } from "$env/dynamic/public";
 
 export const BLOG_NAME = "Renhet Between Builds";
-export const BLOG_TAGLINE = "Small updates from our warm, handmade game studio.";
+export const BLOG_TAGLINE = "A little look into the stories behind our games.";
 
 export const BLOG_CATEGORIES = [
   "Dev Log",

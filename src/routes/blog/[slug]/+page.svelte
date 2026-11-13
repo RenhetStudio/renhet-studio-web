@@ -1,6 +1,5 @@
 <script lang="ts">
   import SocialMeta from "$lib/components/SocialMeta.svelte";
-  import { SITE_URL } from "$lib/blog/config";
   import BlogShell from "$lib/components/BlogShell.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
   import OrganicDivider from "$lib/components/OrganicDivider.svelte";
@@ -26,8 +25,6 @@
 
 <svelte:head>
   <title>{data.post.title} | Renhet Studio</title>
-  <meta name="description" content={data.post.excerpt} />
-  <link rel="canonical" href={`${SITE_URL}/blog/${data.post.slug}`} />
   <meta property="article:published_time" content={publishedDate} />
   <meta property="article:modified_time" content={data.post.updated_at} />
 </svelte:head>

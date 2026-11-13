@@ -1,6 +1,5 @@
 <script lang="ts">
   import SocialMeta from "$lib/components/SocialMeta.svelte";
-  import { SITE_URL } from "$lib/blog/config";
   import { enhance } from "$app/forms";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
@@ -15,16 +14,11 @@
 
 <svelte:head>
   <title>Careers | Renhet Studio</title>
-  <meta
-    name="description"
-    content="Join Renhet Studio and help us build friendly, detailed game worlds."
-  />
-  <link rel="canonical" href={`${SITE_URL}/careers`} />
 </svelte:head>
 
 <SocialMeta
   title="Careers | Renhet Studio"
-  description="Make warm worlds with a tiny, international crew. We care about thoughtful craft, kind collaboration, and games full of personality."
+  description="Make something that stays with people. Join our small international team to make games with curiosity, honest collaboration, and care for the details."
   path="/careers"
 />
 
@@ -55,7 +49,7 @@
           <h2
             class="text-[clamp(2.2rem,4.5vw,4.2rem)] font-black leading-[0.96] tracking-tight text-[#4f5f70]"
           >
-            Make warm worlds with a tiny, international crew.
+            Make something that stays with people.
           </h2>
         </div>
 
@@ -64,8 +58,9 @@
           <p
             class="text-lg font-bold leading-relaxed text-[#627383] sm:text-xl md:text-[22px]"
           >
-            We care about thoughtful craft, kind collaboration, and games full
-            of personality. If that sounds like your kind of place, say hello.
+            We're a small team from different corners of the world, brought together by a love for making games.
+            We value curiosity, honest collaboration, and caring about the little details.
+            If that sounds like your kind of place, we'd love to hear from you.
           </p>
 
           <div class="flex flex-wrap items-center gap-4">
@@ -170,13 +165,6 @@
               class="flex flex-col justify-between gap-8 lg:flex-row lg:items-center"
             >
               <div class="max-w-2xl">
-                <div class="flex items-center gap-3">
-                  <span
-                    class="text-xs font-black tracking-widest text-[#718191] uppercase"
-                  >
-                    Open Application
-                  </span>
-                </div>
                 <h3
                   class="mt-3 text-2xl font-black text-[#4f5f70] sm:text-3xl md:text-4xl"
                 >

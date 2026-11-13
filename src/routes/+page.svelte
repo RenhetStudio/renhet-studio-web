@@ -1,6 +1,5 @@
 <script lang="ts">
   import SocialMeta from "$lib/components/SocialMeta.svelte";
-  import { SITE_URL } from "$lib/blog/config";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import HeroSplit from "$lib/components/home/HeroSplit.svelte";
@@ -9,17 +8,12 @@
 </script>
 
 <svelte:head>
-  <title>Renhet Studio</title>
-  <meta
-    name="description"
-    content="Renhet Studio is an independent international game studio making warm, handmade things. Play our debut game, Beelze Pub, free on Itch.io."
-  />
-  <link rel="canonical" href={`${SITE_URL}/`} />
+  <title>Renhet Studio | Independent Game Studio Meant To Be Felt</title>
 </svelte:head>
 
 <SocialMeta
-  title="Renhet Studio"
-  description="An independent international game studio making warm, handmade things. Play our debut game, Beelze Pub, free on Itch.io."
+  title="Renhet Studio | Independent Game Studio Meant To Be Felt"
+  description="An independent international game studio making games with something to say. Meet the crew and play Beelze Pub, our debut game, free on itch.io."
   path="/"
 />
 
@@ -31,7 +25,7 @@
   <meta itemprop="name" content="Renhet Studio" />
   <meta itemprop="url" content="https://www.renhetstudio.com" />
   <meta itemprop="logo" content="https://www.renhetstudio.com/renhet-logo-dark.png" />
-  <meta itemprop="description" content="An independent international game studio making warm, handmade games." />
+  <meta itemprop="description" content="An independent international game studio making games with something to say." />
   <link itemprop="sameAs" href="https://x.com/renhetstudio" />
   <link itemprop="sameAs" href="https://www.instagram.com/renhet.studio/" />
   <link itemprop="sameAs" href="https://www.reddit.com/user/RenhetStudio/" />

@@ -1,7 +1,7 @@
 <script lang="ts">
   import SocialMeta from "$lib/components/SocialMeta.svelte";
   import { goto } from "$app/navigation";
-  import { BLOG_CATEGORIES, BLOG_NAME, BLOG_TAGLINE, SITE_URL } from "$lib/blog/config";
+  import { BLOG_CATEGORIES, BLOG_NAME, BLOG_TAGLINE } from "$lib/blog/config";
   import BlogShell from "$lib/components/BlogShell.svelte";
   import IconChevronDown from "$lib/components/icons/IconChevronDown.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
@@ -74,8 +74,6 @@
 
 <svelte:head>
   <title>{BLOG_NAME} | Renhet Studio</title>
-  <meta name="description" content={BLOG_TAGLINE} />
-  <link rel="canonical" href={`${SITE_URL}/blog`} />
 </svelte:head>
 
 <SocialMeta
@@ -99,7 +97,7 @@
       <p
         class="mt-4 sm:mt-6 text-lg sm:text-xl md:text-[22px] font-bold leading-relaxed text-[#627383]"
       >
-        Small updates from our warm, handmade game studio.
+        A little look into the stories behind our games.
       </p>
     </header>
 

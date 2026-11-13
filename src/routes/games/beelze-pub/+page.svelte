@@ -1,6 +1,5 @@
 <script lang="ts">
   import SocialMeta from "$lib/components/SocialMeta.svelte";
-  import { SITE_URL } from "$lib/blog/config";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import WaveDivider from "$lib/components/home/WaveDivider.svelte";
@@ -99,16 +98,11 @@
 
 <svelte:head>
   <title>Beelze Pub | Renhet Studio</title>
-  <meta
-    name="description"
-    content="Play Beelze Pub free on Itch.io. Mix drinks, balance customer emotions, and keep the beach-hut bar running as Skelly in Renhet Studio's debut cocktail sim."
-  />
-  <link rel="canonical" href={`${SITE_URL}/games/beelze-pub`} />
 </svelte:head>
 
 <SocialMeta
   title="Beelze Pub | Renhet Studio"
-  description="The boss is away for the weekend. Mix drinks, serve customers, and survive the rush as Skelly in Beelze Pub."
+  description="Mix drinks and serve customers as Skelly in Beelze Pub, Renhet Studio's debut game. Keep a beach bar running while the boss is away. Play free on itch.io."
   path="/games/beelze-pub"
   image={{
     src: "/social/beelze-pub.jpg",

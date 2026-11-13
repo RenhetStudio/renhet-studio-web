@@ -295,7 +295,7 @@
             <span
               class="block text-xl sm:text-2xl md:text-3xl xl:text-[2.4rem] 2xl:text-[2.75rem] leading-[1.08] tracking-wide"
             >
-              Friendly detailed worlds
+              Meant to be felt
             </span>
           </h1>
         </div>
