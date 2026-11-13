@@ -93,7 +93,7 @@
     },
     {
       name: "Freya",
-      role: "Marketer & Writer",
+      role: "Narrative Writer",
       country: "England",
       href: "https://www.linkedin.com/in/freya-clinton-06383134a/",
     },
