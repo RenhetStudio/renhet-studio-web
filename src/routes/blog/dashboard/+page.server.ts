@@ -3,6 +3,7 @@ import { clearPublishedPostsCache, getAllPostsForDashboard, getPendingComments }
 import { requireAuthor } from "$lib/supabase/auth";
 import type { Actions, PageServerLoad } from "./$types";
 
+// This loads the page server
 export const load: PageServerLoad = async ({ locals }) => {
   const profile = await requireAuthor(locals);
   const [allPosts, comments] = await Promise.all([
