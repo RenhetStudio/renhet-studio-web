@@ -10,6 +10,10 @@
 
   let { profile = null }: { profile?: UserProfile | null } = $props();
 
+  const activeProfile = $derived(
+    profile ?? (page.data?.profile as UserProfile | null) ?? null
+  );
+
   let isMuted = $state(false);
   let isHeroInView = $state(
     typeof document !== "undefined" ? Boolean(document.querySelector("[data-hero]")) : true
@@ -132,7 +136,9 @@
     { label: "Careers", href: "/careers" },
   ];
 
-  const canAuthor = $derived(profile ? ["author", "admin"].includes(profile.role) : false);
+  const canAuthor = $derived(
+    activeProfile ? ["author", "admin"].includes(activeProfile.role) : false
+  );
 
 
   const toggleSound = () => {
@@ -328,7 +334,7 @@
       </button>
 
       <!-- Desktop User Account Dropdown (replaces scattered Dashboard/Name/Signout buttons) -->
-      {#if profile}
+      {#if activeProfile}
         <div class="relative hidden md:block" bind:this={userMenuRef}>
           <button
             type="button"
@@ -341,7 +347,7 @@
             aria-label="User account menu"
           >
             <span class="max-w-[130px] truncate sm:max-w-[160px]">
-              {profile.display_name}
+              {activeProfile.display_name}
             </span>
             <IconChevronDown
               size={13}
@@ -363,13 +369,13 @@
                 </p>
                 <div class="mt-0.5 flex items-center justify-between gap-1.5">
                   <span class="truncate text-sm font-black text-[#fffdf3]">
-                    {profile.display_name}
+                    {activeProfile.display_name}
                   </span>
                   {#if canAuthor}
                     <span
                       class="shrink-0 rounded-full border border-[#8fb8d8]/60 bg-[#8fb8d8]/20 px-2 py-0.5 text-[10px] font-black text-[#fffdf3]"
                     >
-                      {profile.role === 'admin' ? 'Admin' : 'Author'}
+                      {activeProfile.role === 'admin' ? 'Admin' : 'Author'}
                     </span>
                   {/if}
                 </div>
@@ -453,20 +459,20 @@
           </a>
         {/each}
 
-        {#if profile}
+        {#if activeProfile}
           <div class="my-1.5 h-px w-full bg-[#fffdf3]/15"></div>
 
           <!-- Compact Mobile Account Section -->
           <div class="flex flex-col gap-0.5 px-1 py-0.5">
             <div class="flex items-center justify-between px-3 py-1">
               <span class="truncate text-xs font-bold text-[#fffdf3]/75">
-                {profile.display_name}
+                {activeProfile.display_name}
               </span>
               {#if canAuthor}
                 <span
                   class="shrink-0 rounded-full border border-[#8fb8d8]/60 bg-[#8fb8d8]/20 px-2 py-0.5 text-[9px] font-black text-[#fffdf3]"
                 >
-                  {profile.role === 'admin' ? 'Admin' : 'Author'}
+                  {activeProfile.role === 'admin' ? 'Admin' : 'Author'}
                 </span>
               {/if}
             </div>

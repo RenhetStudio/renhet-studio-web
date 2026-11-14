@@ -4,8 +4,14 @@ import { applicationSchema } from "$lib/careers/validation";
 import type { CareerPosition } from "$lib/careers/types";
 import type { Actions, PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ url, setHeaders }) => {
-  setHeaders({ "Cache-Control": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400" });
+export const load: PageServerLoad = async ({ url, setHeaders, cookies }) => {
+  const hasAuthCookie = cookies
+    .getAll()
+    .some((c) => c.name.startsWith("sb-") && c.name.includes("-auth-token"));
+
+  if (!hasAuthCookie) {
+    setHeaders({ "Cache-Control": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400" });
+  }
   const positions = getPublishedPositions().catch((error): CareerPosition[] => {
     console.error("Career positions could not be loaded", error);
     return [];
