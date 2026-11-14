@@ -1878,7 +1878,17 @@ a {
 
 .editor-dropdown-item.is-active {
   background: #344253;
-  color: #fffdf3;
+  color: #ffffff;
+}
+
+.editor-dropdown-item.is-active span,
+.editor-dropdown-item.is-active svg {
+  color: #ffffff;
+}
+
+.editor-dropdown-item.is-active span,
+.editor-dropdown-item.is-active svg {
+  color: #ffffff;
 }
 
 .editor-dropdown-item:disabled {

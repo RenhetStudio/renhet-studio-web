@@ -1663,10 +1663,6 @@
                   ? "Paragraph text size (Small, Normal, Lead)"
                   : "Text size applies to paragraphs (headings follow fixed editorial hierarchy)"}
               >
-                <span
-                  class="text-[10px] font-bold text-[#8a98a5] uppercase tracking-wider"
-                  >Size:</span
-                >
                 <span>{currentTextSizeLabel}</span>
                 <IconChevronDown
                   size={12}
@@ -1696,13 +1692,23 @@
                     }}
                   >
                     <div class="flex flex-col text-left">
-                      <span class="font-bold text-xs text-[#4f5f70]">Small</span>
-                      <span class="text-[10px] text-[#8a98a5] leading-tight"
-                        >Footnotes, captions & disclaimers</span
+                      <span
+                        class="font-bold text-xs {currentParagraphSize === 'small'
+                          ? 'text-white'
+                          : 'text-[#344253]'}"
                       >
+                        Small
+                      </span>
+                      <span
+                        class="text-[10px] leading-tight {currentParagraphSize === 'small'
+                          ? 'text-white/90'
+                          : 'text-[#8a98a5]'}"
+                      >
+                        Footnotes, captions & disclaimers
+                      </span>
                     </div>
                     {#if currentParagraphSize === "small"}
-                      <IconCheck size={13} strokeWidth={2.5} />
+                      <IconCheck size={13} strokeWidth={2.5} class="text-white" />
                     {/if}
                   </button>
 
@@ -1722,13 +1728,23 @@
                     }}
                   >
                     <div class="flex flex-col text-left">
-                      <span class="font-bold text-sm text-[#4f5f70]">Normal</span>
-                      <span class="text-[10px] text-[#8a98a5] leading-tight"
-                        >Standard reading body</span
+                      <span
+                        class="font-bold text-sm {currentParagraphSize === 'normal'
+                          ? 'text-white'
+                          : 'text-[#344253]'}"
                       >
+                        Normal
+                      </span>
+                      <span
+                        class="text-[10px] leading-tight {currentParagraphSize === 'normal'
+                          ? 'text-white/90'
+                          : 'text-[#8a98a5]'}"
+                      >
+                        Standard reading body
+                      </span>
                     </div>
                     {#if currentParagraphSize === "normal"}
-                      <IconCheck size={13} strokeWidth={2.5} />
+                      <IconCheck size={13} strokeWidth={2.5} class="text-white" />
                     {/if}
                   </button>
 
@@ -1748,13 +1764,23 @@
                     }}
                   >
                     <div class="flex flex-col text-left">
-                      <span class="font-bold text-base text-[#344253]">Lead</span>
-                      <span class="text-[10px] text-[#8a98a5] leading-tight"
-                        >Introductory & featured opening</span
+                      <span
+                        class="font-bold text-base {currentParagraphSize === 'lead'
+                          ? 'text-white'
+                          : 'text-[#344253]'}"
                       >
+                        Lead
+                      </span>
+                      <span
+                        class="text-[10px] leading-tight {currentParagraphSize === 'lead'
+                          ? 'text-white/90'
+                          : 'text-[#8a98a5]'}"
+                      >
+                        Introductory & featured opening
+                      </span>
                     </div>
                     {#if currentParagraphSize === "lead"}
-                      <IconCheck size={13} strokeWidth={2.5} />
+                      <IconCheck size={13} strokeWidth={2.5} class="text-white" />
                     {/if}
                   </button>
                 </div>
