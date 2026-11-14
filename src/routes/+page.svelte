@@ -8,11 +8,11 @@
 </script>
 
 <svelte:head>
-  <title>Renhet Studio | Independent Game Studio Meant To Be Felt</title>
+  <title>Renhet Studio | Making Games With Something To Say</title>
 </svelte:head>
 
 <SocialMeta
-  title="Renhet Studio | Independent Game Studio Meant To Be Felt"
+  title="Renhet Studio | Making Games With Something To Say"
   description="An independent international game studio making games with something to say. Meet the crew and play Beelze Pub, our debut game, free on itch.io."
   path="/"
 />

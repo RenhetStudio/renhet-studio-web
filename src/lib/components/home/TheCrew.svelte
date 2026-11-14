@@ -206,16 +206,21 @@
 >
   <div class="mx-auto max-w-[1440px]">
     <!-- Header: Dominant title -->
-    <div class="mb-8 flex flex-col items-start gap-2 sm:mb-10">
+    <div class="mb-8 flex flex-col items-start gap-4 sm:mb-10 sm:gap-6">
       <h2
         id="crew-title"
         class="text-[clamp(3.5rem,8vw,7.5rem)] font-black leading-[0.88] tracking-tight text-[#4f5f70]"
       >
         The crew.
       </h2>
-      <p class="text-lg font-bold leading-relaxed text-[#627383] sm:text-xl md:text-[22px]">
-        Making games with something to say.
-      </p>
+      <div class="flex flex-col gap-4 text-lg font-bold leading-relaxed text-[#627383] sm:text-xl md:text-[22px]">
+        <p>
+          Renhet Studio is an independent game studio bringing together creators from around the world.
+        </p>
+        <p>
+          We believe games are meant to be more than played. They're meant to be felt.
+        </p>
+      </div>
     </div>
 
     <!-- Main Editorial Layout: Typographic Names Cloud (72%) + Hairline + Context Panel (28%) — NO CARDS -->
