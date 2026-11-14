@@ -83,7 +83,7 @@
   });
   let openDropdown = $state<"lists" | "align" | null>(null);
   let activeToolbarMenu = $state<
-    "block" | "lists" | "insert" | "replace" | null
+    "block" | "textSize" | "lists" | "insert" | "replace" | null
   >(null);
   let activeSubmenu = $state<"upload" | "url" | "table" | "separator" | null>(
     null,
@@ -129,6 +129,34 @@
                 attributes.textAlign
                   ? { "data-text-align": attributes.textAlign }
                   : {},
+            },
+          },
+        },
+      ];
+    },
+  });
+  const CspTextSize = Extension.create({
+    name: "textSize",
+    addGlobalAttributes() {
+      return [
+        {
+          types: ["paragraph"],
+          attributes: {
+            textSize: {
+              default: null,
+              parseHTML: (element) => {
+                const size = element.getAttribute("data-text-size");
+                return size === "small" || size === "lead" ? size : null;
+              },
+              renderHTML: (attributes) => {
+                if (
+                  attributes.textSize === "small" ||
+                  attributes.textSize === "lead"
+                ) {
+                  return { "data-text-size": attributes.textSize };
+                }
+                return {};
+              },
             },
           },
         },
@@ -310,6 +338,7 @@
         CspTextAlign.configure({
           types: ["heading", "paragraph", "blockquote"],
         }),
+        CspTextSize,
         Placeholder.configure({
           placeholder: ({ node }) =>
             node.type.name === "heading"
@@ -1273,6 +1302,29 @@
     return "Paragraph";
   });
 
+  const isParagraphActive = $derived.by(() => {
+    void revision;
+    if (!editor) return false;
+    return editor.isActive("paragraph") && !editor.isActive("heading");
+  });
+
+  const currentParagraphSize = $derived.by(() => {
+    void revision;
+    if (!editor || !isParagraphActive) return null;
+    const attrs = editor.getAttributes("paragraph");
+    const size = attrs?.textSize;
+    if (size === "lead") return "lead";
+    if (size === "small") return "small";
+    return "normal";
+  });
+
+  const currentTextSizeLabel = $derived.by(() => {
+    if (!isParagraphActive) return "—";
+    if (currentParagraphSize === "lead") return "Lead";
+    if (currentParagraphSize === "small") return "Small";
+    return "Normal";
+  });
+
   function deleteSelectedMedia() {
     if (!editor) return;
     if (currentMediaSelection) {
@@ -1480,8 +1532,8 @@
 
           <div class="editor-toolbar-separator" aria-hidden="true"></div>
 
-          <!-- 2. Paragraph ▾ (Block styles) -->
-          <div class="editor-toolbar-group">
+          <!-- 2. Typography cluster: Block style ▾ & Text size ▾ -->
+          <div class="editor-toolbar-group" aria-label="Typography">
             <div class="editor-toolbar-dropdown" data-toolbar-dropdown>
               <button
                 type="button"
@@ -1583,6 +1635,125 @@
                   >
                     <span>Quote</span>
                     {#if active("blockquote")}
+                      <IconCheck size={13} strokeWidth={2.5} />
+                    {/if}
+                  </button>
+                </div>
+              {/if}
+            </div>
+
+            <div class="editor-toolbar-separator" aria-hidden="true"></div>
+
+            <!-- 2.1 Text size ▾ (Small, Normal, Lead) -->
+            <div class="editor-toolbar-dropdown" data-toolbar-dropdown>
+              <button
+                type="button"
+                class="editor-dropdown-trigger"
+                disabled={!isParagraphActive}
+                class:is-active={currentParagraphSize === "small" ||
+                  currentParagraphSize === "lead"}
+                onclick={() => {
+                  if (!isParagraphActive) return;
+                  activeToolbarMenu =
+                    activeToolbarMenu === "textSize" ? null : "textSize";
+                }}
+                aria-expanded={activeToolbarMenu === "textSize"}
+                aria-haspopup="menu"
+                title={isParagraphActive
+                  ? "Paragraph text size (Small, Normal, Lead)"
+                  : "Text size applies to paragraphs (headings follow fixed editorial hierarchy)"}
+              >
+                <span
+                  class="text-[10px] font-bold text-[#8a98a5] uppercase tracking-wider"
+                  >Size:</span
+                >
+                <span>{currentTextSizeLabel}</span>
+                <IconChevronDown
+                  size={12}
+                  strokeWidth={2.4}
+                  class="transition-transform duration-150 {activeToolbarMenu ===
+                  'textSize'
+                    ? 'rotate-180'
+                    : ''}"
+                />
+              </button>
+
+              {#if activeToolbarMenu === "textSize"}
+                <div class="editor-dropdown-menu w-48" role="menu">
+                  <button
+                    type="button"
+                    class="editor-dropdown-item"
+                    class:is-active={currentParagraphSize === "small"}
+                    onclick={() => {
+                      activeToolbarMenu = null;
+                      run((e) =>
+                        e
+                          .chain()
+                          .focus()
+                          .updateAttributes("paragraph", { textSize: "small" })
+                          .run(),
+                      );
+                    }}
+                  >
+                    <div class="flex flex-col text-left">
+                      <span class="font-bold text-xs text-[#4f5f70]">Small</span>
+                      <span class="text-[10px] text-[#8a98a5] leading-tight"
+                        >Footnotes, captions & disclaimers</span
+                      >
+                    </div>
+                    {#if currentParagraphSize === "small"}
+                      <IconCheck size={13} strokeWidth={2.5} />
+                    {/if}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="editor-dropdown-item"
+                    class:is-active={currentParagraphSize === "normal"}
+                    onclick={() => {
+                      activeToolbarMenu = null;
+                      run((e) =>
+                        e
+                          .chain()
+                          .focus()
+                          .updateAttributes("paragraph", { textSize: null })
+                          .run(),
+                      );
+                    }}
+                  >
+                    <div class="flex flex-col text-left">
+                      <span class="font-bold text-sm text-[#4f5f70]">Normal</span>
+                      <span class="text-[10px] text-[#8a98a5] leading-tight"
+                        >Standard reading body</span
+                      >
+                    </div>
+                    {#if currentParagraphSize === "normal"}
+                      <IconCheck size={13} strokeWidth={2.5} />
+                    {/if}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="editor-dropdown-item"
+                    class:is-active={currentParagraphSize === "lead"}
+                    onclick={() => {
+                      activeToolbarMenu = null;
+                      run((e) =>
+                        e
+                          .chain()
+                          .focus()
+                          .updateAttributes("paragraph", { textSize: "lead" })
+                          .run(),
+                      );
+                    }}
+                  >
+                    <div class="flex flex-col text-left">
+                      <span class="font-bold text-base text-[#344253]">Lead</span>
+                      <span class="text-[10px] text-[#8a98a5] leading-tight"
+                        >Introductory & featured opening</span
+                      >
+                    </div>
+                    {#if currentParagraphSize === "lead"}
                       <IconCheck size={13} strokeWidth={2.5} />
                     {/if}
                   </button>

@@ -1001,7 +1001,7 @@ The hand-drawn Renhet logo includes an expressive bottom star flourish. Placing 
 
 **In this project**
 
-Coordinated between [HeroSplit.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/home/HeroSplit.svelte), [SiteFooter.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/SiteFooter.svelte), and [SPECS.md](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/SPECS.md).
+Coordinated between [HeroSplit.svelte](renhet-studio-web/src/lib/components/home/HeroSplit.svelte), [SiteFooter.svelte](renhet-studio-web/src/lib/components/SiteFooter.svelte), and [SPECS.md](renhet-studio-web/SPECS.md).
 
 **Tradeoffs / pitfalls**
 
@@ -1039,7 +1039,7 @@ Writers spend 90% of their time writing words and 10% adjusting media. Surfacing
 
 **In this project**
 
-Implemented in [RichEditor.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/RichEditor.svelte), [globals.css](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/app/globals.css), [IconUndo.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconUndo.svelte), and [IconRedo.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconRedo.svelte).
+Implemented in [RichEditor.svelte](renhet-studio-web/src/lib/components/RichEditor.svelte), [globals.css](renhet-studio-web/src/app/globals.css), [IconUndo.svelte](renhet-studio-web/src/lib/components/icons/IconUndo.svelte), and [IconRedo.svelte](renhet-studio-web/src/lib/components/icons/IconRedo.svelte).
 
 **Tradeoffs / pitfalls**
 
@@ -1074,9 +1074,9 @@ Placing table controls in a sticky toolbar requires the author to look away from
 
 **In this project**
 
-- Implemented in [RichEditor.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/RichEditor.svelte) with Svelte 5 runes (`$state`, `$derived`, `$props`).
-- Styled in [globals.css](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/app/globals.css) with `.editor-dropdown-subitem-wrap`, `.editor-dropdown-submenu`, and `.editor-floating-table-menu`.
-- Supported by [IconChevronRight.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconChevronRight.svelte), [IconVideo.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconVideo.svelte), and [IconTrash.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/icons/IconTrash.svelte).
+- Implemented in [RichEditor.svelte](renhet-studio-web/src/lib/components/RichEditor.svelte) with Svelte 5 runes (`$state`, `$derived`, `$props`).
+- Styled in [globals.css](renhet-studio-web/src/app/globals.css) with `.editor-dropdown-subitem-wrap`, `.editor-dropdown-submenu`, and `.editor-floating-table-menu`.
+- Supported by [IconChevronRight.svelte](renhet-studio-web/src/lib/components/icons/IconChevronRight.svelte), [IconVideo.svelte](renhet-studio-web/src/lib/components/icons/IconVideo.svelte), and [IconTrash.svelte](renhet-studio-web/src/lib/components/icons/IconTrash.svelte).
 
 **Tradeoffs / pitfalls**
 
@@ -1119,7 +1119,7 @@ Editorial dashboards should look as carefully crafted as the publications they m
 
 **In this project**
 
-Implemented in [src/routes/blog/dashboard/+page.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/routes/blog/dashboard/+page.svelte).
+Implemented in [src/routes/blog/dashboard/+page.svelte](renhet-studio-web/src/routes/blog/dashboard/+page.svelte).
 
 **Tradeoffs / pitfalls**
 
@@ -1144,7 +1144,7 @@ The title of an article in an indie publication editor sets the tone for the ent
 
 **In this project**
 
-Implemented in [src/lib/components/PostEditor.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/PostEditor.svelte) and [src/app/globals.css](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/app/globals.css).
+Implemented in [src/lib/components/PostEditor.svelte](renhet-studio-web/src/lib/components/PostEditor.svelte) and [src/app/globals.css](renhet-studio-web/src/app/globals.css).
 
 **Tradeoffs / pitfalls**
 
@@ -1174,8 +1174,48 @@ Writers rely on preview to verify how titles break, how images wrap with prose, 
 
 **In this project**
 
-Implemented in [src/routes/blog/preview/[id]/+page.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/routes/blog/preview/[id]/+page.svelte).
+Implemented in [src/routes/blog/preview/[id]/+page.svelte](renhet-studio-web/src/routes/blog/preview/[id]/+page.svelte).
 
 **Tradeoffs / pitfalls**
 
 Preview routes should only differ from published articles by excluding public discussion/comment submission forms and providing quick navigation back to the author's editor. Never alter the container width (`max-w-[880px]`) or rich content typography.
+
+
+### Hierarchical paragraph text sizing with strict heading limits in rich text editor
+
+**Simple explanation**
+
+In editorial rich text editors, allowing arbitrary pixel font sizes destroys typographic hierarchy (e.g. creating paragraphs larger than headings), breaks accessible semantics, and violates strict CSP rules that block inline style attributes. Restricting text sizing to a closed set of relative paragraph scales (Lead, Normal, Small) gives authors editorial flexibility (e.g. introductory lead paragraphs or fine-print footnotes) while guaranteeing that body text never exceeds subsection headings (`H3`) or article titles (`H1`/`H2`).
+
+**How it works**
+
+1. **Closed TipTap Schema Extension (`CspTextSize`):**
+   - Extends TipTap via `addGlobalAttributes` scoped strictly to `types: ["paragraph"]`.
+   - Manages the `textSize` attribute (`"lead" | "small" | null`), parsed from and rendered to HTML via `data-text-size="lead" | "small"`.
+   - When converting a paragraph to a heading (`toggleHeading`), TipTap automatically purges `textSize` because headings do not define the attribute in their schema.
+2. **Contextual Typography Cluster Toolbar:**
+   - In [RichEditor.svelte](renhet-studio-web/src/lib/components/RichEditor.svelte), the block selector (`Paragraph ▾`) and size selector (`Size: Normal ▾`) sit together in a unified `Typography` group pill.
+   - When the cursor is on an `H1`, `H2`, or `H3`, the size selector is disabled (`opacity-45`, `cursor-not-allowed`, displaying `Size: —`) with a descriptive tooltip explaining that headings maintain their fixed editorial hierarchy.
+   - When the cursor is in a paragraph, the dropdown allows selecting between:
+     - `Small` (Footnotes, captions & disclaimers)
+     - `Normal` (Standard reading body text)
+     - `Lead` (Introductory & featured opening)
+3. **Twin CSP-Compliant Typography Rules:**
+   - Both `.editor-prose` (editor) and `.rich-content` (live post & preview) define:
+     - `p[data-text-size="small"]`: `clamp(0.88rem, 1.05vw, 0.95rem)` (lighter ink `#627383`, line-height `1.65`).
+     - `p[data-text-size="lead"]`: `clamp(1.22rem, 1.4vw, 1.32rem)` (deeper ink `#344253`, line-height `1.7`, weight `650`).
+   - The maximum lead size (`1.32rem`) is strictly capped below `H3` (`clamp(1.35rem, 2.2vw, 1.65rem)`), ensuring that a paragraph can never visually or structurally surpass any heading.
+4. **HTML Serialization & Parity:**
+   - [src/lib/blog/rich-content.ts](renhet-studio-web/src/lib/blog/rich-content.ts) reads `node.attrs?.textSize` and injects `data-text-size="${size}"` onto `<p>` tags for published posts and previews.
+
+**Why it matters**
+
+Writers often need to emphasize opening paragraphs (journalistic "lead" style) or reduce font size for footnotes and citations, but giving them arbitrary `font-size: 32px` controls leads to inconsistent, unpolished layouts. Bounding sizes within an editorial scale preserves the magazine-grade feel while protecting mobile responsiveness and CSP compliance.
+
+**In this project**
+
+Implemented in [RichEditor.svelte](renhet-studio-web/src/lib/components/RichEditor.svelte), [globals.css](renhet-studio-web/src/app/globals.css), and [rich-content.ts](renhet-studio-web/src/lib/blog/rich-content.ts).
+
+**Tradeoffs / pitfalls**
+
+Never apply inline CSS styles for font sizing; `svelte.config.js` enforces strict CSP (`style-src-attr` restrictions) which will drop or block inline styles. Always bind styling to semantic data attributes (`data-text-size`) backed by fluid CSS `clamp()` rules.

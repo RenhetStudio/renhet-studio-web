@@ -737,6 +737,32 @@ a {
   margin: 1.25rem 0;
 }
 
+/* Editorial paragraph text sizes (strictly bounded below H3) */
+.rich-content p[data-text-size="small"],
+.editor-prose p[data-text-size="small"] {
+  font-size: clamp(0.88rem, 1.05vw, 0.95rem);
+  line-height: 1.65;
+  color: #627383;
+}
+
+.rich-content p[data-text-size="lead"],
+.editor-prose p[data-text-size="lead"] {
+  font-size: clamp(1.22rem, 1.4vw, 1.32rem);
+  line-height: 1.7;
+  color: #344253;
+  font-weight: 650;
+}
+
+.rich-content blockquote[data-text-size="small"],
+.editor-prose blockquote[data-text-size="small"] {
+  font-size: clamp(0.92rem, 1.1vw, 1rem);
+}
+
+.rich-content blockquote[data-text-size="lead"],
+.editor-prose blockquote[data-text-size="lead"] {
+  font-size: clamp(1.22rem, 1.4vw, 1.32rem);
+}
+
 .rich-content p:empty,
 .editor-prose p:empty {
   min-height: 1.78em;
@@ -1779,6 +1805,15 @@ a {
 
 .editor-dropdown-trigger:hover {
   background: #eef2f1;
+}
+
+.editor-dropdown-trigger:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.editor-dropdown-trigger:disabled:hover {
+  background: transparent;
 }
 
 .editor-dropdown-trigger.is-active {

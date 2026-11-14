@@ -33,6 +33,11 @@ function alignAttr(node: JSONContent) {
   return ["left", "center", "right", "justify"].includes(align) ? ` data-text-align="${align}"` : "";
 }
 
+function textSizeAttr(node: JSONContent) {
+  const size = String(node.attrs?.textSize ?? "");
+  return ["small", "lead"].includes(size) ? ` data-text-size="${size}"` : "";
+}
+
 function renderText(node: JSONContent) {
   let content = escapeHtml(node.text);
   for (const mark of node.marks ?? []) {
@@ -56,7 +61,10 @@ function renderNode(node: JSONContent): string {
   const align = alignAttr(node);
   switch (node.type) {
     case "doc": return children;
-    case "paragraph": return `<p${align}>${children.trim() ? children : "<br>"}</p>`;
+    case "paragraph": {
+      const size = textSizeAttr(node);
+      return `<p${align}${size}>${children.trim() ? children : "<br>"}</p>`;
+    }
     case "heading": {
       const level = Math.min(3, Math.max(1, Number(node.attrs?.level) || 2));
       return `<h${level}${align}>${children}</h${level}>`;
@@ -69,7 +77,10 @@ function renderNode(node: JSONContent): string {
       const isChecked = Boolean(node.attrs?.checked);
       return `<li class="content-task-item" data-type="taskItem" data-checked="${isChecked}"><label contenteditable="false"><input type="checkbox" ${isChecked ? "checked " : ""}disabled aria-label="Checklist item"><span></span></label><div>${children}</div></li>`;
     }
-    case "blockquote": return `<blockquote${align}>${children}</blockquote>`;
+    case "blockquote": {
+      const size = textSizeAttr(node);
+      return `<blockquote${align}${size}>${children}</blockquote>`;
+    }
     case "codeBlock": return `<pre><code>${children}</code></pre>`;
     case "horizontalRule": return "<hr>";
     case "sectionGap": {
