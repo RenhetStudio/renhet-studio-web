@@ -147,7 +147,7 @@
         <h2
           class="font-black text-xl sm:text-4xl lg:text-[40px] xl:text-[44px] leading-[0.98] tracking-tight text-[#fffdf3] shrink-0 text-right sm:text-left"
         >
-          See where<br />we go next.
+          Meant to<br />be felt.
         </h2>
       </div>
 

@@ -278,27 +278,14 @@
             ? 'scale-90 opacity-45'
             : 'scale-100 opacity-100'}"
       >
+        <h1 class="sr-only">Renhet Studio</h1>
         <img
           src="/renhet-logo-white.png"
           alt="Renhet Studio"
           width="1024"
           height="516"
-          class="studio-logo-extrusion relative z-10 w-[80%] max-w-[280px] sm:max-w-[340px] md:max-w-[380px] xl:w-[84%] xl:max-w-[490px] 2xl:max-w-[540px] -rotate-1 object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          class="studio-logo-extrusion relative z-10 w-[84%] max-w-[320px] sm:max-w-[390px] md:max-w-[440px] xl:w-[88%] xl:max-w-[540px] 2xl:max-w-[600px] -rotate-1 object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
         />
-
-        <div
-          class="studio-slogan-wrap relative z-20 -mt-1 sm:-mt-2 xl:-mt-3 flex flex-col items-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        >
-          <h1
-            class="studio-slogan-extrusion text-center font-brand tracking-normal text-[#fffdf3]"
-          >
-            <span
-              class="block text-xl sm:text-2xl md:text-3xl xl:text-[2.4rem] 2xl:text-[2.75rem] leading-[1.08] tracking-wide"
-            >
-              Meant to be felt
-            </span>
-          </h1>
-        </div>
       </div>
 
       <!-- Studio CTA button -->
@@ -369,7 +356,7 @@
           alt=""
           width="520"
           height="260"
-          class="w-[75%] max-w-[270px] sm:max-w-[330px] xl:w-[80%] xl:max-w-md object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
+          class="w-[80%] max-w-[310px] sm:max-w-[370px] xl:w-[85%] xl:max-w-[490px] 2xl:max-w-[540px] object-contain transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] {activePanel ===
           'game'
             ? 'opacity-85 scale-105'
             : activePanel === 'studio'
@@ -427,19 +414,9 @@
       drop-shadow(0 10px 20px rgba(30, 38, 50, 0.25));
   }
 
-  .studio-slogan-extrusion {
-    filter: drop-shadow(0 1.5px 0 #34425355) drop-shadow(0 -0.5px 0 #34425335)
-      drop-shadow(1px 0 0 #34425345) drop-shadow(-1px 0 0 #34425345)
-      drop-shadow(0 6px 14px rgba(30, 38, 50, 0.2));
-  }
-
   @media (hover: hover) and (pointer: fine) {
     .panel-studio:hover .studio-logo-extrusion {
       transform: rotate(-2deg) scale(1.03);
-    }
-
-    .panel-studio:hover .studio-slogan-wrap {
-      transform: scale(1.03);
     }
 
     .panel-studio:hover .hero-cta-button {

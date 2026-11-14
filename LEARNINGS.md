@@ -977,10 +977,35 @@ Query pointer and hover capabilities using `window.matchMedia("(hover: hover) an
 Without this guard, tapping a panel on a mobile phone or tablet to navigate down into a section locks the clicked panel into its expanded/highlighted state and the other into its shrunken/dimmed state. When the user scrolls back up, the hero remains stuck in an asymmetric distortion rather than its intended balanced composition.
 
 **In this project**
-Implemented in `src/lib/components/home/HeroSplit.svelte`. `canHover` guards `handlePanelEnter`, `handlePanelLeave`, and `onMouseMove`. Scoped CSS hover rules for `.studio-logo-extrusion`, `.studio-slogan-wrap`, and `.hero-cta-button` are restricted to `@media (hover: hover) and (pointer: fine)`.
+Implemented in `src/lib/components/home/HeroSplit.svelte`. `canHover` guards `handlePanelEnter`, `handlePanelLeave`, and `onMouseMove`. Scoped CSS hover rules for `.studio-logo-extrusion` and `.hero-cta-button` are restricted to `@media (hover: hover) and (pointer: fine)`.
 
 **Tradeoffs / pitfalls**
 Do not rely exclusively on viewport width media queries (e.g. `max-width: 768px`) to disable hover states. Large touch devices like iPad Pro and touchscreen laptops have desktop-class viewport widths but lack true hover pointers. Testing `(hover: hover) and (pointer: fine)` accurately detects the presence of a primary pointing device across all screen dimensions.
+
+
+### Hero brand lockup simplification and monumental footer tagline placement
+
+**Simple explanation**
+
+Floating subtitles beneath hand-drawn, illustrative brand logos frequently crowd the organic silhouette and compete for visual hierarchy. Removing the floating slogan from the split hero gives both logos breathing room to expand, while relocating the studio motto to the footer pairs it naturally with the closing brand mark.
+
+**How it works**
+
+1. In `src/lib/components/home/HeroSplit.svelte`, the visual slogan block is removed from the studio panel, and an accessible `<h1 class="sr-only">Renhet Studio</h1>` is preserved for semantic hierarchy and screen readers.
+2. Both the Renhet Studio logo (`renhet-logo-white.png`) and the Beelze Pub logo (`beelze-pub/logo.png`) are scaled up by ~12-15% across all breakpoints (`max-w-[320px] -> 600px` on 2xl), balancing both panels symmetrically.
+3. In `src/lib/components/SiteFooter.svelte`, the monumental headline next to the vertical divider is set to `"Meant to<br />be felt."`, establishing a cohesive closing statement across the website.
+
+**Why it matters**
+
+The hand-drawn Renhet logo includes an expressive bottom star flourish. Placing text directly underneath created visual friction regardless of typeface choice. Letting the logo breathe enhances the handcrafted indie aesthetic, while the footer provides an editorial anchor for the studio's philosophical motto.
+
+**In this project**
+
+Coordinated between [HeroSplit.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/home/HeroSplit.svelte), [SiteFooter.svelte](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/src/lib/components/SiteFooter.svelte), and [SPECS.md](file:///c:/Users/Pablo/Desktop/Poopshock/renhet-studio-web/SPECS.md).
+
+**Tradeoffs / pitfalls**
+
+Never delete heading semantics when removing visual text. Always provide an `.sr-only` `<h1>` element on the landing page so assistive technology and SEO crawlers retain a well-formed heading outline.
 
 
 ### Contextual dual-state editor toolbar with clean functional clusters and popover menus

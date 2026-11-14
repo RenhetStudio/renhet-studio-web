@@ -75,13 +75,12 @@ Para garantizar que la web respire autenticidad, artesanía y alma indie real, s
 * **Costura Orgánica entre Paneles (Seam Divider):** En lugar de un corte digital recto, la separación entre el panel del estudio (`#8fb8d8`) y el pub (`#344253`) se articula mediante un divisor de onda vertical orgánico animado, que ondea suavemente y acompaña la expansión de las columnas al pasar el ratón. En móvil, se adapta a un divisor horizontal suave.
 * **Panel Izquierdo (El Estudio):**
   * Toda el área del panel funciona como enlace interactivo hacia `#crew`. Sin botones de estilo SaaS ni píldoras.
-  * **Logotipo Principal a Gran Escala:** Se exhibe el logotipo de *Renhet Studio* en gran formato (`renhet-logo-white.png`) presidiendo la sección.
-  * Titular: *"Friendly detailed worlds filled with passion."*
+  * **Logotipo Principal a Gran Escala:** Se exhibe el logotipo de *Renhet Studio* en gran formato ampliado (`renhet-logo-white.png`) presidiendo la sección con total protagonismo artístico y sin subtítulo flotante.
   * Manifiesto breve y cercano: *"A tiny indie game studio making warm, handmade things."*
 * **Panel Derecho (El Juego — Beelze Pub):**
   * Toda el área del panel funciona como enlace interactivo hacia `#game`. Sin botones invasivos ni píldoras.
   * Titular: *"Beelze Pub"* y subtítulo mínimo: *"Mix drinks. Serve the underworld. Survive the weekend."*
-  * Marca de agua del logotipo de *Beelze Pub* en el fondo con opacidad del 25% y sombra atmosférica.
+  * Logotipo de *Beelze Pub* ampliado en el fondo con sombra atmosférica.
   * **Elemento estrella interactivo:** GIF animado de Skelly (`skelly-anim.gif`) a gran escala (hasta 420px de altura), fijado a ras del fondo (`bottom-0`) para evitar cualquier corte o salto visual.
 * **Interacción de Expansión (Hover Expansion):**
   * Reposo: 50% / 50%.
@@ -112,6 +111,7 @@ Para garantizar que la web respire autenticidad, artesanía y alma indie real, s
 
 ### 5.7. Pie de Página (`SiteFooter`)
 * **Color de Fondo Restaurado:** `#4f5f70` (azul pizarra original de Renhet).
+* **Lema Monumental:** *"Meant to be felt."* como titular de cierre del estudio junto al logotipo.
 * **Logotipo Ampliado:** El logotipo del estudio en el footer cuenta con dimensiones ampliadas (`max-w-[400px]`) otorgando peso y autoridad visual al cierre.
 * **Divisor de Ola Invertida:** Integrado en la parte superior del footer, generando una orilla fluida desde el papel `#f6f1e8` hacia el `#4f5f70`.
 * **Copyright Centrado:** El texto de derechos reservados se encuentra centrado horizontalmente al pie de página.
