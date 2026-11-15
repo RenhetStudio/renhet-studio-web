@@ -104,7 +104,7 @@
 
     const onResize = () => {
       checkHeroVisibility();
-      if (window.innerWidth >= 768 && isMobileMenuOpen) {
+      if (window.innerWidth >= 1024 && isMobileMenuOpen) {
         isMobileMenuOpen = false;
       }
       if (isUserMenuOpen) {
@@ -134,6 +134,7 @@
     { label: "Beelze Pub", href: "/games/beelze-pub" },
     { label: "Renhet Between Builds", href: "/blog" },
     { label: "Careers", href: "/careers" },
+    { label: "Contact", href: "/contact" },
   ];
 
   const canAuthor = $derived(
@@ -172,7 +173,7 @@
   <button
     type="button"
     transition:fade={{ duration: navigating.to ? 0 : 180 }}
-    class="fixed inset-0 z-40 bg-black/25 backdrop-blur-[2px] md:hidden"
+    class="fixed inset-0 z-40 bg-black/25 backdrop-blur-[2px] lg:hidden"
     aria-label="Close navigation menu"
     onclick={() => (isMobileMenuOpen = false)}
   ></button>
@@ -243,7 +244,7 @@
     </a>
 
     <!-- Desktop Navigation Links (Centered mathematically at 50% of the navbar pill) -->
-    <div class="hidden items-center gap-1 md:flex md:absolute md:left-1/2 md:-translate-x-1/2">
+    <div class="hidden items-center gap-1 lg:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2">
       {#each navigation as item}
         <a
           class="whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-bold text-[#fffdf3]/90 transition-all duration-200 hover:bg-[#fffdf3]/15 hover:text-[#fffdf3]"
@@ -305,7 +306,7 @@
       <!-- Mobile Hamburger / Close Button (CSS span morph: 3 bars → X) -->
       <button
         type="button"
-        class="mobile-menu-toggle inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#fffdf3]/30 bg-[#fffdf3]/10 text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/25 active:scale-95 md:hidden"
+        class="mobile-menu-toggle inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#fffdf3]/30 bg-[#fffdf3]/10 text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/25 active:scale-95 lg:hidden"
         onclick={toggleMobileMenu}
         aria-label={isMobileMenuOpen ? "Close menu" : "Open navigation menu"}
         aria-expanded={isMobileMenuOpen}
@@ -335,7 +336,7 @@
 
       <!-- Desktop User Account Dropdown (replaces scattered Dashboard/Name/Signout buttons) -->
       {#if activeProfile}
-        <div class="relative hidden md:block" bind:this={userMenuRef}>
+        <div class="relative hidden lg:block" bind:this={userMenuRef}>
           <button
             type="button"
             onclick={() => (isUserMenuOpen = !isUserMenuOpen)}
@@ -346,7 +347,7 @@
             aria-haspopup="menu"
             aria-label="User account menu"
           >
-            <span class="max-w-[130px] truncate sm:max-w-[160px]">
+            <span class="max-w-[90px] truncate xl:max-w-[160px]">
               {activeProfile.display_name}
             </span>
             <IconChevronDown
@@ -437,7 +438,7 @@
   {#if isMobileMenuOpen}
     <div
       transition:fly={{ y: -8, duration: navigating.to ? 0 : 240 }}
-      class="mx-auto mt-2 w-full max-w-5xl overflow-hidden rounded-3xl border-2 p-2.5 text-[#fffdf3] shadow-[0_16px_48px_rgba(30,40,55,0.35)] backdrop-blur-xl md:hidden {isHeroInView
+      class="mx-auto mt-2 w-full max-w-5xl overflow-hidden rounded-3xl border-2 p-2.5 text-[#fffdf3] shadow-[0_16px_48px_rgba(30,40,55,0.35)] backdrop-blur-xl lg:hidden {isHeroInView
         ? 'border-[#fffdf3]/35 bg-[#627383]/85 ring-1 ring-[#fffdf3]/25'
         : 'border-[#fffdf3] bg-[#627383]/95 ring-1 ring-[#fffdf3]/40'}"
     >

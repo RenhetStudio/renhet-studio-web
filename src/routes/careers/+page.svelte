@@ -10,6 +10,7 @@
   import type { PageProps } from "./$types";
 
   let { data, form }: PageProps = $props();
+  let message = $state("");
 </script>
 
 <svelte:head>
@@ -549,15 +550,20 @@
                   class="text-xs font-black tracking-wider text-[#344253] uppercase"
                   >Tell us about yourself</span
                 >
-                <textarea
-                  name="message"
-                  required
-                  minlength="20"
-                  maxlength="5000"
-                  rows="6"
-                  placeholder="What do you love making, and why would Renhet Studio be a good fit?"
-                  class="rounded-xl border border-[#d6d5ca] bg-[#fffdf3] p-4 font-bold text-[#344253] outline-none transition-all duration-180 placeholder:text-[#718191]/60 focus:border-[#4f5f70] focus:ring-2 focus:ring-[#8fb8d8]/30 resize-y"
-                ></textarea>
+                <div class="relative">
+                  <textarea
+                    name="message"
+                    bind:value={message}
+                    required
+                    minlength="20"
+                    maxlength="5000"
+                    rows="6"
+                    aria-describedby="careers-message-count"
+                    placeholder="What do you love making, and why would Renhet Studio be a good fit?"
+                    class="block w-full rounded-xl border border-[#d6d5ca] bg-[#fffdf3] p-4 pb-11 font-bold text-[#344253] outline-none transition-[border-color,box-shadow] duration-180 placeholder:text-[#718191]/60 focus:border-[#4f5f70] focus:ring-2 focus:ring-[#8fb8d8]/30 resize-y"
+                  ></textarea>
+                  <span id="careers-message-count" class="pointer-events-none absolute right-5 bottom-4 text-xs font-bold tabular-nums text-[#627383]">{message.length} / 5,000<span class="sr-only"> characters. Minimum 20 characters.</span></span>
+                </div>
                 {#if form?.errors?.message}
                   <span class="text-xs font-extrabold text-[#9a3e45]"
                     >{form.errors.message[0]}</span

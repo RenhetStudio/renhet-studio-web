@@ -10,6 +10,28 @@ Renhet Studio's official site and blog, built with SvelteKit 2, Svelte 5, and Ta
 
 See `docs/careers-google-sheets.md` for the required tabs, headers, and Google Apps Script setup.
 
+## Contact
+
+`/contact` sends a message to the private `CONTACT_TO_EMAIL` recipient and a branded confirmation to the visitor through Resend. Both emails include HTML and plain text. The public contact address and confirmation reply address remain `hello@renhetstudio.com`; the notification recipient can be configured independently.
+
+Configure these private variables in `.env.local` and in the deployment environment:
+
+```dotenv
+RESEND_API_KEY=re_your_sending_key
+CONTACT_FROM_EMAIL="Renhet Studio <no-reply@renhetstudio.com>"
+CONTACT_TO_EMAIL=hello@renhetstudio.com
+TURNSTILE_SITE_KEY=your_site_key
+TURNSTILE_SECRET_KEY=your_secret_key
+```
+
+Verify `renhetstudio.com` in Resend before using that sender. Create a Cloudflare Turnstile widget with the site's production hostnames and `localhost` for local development. Only the site key is exposed to the browser. Missing configuration disables the form and leaves the direct email link available. Restart the server after changing environment variables.
+
+The form validates Turnstile's success, hostname and `contact` action on the server before sending. SvelteKit's default origin checking protects form POSTs. No contact data is written to the application database or included in provider error logs. Configure provider quotas/rate limits for the deployment; Turnstile and a honeypot reduce abuse but are not a per-user quota.
+
+Run `npm run test:contact` for the provider-intercepted integration tests. They use dummy credentials and never send email. For local browser verification only, Cloudflare's passing test keys are site key `1x00000000000000000000AA` and secret `1x0000000000000000000000000000000AA`; the server accepts their test metadata only in development. Use real keys in production. Verify actual delivery and reply addresses with a controlled submission after configuring Resend.
+
+Email templates live in `src/lib/server/contact-email.ts`. They use the production logo URL, the studio palette, table layout and inline styles for email clients. System fonts are intentional because many mail clients do not support custom web fonts. Preview both templates on mobile and check Gmail/Outlook before changing the layout.
+
 ## Blog
 
 - Public blog: `/blog`

@@ -162,6 +162,15 @@
         <!-- Row 1: Careers and Blog pills (measured to exactly match the 5 social links below) -->
         <div class="grid grid-cols-2 gap-2.5 sm:gap-3 w-full sm:w-[260px]">
           <a
+            href="/blog"
+            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
+          >
+            <span>Blog</span>
+            <span class="inline-block">
+              <IconArrowUpRight size={13} strokeWidth={2.2} />
+            </span>
+          </a>
+          <a
             href="/careers"
             class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
           >
@@ -170,15 +179,8 @@
               <IconArrowUpRight size={13} strokeWidth={2.2} />
             </span>
           </a>
-
-          <a
-            href="/blog"
-            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
-          >
-            <span>Blog</span>
-            <span class="inline-block">
-              <IconArrowUpRight size={13} strokeWidth={2.2} />
-            </span>
+          <a href="/contact" class="col-span-2 inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm font-semibold text-[#fffdf3] transition-colors hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3]">
+            Contact <IconArrowUpRight size={13} strokeWidth={2.2} />
           </a>
         </div>
 

@@ -12,7 +12,7 @@ const config = {
       mode: "auto",
       directives: {
         "default-src": ["self"],
-        "script-src": ["self"],
+        "script-src": ["self", "https://challenges.cloudflare.com"],
         "style-src": ["self"],
         // SvelteKit's generated #svelte-announcer uses this exact inline style.
         "style-src-attr": [
@@ -23,7 +23,7 @@ const config = {
         "media-src": ["self", "blob:", "https:"],
         "font-src": ["self", "data:"],
         "connect-src": ["self", "https://*.supabase.co", "wss://*.supabase.co"],
-        "frame-src": ["https://www.youtube-nocookie.com", "https://www.youtube.com"],
+        "frame-src": ["https://www.youtube-nocookie.com", "https://www.youtube.com", "https://challenges.cloudflare.com"],
         "object-src": ["none"],
         "base-uri": ["self"],
         "form-action": ["self"],

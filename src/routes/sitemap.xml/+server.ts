@@ -10,6 +10,7 @@ const publicPages = [
   { path: "/games/beelze-pub", lastmod: "2026-11-09", priority: 0.9 },
   { path: "/blog", lastmod: "2026-11-09", priority: 0.9 },
   { path: "/careers", lastmod: "2026-11-09", priority: 0.8 },
+  { path: "/contact", lastmod: "2026-11-15", priority: 0.8 },
 ];
 
 function escapeXml(value: string): string {

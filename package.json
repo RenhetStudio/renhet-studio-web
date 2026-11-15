@@ -11,7 +11,8 @@
     "start": "node scripts/start.mjs",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:contact": "svelte-kit sync && node --test tests/contact.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.2.8",

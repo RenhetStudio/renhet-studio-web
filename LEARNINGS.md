@@ -2,6 +2,40 @@
 
 ## Web Development
 
+### Keep user-controlled resizing out of CSS transitions
+
+**Simple explanation**
+A resizable textarea should follow the pointer immediately. Animating its height makes resizing feel delayed or resistant.
+
+**How it works**
+`transition-all` includes width and height. Replace it with an explicit property list such as `transition-[border-color,box-shadow]` to preserve focus feedback while leaving dimensions instantaneous.
+
+**Why it matters**
+Transitions intended to soften focus changes can accidentally interfere with direct manipulation.
+
+**In this project**
+The application textarea in `src/routes/careers/+page.svelte` transitions only its border and focus shadow. Its counter sits inside a relative wrapper, with bottom padding reserving space so text cannot overlap it.
+
+**Tradeoffs / pitfalls**
+Prefer explicit animated properties on resizable controls. Do not remove useful focus feedback just to fix resizing, or animate dimensions that the user controls directly.
+
+### Server-owned contact forms and branded transactional email
+
+**Simple explanation**
+A contact form crosses two trust boundaries: visitor input enters the server, then leaves through an email provider. The server must own validation, credentials, destination and sender identity. Disabling a browser button is only interface feedback.
+
+**How it works**
+A SvelteKit form action validates bounded fields with Zod, ignores a filled honeypot and verifies the Turnstile token through Siteverify, including its action and hostname. Only then does it call Resend's batch endpoint for the studio notification and visitor confirmation. `Reply-To` routes responses without pretending the visitor owns the verified sender domain. `use:enhance` keeps inputs on validation or provider errors and refreshes the single-use security widget after each attempt. The page and action responses remain private rather than sharing submitted fields through CDN caches.
+
+**Why it matters**
+Client validation cannot secure an endpoint. Sending raw input as HTML can alter email content, and using the visitor's address as `From` breaks sender authentication. Notification and confirmation have different recipients and reply destinations, even when they share one visual template.
+
+**In this project**
+`src/routes/contact/+page.server.ts` owns the submission, `src/lib/contact/validation.ts` bounds the fields, and `ContactVerification.svelte` mounts and removes the widget during navigation. `src/lib/server/contact-email.ts` escapes visitor data and produces both plain text and HTML using the studio palette and logo. Tests intercept provider requests to verify rejection paths, recipients and escaping without delivering email.
+
+**Tradeoffs / pitfalls**
+Email clients need table layout, inline styles, absolute image URLs and system font fallbacks; website CSS and Paperlogy cannot be assumed to work in an inbox. A successful provider response means accepted for sending, not guaranteed delivery. Missing credentials leave direct email available. Turnstile needs JavaScript and narrow CSP script/frame permissions; its tokens expire and cannot be reused. Production needs verified sender DNS, correct widget hostnames and provider quotas. Do not use process-local throttling as a distributed rate limit on serverless hosts.
+
 ### Native route transitions without remounting the application shell
 
 **Simple explanation**
