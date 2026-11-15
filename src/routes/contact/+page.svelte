@@ -1,5 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { onMount } from "svelte";
+  import { showToast } from "$lib/toast.svelte";
   import ContactVerification from "$lib/components/ContactVerification.svelte";
   import OrganicDivider from "$lib/components/OrganicDivider.svelte";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
@@ -13,6 +15,12 @@
   let verified = $state(false);
   let challengeVersion = $state(0);
   let messageLength = $state<number | null>(null);
+
+  onMount(() => {
+    if (!data.contactAvailable) {
+      showToast("The contact form is temporarily unavailable. Please email hello@renhetstudio.com.", false);
+    }
+  });
 </script>
 
 <svelte:head><title>Reach Out | Renhet Studio</title></svelte:head>
@@ -102,6 +110,7 @@
         {:else}
           <form
             method="POST"
+            novalidate
             aria-label="Reach Out to Renhet Studio"
             aria-busy={submitting}
             use:enhance={({ cancel }) => {
@@ -110,14 +119,23 @@
                 return;
               }
               submitting = true;
-              return async ({ update }) => {
+              return async ({ result, update }) => {
                 try {
+                  if (result.type === "error") {
+                    showToast("We couldn't send your message. Please try again.", false);
+                    return;
+                  }
                   await update({ reset: false });
+                  messageLength = null;
+                  if (result.type === "success" && result.data?.status === "success") {
+                    showToast("Message sent");
+                  } else if (result.type === "failure") {
+                    showToast(typeof result.data?.message === "string" ? result.data.message : "We couldn't send your message. Please try again.", false);
+                  }
                 } finally {
                   submitting = false;
                   verified = false;
                   challengeVersion += 1;
-                  messageLength = null;
                 }
               };
             }}
@@ -139,16 +157,7 @@
                     placeholder="Your name"
                     value={form?.values?.name ?? ""}
                     aria-invalid={Boolean(form?.errors?.name)}
-                    aria-describedby={form?.errors?.name
-                      ? "name-error"
-                      : undefined}
                   />
-                  {#if form?.errors?.name}<p
-                      id="name-error"
-                      class="form-error mt-2 text-sm"
-                    >
-                      {form.errors.name[0]}
-                    </p>{/if}
                 </div>
                 <div>
                   <label for="contact-email">Your email</label>
@@ -162,16 +171,7 @@
                     placeholder="you@example.com"
                     value={form?.values?.email ?? ""}
                     aria-invalid={Boolean(form?.errors?.email)}
-                    aria-describedby={form?.errors?.email
-                      ? "email-error"
-                      : undefined}
                   />
-                  {#if form?.errors?.email}<p
-                      id="email-error"
-                      class="form-error mt-2 text-sm"
-                    >
-                      {form.errors.email[0]}
-                    </p>{/if}
                 </div>
               </div>
               <div>
@@ -189,9 +189,7 @@
                     oninput={(event) =>
                       (messageLength = event.currentTarget.value.length)}
                     aria-invalid={Boolean(form?.errors?.message)}
-                    aria-describedby={form?.errors?.message
-                      ? "message-hint message-error"
-                      : "message-hint"}></textarea>
+                    aria-describedby="message-hint"></textarea>
                   <span
                     id="message-hint"
                     class="pointer-events-none absolute right-5 bottom-4 text-xs font-bold tabular-nums text-[#627383]"
@@ -202,12 +200,6 @@
                     ></span
                   >
                 </div>
-                {#if form?.errors?.message}<p
-                    id="message-error"
-                    class="form-error mt-2 text-sm"
-                  >
-                    {form.errors.message[0]}
-                  </p>{/if}
               </div>
               <div class="honeypot" aria-hidden="true">
                 <label for="contact-website">Leave this field empty</label>
@@ -241,21 +233,6 @@
                 />
               </button>
             </fieldset>
-            {#if form?.status === "error"}<p
-                class="form-error mt-5 text-sm leading-relaxed"
-                role="alert"
-              >
-                {form.message}
-              </p>{/if}
-            {#if !data.contactAvailable}<p
-                class="mt-5 text-sm font-bold leading-relaxed text-[#627383]"
-                role="status"
-              >
-                The form is temporarily unavailable. Email <a
-                  href="mailto:hello@renhetstudio.com"
-                  class="underline underline-offset-4">hello@renhetstudio.com</a
-                > to get in touch.
-              </p>{/if}
             <noscript
               ><p class="mt-5 text-sm font-bold">
                 Enable JavaScript to complete the security check, or email <a

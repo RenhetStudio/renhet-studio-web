@@ -2,6 +2,23 @@
 
 ## Web Development
 
+### Distinguish form validation failures from unexpected action errors
+
+**Simple explanation**
+A rejected form and a failed request need different handling. Both should explain the problem without discarding what the visitor typed.
+
+**How it works**
+SvelteKit `use:enhance` passes an action result to its completion callback. `fail(...)` produces `type: "failure"`; call `update()` to apply the returned form state, then display the server's user-facing message. Network or unexpected server errors produce `type: "error"`; show a generic error toast and skip `update()`, which would otherwise render the nearest error page.
+
+**Why it matters**
+Calling the default update for every result can replace a recoverable form with an error page. Showing success on a completed HTTP request alone can also misreport a rejected submission.
+
+**In this project**
+The contact and careers forms call the shared `showToast(message, false)` for failures. Contact additionally resets its pending state and single-use Turnstile challenge in `finally`, including when the callback returns early after a request error.
+
+**Tradeoffs / pitfalls**
+Only display success when both the action result and its application status indicate success. Unexpected errors use fixed copy instead of exposing exception details. Contact and careers use `novalidate` so server validation messages appear only in shared toasts, without native validation bubbles or inline error text. This changes presentation, not enforcement: the server still validates before any writes or email sends and returns the first validation message in English. Turnstile failures also use the shared toast, suppressing repeated identical widget errors until verification succeeds again.
+
 ### Non-blocking subscriptions with database-owned idempotency
 
 **Simple explanation**

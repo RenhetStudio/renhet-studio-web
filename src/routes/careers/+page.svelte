@@ -1,6 +1,7 @@
 <script lang="ts">
   import SocialMeta from "$lib/components/SocialMeta.svelte";
   import { enhance } from "$app/forms";
+  import { showToast } from "$lib/toast.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import SiteHeader from "$lib/components/SiteHeader.svelte";
   import OrganicDivider from "$lib/components/OrganicDivider.svelte";
@@ -383,7 +384,18 @@
             </p>
           </div>
         {:else}
-          <form method="POST" use:enhance class="flex flex-col">
+          <form method="POST" novalidate use:enhance={() => async ({ result, update }) => {
+            if (result.type === "error") {
+              showToast("We couldn't send your application. Please try again.", false);
+              return;
+            }
+            await update();
+            if (result.type === "success" && result.data?.status === "success") {
+              showToast("Application received");
+            } else if (result.type === "failure") {
+              showToast(typeof result.data?.message === "string" ? result.data.message : "We couldn't send your application. Please try again.", false);
+            }
+          }} class="flex flex-col">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <!-- Position select (wide) -->
               <label class="flex flex-col gap-2 sm:col-span-2">
@@ -423,11 +435,6 @@
                     <IconChevronDown size={18} strokeWidth={2.4} />
                   </span>
                 </div>
-                {#if form?.errors?.positionId}
-                  <span class="text-xs font-extrabold text-[#9a3e45]"
-                    >{form.errors.positionId[0]}</span
-                  >
-                {/if}
               </label>
 
               <!-- Name -->
@@ -443,11 +450,6 @@
                   maxlength="120"
                   class="h-[52px] rounded-xl border border-[#d6d5ca] bg-[#fffdf3] px-4 font-bold text-[#344253] outline-none transition-all duration-180 focus:border-[#4f5f70] focus:ring-2 focus:ring-[#8fb8d8]/30"
                 />
-                {#if form?.errors?.name}
-                  <span class="text-xs font-extrabold text-[#9a3e45]"
-                    >{form.errors.name[0]}</span
-                  >
-                {/if}
               </label>
 
               <!-- Email -->
@@ -464,11 +466,6 @@
                   maxlength="254"
                   class="h-[52px] rounded-xl border border-[#d6d5ca] bg-[#fffdf3] px-4 font-bold text-[#344253] outline-none transition-all duration-180 focus:border-[#4f5f70] focus:ring-2 focus:ring-[#8fb8d8]/30"
                 />
-                {#if form?.errors?.email}
-                  <span class="text-xs font-extrabold text-[#9a3e45]"
-                    >{form.errors.email[0]}</span
-                  >
-                {/if}
               </label>
 
               <!-- Location / Timezone (wide) -->
@@ -501,11 +498,6 @@
                   placeholder="https://"
                   class="h-[52px] rounded-xl border border-[#d6d5ca] bg-[#fffdf3] px-4 font-bold text-[#344253] outline-none transition-all duration-180 placeholder:text-[#718191]/60 focus:border-[#4f5f70] focus:ring-2 focus:ring-[#8fb8d8]/30"
                 />
-                {#if form?.errors?.portfolioUrl}
-                  <span class="text-xs font-extrabold text-[#9a3e45]"
-                    >{form.errors.portfolioUrl[0]}</span
-                  >
-                {/if}
               </label>
 
               <!-- CV / Resume URL -->
@@ -570,11 +562,6 @@
                     ></span
                   >
                 </div>
-                {#if form?.errors?.message}
-                  <span class="text-xs font-extrabold text-[#9a3e45]"
-                    >{form.errors.message[0]}</span
-                  >
-                {/if}
               </label>
             </div>
 
@@ -601,15 +588,6 @@
               Website
               <input name="website" tabindex="-1" autocomplete="off" />
             </label>
-
-            {#if form?.message}
-              <p
-                class="mt-4 text-sm font-extrabold text-[#9a3e45]"
-                role="alert"
-              >
-                {form.message}
-              </p>
-            {/if}
 
             <!-- Submit Button (Primary standard 52px button without icon drift animation) -->
             <div class="mt-8">

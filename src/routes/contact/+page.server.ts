@@ -33,7 +33,7 @@ export const actions = {
     };
     const parsed = contactSchema.safeParse(values);
     if (!parsed.success) {
-      return fail(400, { status: "error", message: "Check the highlighted fields and try again.", errors: parsed.error.flatten().fieldErrors, values });
+      return fail(400, { status: "error", message: parsed.error.issues[0]?.message ?? "Please check your details and try again.", errors: parsed.error.flatten().fieldErrors, values });
     }
     const unavailable = () => fail(503, { status: "error", message: `Your message could not be sent. Please try again or email ${CONTACT_EMAIL}.`, errors: undefined, values });
     if (!isConfigured()) return unavailable();

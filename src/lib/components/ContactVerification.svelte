@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { showToast } from "$lib/toast.svelte";
 
   let { siteKey, onverified }: { siteKey: string; onverified: (verified: boolean) => void } = $props();
   let container: HTMLDivElement;
-  let failed = $state(false);
 
   interface Turnstile {
     render: (element: HTMLElement, options: Record<string, unknown>) => string;
@@ -14,7 +14,13 @@
     const browser = window as Window & { turnstile?: Turnstile };
     let widgetId: string | undefined;
     let disposed = false;
-    const onError = () => { failed = true; onverified(false); };
+    let failed = false;
+    const onError = () => {
+      if (disposed) return;
+      if (!failed) showToast("The security check could not load. Reload this page or email hello@renhetstudio.com.", false);
+      failed = true;
+      onverified(false);
+    };
     const render = () => {
       if (disposed || !browser.turnstile || widgetId !== undefined) return;
       try {
@@ -56,6 +62,3 @@
 </script>
 
 <div class="min-h-[65px] w-full" bind:this={container}></div>
-{#if failed}
-  <p class="form-error text-sm" role="alert">The security check could not load. Reload this page or email hello@renhetstudio.com.</p>
-{/if}

@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ url, setHeaders, cookies }) => {
 export const actions = {
   default: async ({ request }) => {
     const parsed = applicationSchema.safeParse(Object.fromEntries(await request.formData()));
-    if (!parsed.success) return fail(400, { status: "error", message: "Check the highlighted fields and try again.", errors: parsed.error.flatten().fieldErrors });
+    if (!parsed.success) return fail(400, { status: "error", message: parsed.error.issues[0]?.message ?? "Please check your details and try again.", errors: parsed.error.flatten().fieldErrors });
     try {
       const positions = parsed.data.positionId === "open-application" ? [] : await getPublishedPositions();
       const selected = positions.find((position) => position.slug === parsed.data.positionId);
