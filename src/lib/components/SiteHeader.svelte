@@ -250,9 +250,9 @@
       </picture>
     </a>
 
-    <!-- Desktop Navigation Links (Centered mathematically at 50% of the navbar pill) -->
+    <!-- Center links in the space between the logo and variable-width controls. -->
     <div
-      class="hidden items-center gap-1 lg:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2"
+      class="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex"
     >
       {#each navigation as item}
         <a

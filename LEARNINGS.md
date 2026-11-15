@@ -836,8 +836,10 @@ When a floating pill navbar uses centered navigation links alongside user contro
 **How it works**
 Replace inline authenticated links with a single interactive pill displaying the user's name and a chevron. Clicking toggles a floating contextual menu (`role="menu"`) styled with the studio aesthetic (frosted dark slate background `#4f5f70`/95, white border, soft blur). Listen to click-outside on `window` and the `Escape` key, and automatically close the menu on client navigation (`afterNavigate`) and window resize.
 
+Keep the logo and controls in normal flex layout with `shrink-0`, and give the links container `flex-1 justify-center`. The links then have equal free space on either side within the remaining area, automatically accounting for the account menu's actual width without JavaScript measurements.
+
 **Why it matters**
-On fixed pill headers with absolutely centered elements (`left-1/2 -translate-x-1/2`), right-aligned action groups that grow with author privileges easily collide with navigation links (e.g., placing audio toggle buttons directly on top of "Careers"). A compact dropdown guarantees a predictable max-width (~160px) regardless of user role or action count.
+Absolute centering (`left-1/2 -translate-x-1/2`) aligns links to the entire header rather than the space between its controls. Unequal side widths then create uneven gaps and can cause overlaps. Normal flex layout accounts for both sides, while a compact dropdown bounds the space consumed by account actions.
 
 **In this project**
 `src/lib/components/SiteHeader.svelte` uses `IconChevronDown` with a rotational transition and renders an organic floating menu offering "Author Dashboard", "Account Settings", and a distinct "Sign out" action.
