@@ -2,6 +2,23 @@
 
 ## Web Development
 
+### Non-blocking subscriptions with database-owned idempotency
+
+**Simple explanation**
+Render the subscription form immediately, and contact the database only after an explicit submit. The database must enforce uniqueness so repeated or simultaneous requests cannot create duplicate subscribers.
+
+**How it works**
+`NewsletterSignup.svelte` sends JSON to `/api/newsletter` from its submit handler. The endpoint validates and normalizes the email, then calls a narrow Supabase RPC using a cookie-free client. PostgreSQL uses the email primary key with `ON CONFLICT DO NOTHING`; a duplicate never updates the original timestamp. Both outcomes return the same generic success response, without exposing whether an email was already present.
+
+**Why it matters**
+Checking whether an email exists before inserting requires an extra query and has a race: two requests can both see no record. A unique constraint makes the decision atomically, while deferring the request keeps database latency out of page rendering.
+
+**In this project**
+`202611150001_newsletter_subscribers.sql` creates the private table and insert-only `subscribe_newsletter` function. Public roles cannot read, directly insert, update or delete subscriber rows. The function uses `SECURITY DEFINER` with an empty search path and fully qualified table names so it can insert without granting broader table access. `ToastProvider.svelte` lives in the root layout, outside the footer's overflow and transform contexts; its four-second timer is cleaned up when a notification changes or the provider unmounts.
+
+**Tradeoffs / pitfalls**
+The public RPC is intentionally callable without login and does not prove mailbox ownership. Do not mistake a honeypot for a distributed rate limiter. Adding mailbox confirmation or newsletter delivery is a separate feature. The SQL schema tests must run against PostgreSQL; intercepted endpoint tests alone do not prove permissions or conflict handling. Shared Svelte rune state is safe here because it is only mutated in browser event handlers; never put request-specific server data in that singleton. Mount viewport-fixed notifications outside transformed or clipped ancestors, or their position and visibility can depend on the footer instead of the viewport.
+
 ### Keep user-controlled resizing out of CSS transitions
 
 **Simple explanation**

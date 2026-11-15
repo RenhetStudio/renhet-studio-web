@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint .",
-    "test:contact": "svelte-kit sync && node --test tests/contact.test.mjs"
+    "test:contact": "svelte-kit sync && node --test tests/contact.test.mjs",
+    "test:newsletter": "svelte-kit sync && node --test tests/newsletter.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.2.8",

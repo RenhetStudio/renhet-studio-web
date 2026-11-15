@@ -9,6 +9,7 @@
   import IconItch from "$lib/components/icons/IconItch.svelte";
   import FooterDecoSplash from "$lib/components/footer/FooterDecoSplash.svelte";
   import { scrollDockState } from "./scrollDock.svelte";
+  import NewsletterSignup from "$lib/components/NewsletterSignup.svelte";
 
   const socialLinks = [
     {
@@ -94,9 +95,10 @@
     <WaveDivider fillColor="#f6f1e8" inverted={true} pronounced={true} />
   </div>
 
-  <!-- Decorative sun/splash element emerging from bottom edge behind content (100% organic curves) -->
+  <div class="relative lg:static">
+  <!-- On mobile, the splash rises from the newsletter boundary. -->
   <FooterDecoSplash
-    class="absolute -bottom-6 left-[50%] z-0 w-[240px] -translate-x-1/2 opacity-35 sm:left-[50%] sm:w-[280px] sm:opacity-40 lg:left-[45%] lg:w-[320px] xl:left-[46%] xl:w-[360px] lg:opacity-55"
+    class="absolute bottom-0 left-[50%] z-0 w-[270px] -translate-x-1/2 opacity-35 sm:left-[50%] sm:w-[310px] sm:opacity-40 lg:-bottom-6 lg:left-[45%] lg:w-[360px] xl:left-[46%] xl:w-[400px] lg:opacity-55"
   />
 
   <div
@@ -163,7 +165,7 @@
         <div class="grid grid-cols-[0.8fr_1.2fr] gap-2.5 sm:gap-3 w-full sm:w-[260px]">
           <a
             href="/blog"
-            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
+            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
           >
             <span>Blog</span>
             <span class="inline-block">
@@ -172,7 +174,7 @@
           </a>
           <a
             href="/careers"
-            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm sm:text-base font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
+            class="group inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 px-3 text-sm font-semibold text-[#fffdf3] shadow-sm backdrop-blur-md transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0"
           >
             <span class="whitespace-nowrap">Be part of it</span>
             <span class="inline-block">
@@ -225,6 +227,15 @@
             <IconArrowUp size={16} />
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="relative z-10 border-t border-[#fffdf3]/15 bg-[#344253]/20">
+    <div class="mx-auto max-w-[1440px] px-6 py-5 sm:px-8 lg:px-12">
+      <!-- Match the logo's visible edge and exclude the 65px scroll-button slot. -->
+      <div class="lg:pl-[23px] lg:pr-[65px] xl:pl-6">
+        <NewsletterSignup />
       </div>
     </div>
   </div>

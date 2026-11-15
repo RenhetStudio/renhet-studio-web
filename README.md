@@ -10,6 +10,19 @@ Renhet Studio's official site and blog, built with SvelteKit 2, Svelte 5, and Ta
 
 See `docs/careers-google-sheets.md` for the required tabs, headers, and Google Apps Script setup.
 
+## Newsletter
+
+The footer newsletter form sends `POST /api/newsletter` only when the visitor presses Subscribe. Loading a page or typing an address performs no subscription reads or writes. Success uses a floating toast matching the post editor. The original subscription and a duplicate receive the same confirmation.
+
+Before enabling subscriptions, run `supabase/migrations/202611150001_newsletter_subscribers.sql` in the Supabase SQL Editor, or apply it with your normal migration workflow. It creates `public.newsletter_subscribers` with:
+
+- `email`: normalized to lowercase, unique primary key.
+- `suscribed_at`: server-generated `timestamptz`, preserving the requested column spelling.
+
+The `subscribe_newsletter` RPC inserts with `ON CONFLICT DO NOTHING`, so resubmitting preserves the original timestamp, including concurrent requests. Row-level security is enabled and public table permissions are revoked. Anonymous and authenticated visitors can call the subscription function, but cannot list, edit or delete subscribers. This uses the existing Supabase URL and anon key; no service-role key is needed. No newsletter emails are sent by this feature.
+
+Run `npm run test:newsletter` for endpoint tests that intercept database requests. `supabase/tests/newsletter.sql` checks the real schema, duplicate behavior and permissions in a test database, rolling back fixture changes. The API and SQL tests are separate: intercepted requests do not validate a deployed database. Apply the migration before deploying the interface, then verify a controlled new subscription and a duplicate in Supabase. The form does not check mailbox ownership; a honeypot reduces simple bot submissions, but the public RPC remains callable and needs deployment-level abuse controls if traffic warrants them.
+
 ## Contact
 
 `/contact` sends a message to the private `CONTACT_TO_EMAIL` recipient and a branded confirmation to the visitor through Resend. Both emails include HTML and plain text. The public contact address and confirmation reply address remain `hello@renhetstudio.com`; the notification recipient can be configured independently.

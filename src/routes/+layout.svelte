@@ -4,6 +4,7 @@
   import CustomCursor from "$lib/components/CustomCursor.svelte";
   import SoundProvider from "$lib/components/SoundProvider.svelte";
   import ScrollToTop from "$lib/components/ScrollToTop.svelte";
+  import ToastProvider from "$lib/components/ToastProvider.svelte";
   import { onNavigate } from "$app/navigation";
   import { tick, type Snippet } from "svelte";
   let { children }: { children: Snippet } = $props();
@@ -42,3 +43,4 @@
 <CustomCursor />
 {@render children()}
 <ScrollToTop />
+<ToastProvider />
