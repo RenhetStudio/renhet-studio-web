@@ -109,46 +109,52 @@
       class="flex flex-col gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-8"
     >
       <!-- Zone 1 & 2: Logo + Vertical Divider + Headline (Always in a row on both mobile and desktop) -->
-      <div class="flex w-full items-center justify-between sm:w-auto sm:justify-start lg:mr-auto">
-        <a
-          href="/"
-          aria-label="Renhet Studio home"
-          class="inline-flex shrink-0 items-center rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fffdf3]"
-        >
-          <picture class="block">
-            <source
-              type="image/avif"
-              srcset="/optimized/renhet-logo-white-176.avif 176w, /optimized/renhet-logo-white-360.avif 360w, /optimized/renhet-logo-white-720.avif 720w"
-              sizes="(max-width: 640px) 130px, (max-width: 1024px) 195px, 235px"
-            />
-            <source
-              type="image/webp"
-              srcset="/optimized/renhet-logo-white-176.webp 176w, /optimized/renhet-logo-white-360.webp 360w, /optimized/renhet-logo-white-720.webp 720w"
-              sizes="(max-width: 640px) 130px, (max-width: 1024px) 195px, 235px"
-            />
-            <img
-              src="/renhet-logo-white.png"
-              width="235"
-              height="118"
-              alt="Renhet Studio"
-              loading="lazy"
-              class="h-auto w-[125px] sm:w-[195px] lg:w-[220px] xl:w-[235px] -translate-y-0.5 sm:-translate-y-1 object-contain transition-opacity duration-200 hover:opacity-90"
-            />
-          </picture>
-        </a>
+      <div
+        class="grid grid-cols-[1fr_auto_1fr] items-center w-full sm:flex sm:w-auto sm:justify-start lg:mr-auto"
+      >
+        <div class="flex items-center justify-end pr-4 sm:justify-start sm:pr-0">
+          <a
+            href="/"
+            aria-label="Renhet Studio home"
+            class="inline-flex shrink-0 items-center rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fffdf3]"
+          >
+            <picture class="block">
+              <source
+                type="image/avif"
+                srcset="/optimized/renhet-logo-white-176.avif 176w, /optimized/renhet-logo-white-360.avif 360w, /optimized/renhet-logo-white-720.avif 720w"
+                sizes="(max-width: 640px) 130px, (max-width: 1024px) 195px, 235px"
+              />
+              <source
+                type="image/webp"
+                srcset="/optimized/renhet-logo-white-176.webp 176w, /optimized/renhet-logo-white-360.webp 360w, /optimized/renhet-logo-white-720.webp 720w"
+                sizes="(max-width: 640px) 130px, (max-width: 1024px) 195px, 235px"
+              />
+              <img
+                src="/renhet-logo-white.png"
+                width="235"
+                height="118"
+                alt="Renhet Studio"
+                loading="lazy"
+                class="block h-auto w-[125px] sm:w-[195px] lg:w-[220px] xl:w-[235px] -translate-y-0.5 sm:-translate-y-1 object-contain transition-opacity duration-200 hover:opacity-90"
+              />
+            </picture>
+          </a>
+        </div>
 
         <!-- Vertical divider line (scaled to match logo & headline height) -->
         <div
-          class="mx-2 sm:mx-7 lg:mx-8 xl:mx-9 h-12 sm:h-16 lg:h-20 w-px shrink-0 bg-[#fffdf3]/25"
+          class="h-[34px] sm:h-14 lg:h-16 xl:h-20 w-px shrink-0 bg-[#fffdf3]/25 sm:mx-7 lg:mx-8 xl:mx-9"
           aria-hidden="true"
         ></div>
 
         <!-- Monumental Title -->
-        <h2
-          class="font-black text-xl sm:text-4xl lg:text-[40px] xl:text-[44px] leading-[0.98] tracking-tight text-[#fffdf3] shrink-0 text-right sm:text-left"
-        >
-          Meant to<br />be felt.
-        </h2>
+        <div class="flex items-center justify-start pl-7 sm:pl-0">
+          <h2
+            class="font-black text-xl sm:text-4xl lg:text-[40px] xl:text-[44px] leading-[0.98] tracking-tight text-[#fffdf3] shrink-0 text-left"
+          >
+            Meant to<br />be felt.
+          </h2>
+        </div>
       </div>
 
       <!-- Zone 3: Links (Two rows: pills on top, circular icons below) -->

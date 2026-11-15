@@ -1008,6 +1008,32 @@ Coordinated between [HeroSplit.svelte](renhet-studio-web/src/lib/components/home
 Never delete heading semantics when removing visual text. Always provide an `.sr-only` `<h1>` element on the landing page so assistive technology and SEO crawlers retain a well-formed heading outline.
 
 
+### Balanced vertical and horizontal alignment for brand lockup dividers in footers
+
+**Simple explanation**
+
+In a brand lockup with an image logo, a hairline divider, and a multi-line headline, using `justify-between` on mobile pushes the middle divider off-center whenever the left and right elements have unequal widths. Furthermore, giving the divider an arbitrary pixel height taller than the text causes it to hang down past the baseline, creating an awkward, crooked appearance.
+
+**How it works**
+
+1. **Horizontal 50% centering via grid:** Instead of `flex justify-between`, use `grid grid-cols-[1fr_auto_1fr]` on mobile. This places the divider on the exact 50% centerline of the viewport, harmoniously aligning with multi-column buttons or grid seams below it.
+2. **Equidistant visual spacing:** In the left column, the logo aligns toward the divider with right padding compensating for transparent raster margins (`justify-end pr-4`), while the right column headline aligns toward the divider (`justify-start pl-7`). Both elements maintain an identical visual distance to the divider line across all screen widths.
+3. **Proportional divider height:** On mobile, reduce the divider height from `h-12` (48px) to `h-[34px]`. This exactly frames the cap-height of the top line and baseline of the bottom line without plunging below the text.
+4. **Left-aligned multi-line text:** Using `text-left` instead of `text-right` next to a divider ensures the text block forms a straight, parallel margin along the divider, preventing staggered indentations from creating hollow voids.
+
+**Why it matters**
+
+Footers are high-scrutiny closing sections. A misaligned divider that hangs into button margins or sits visibly closer to one side diminishes the craftsmanship of an authentic indie aesthetic.
+
+**In this project**
+
+Implemented in [SiteFooter.svelte](renhet-studio-web/src/lib/components/SiteFooter.svelte).
+
+**Tradeoffs / pitfalls**
+
+Remember that raster images (`renhet-logo-white.png`) often have transparent whitespace within their canvas. Always inspect the trim dimensions so padding calculations reflect visible ink rather than raw bounding boxes.
+
+
 ### Contextual dual-state editor toolbar with clean functional clusters and popover menus
 
 **Simple explanation**
