@@ -15,9 +15,9 @@
   let messageLength = $state<number | null>(null);
 </script>
 
-<svelte:head><title>Contact | Renhet Studio</title></svelte:head>
+<svelte:head><title>Reach Out | Renhet Studio</title></svelte:head>
 <SocialMeta
-  title="Contact | Renhet Studio"
+  title="Reach Out | Renhet Studio"
   description="Write to Renhet Studio about our games, press, or collaborations. Send a note or email hello@renhetstudio.com."
   path="/contact"
 />
@@ -34,7 +34,7 @@
         id="contact-title"
         class="text-[clamp(3.5rem,8vw,7.5rem)] font-black leading-[0.88] tracking-tight"
       >
-        Contact.
+        Reach out.
       </h1>
       <OrganicDivider seed="contact-heading" class="mt-8 mb-0 sm:mt-12" />
     </div>
@@ -102,7 +102,7 @@
         {:else}
           <form
             method="POST"
-            aria-label="Contact Renhet Studio"
+            aria-label="Reach Out to Renhet Studio"
             aria-busy={submitting}
             use:enhance={({ cancel }) => {
               if (submitting || !verified) {

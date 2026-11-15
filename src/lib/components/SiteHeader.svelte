@@ -11,12 +11,14 @@
   let { profile = null }: { profile?: UserProfile | null } = $props();
 
   const activeProfile = $derived(
-    profile ?? (page.data?.profile as UserProfile | null) ?? null
+    profile ?? (page.data?.profile as UserProfile | null) ?? null,
   );
 
   let isMuted = $state(false);
   let isHeroInView = $state(
-    typeof document !== "undefined" ? Boolean(document.querySelector("[data-hero]")) : true
+    typeof document !== "undefined"
+      ? Boolean(document.querySelector("[data-hero]"))
+      : true,
   );
   let isMobileMenuOpen = $state(false);
   let isUserMenuOpen = $state(false);
@@ -31,7 +33,10 @@
     // Navbar sits at top: 16px with ~64px height -> bottom edge is ~80px.
     // The exact scroll offset where the hero bottom passes the navbar bottom is: heroBottom - 80px.
     const exitDistance = Math.max(120, Math.round(heroBottom - 80));
-    document.documentElement.style.setProperty("--hero-exit-distance", `${exitDistance}px`);
+    document.documentElement.style.setProperty(
+      "--hero-exit-distance",
+      `${exitDistance}px`,
+    );
   };
 
   const checkHeroVisibility = () => {
@@ -133,14 +138,13 @@
   const navigation = [
     { label: "Beelze Pub", href: "/games/beelze-pub" },
     { label: "Renhet Between Builds", href: "/blog" },
-    { label: "Careers", href: "/careers" },
-    { label: "Contact", href: "/contact" },
+    { label: "Be Part Of It", href: "/careers" },
+    { label: "Reach Out", href: "/contact" },
   ];
 
   const canAuthor = $derived(
-    activeProfile ? ["author", "admin"].includes(activeProfile.role) : false
+    activeProfile ? ["author", "admin"].includes(activeProfile.role) : false,
   );
-
 
   const toggleSound = () => {
     sound.toggleMute();
@@ -179,7 +183,10 @@
   ></button>
 {/if}
 
-<nav class="nav-shell fixed inset-x-0 top-4 z-50 px-4" aria-label="Primary navigation">
+<nav
+  class="nav-shell fixed inset-x-0 top-4 z-50 px-4"
+  aria-label="Primary navigation"
+>
   <div
     class="nav-pill-dynamic relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 rounded-full border-2 px-4 text-[#fffdf3] sm:px-6 {isHeroInView
       ? 'border-[#fffdf3]/35 bg-[#627383]/45 shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-md'
@@ -244,7 +251,9 @@
     </a>
 
     <!-- Desktop Navigation Links (Centered mathematically at 50% of the navbar pill) -->
-    <div class="hidden items-center gap-1 lg:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2">
+    <div
+      class="hidden items-center gap-1 lg:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2"
+    >
       {#each navigation as item}
         <a
           class="whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-bold text-[#fffdf3]/90 transition-all duration-200 hover:bg-[#fffdf3]/15 hover:text-[#fffdf3]"
@@ -264,7 +273,9 @@
         class="sound-toggle inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#fffdf3]/30 bg-[#fffdf3]/10 text-[#fffdf3] transition-all duration-200 hover:bg-[#fffdf3]/25 active:scale-95"
         onclick={toggleSound}
         aria-label={isMuted ? "Enable sound effects" : "Mute sound effects"}
-        title={isMuted ? "Sound is muted (click to enable)" : "Sound is active (click to mute)"}
+        title={isMuted
+          ? "Sound is muted (click to enable)"
+          : "Sound is active (click to mute)"}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +290,10 @@
           aria-hidden="true"
         >
           <!-- Speaker body — solid filled silhouette -->
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+          <polygon
+            points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"
+            fill="currentColor"
+          />
 
           <!-- Sound waves — fade + scale in from left when unmuted -->
           <path
@@ -293,11 +307,17 @@
 
           <!-- Mute X lines — rotate in from center when muted -->
           <line
-            x1="22" y1="9" x2="16" y2="15"
+            x1="22"
+            y1="9"
+            x2="16"
+            y2="15"
             class="sound-cross sound-cross-first"
           />
           <line
-            x1="16" y1="9" x2="22" y2="15"
+            x1="16"
+            y1="9"
+            x2="22"
+            y2="15"
             class="sound-cross sound-cross-second"
           />
         </svg>
@@ -352,7 +372,9 @@
             </span>
             <IconChevronDown
               size={13}
-              class="transition-transform duration-200 {isUserMenuOpen ? 'rotate-180' : ''}"
+              class="transition-transform duration-200 {isUserMenuOpen
+                ? 'rotate-180'
+                : ''}"
             />
           </button>
 
@@ -365,7 +387,9 @@
             >
               <!-- User info header -->
               <div class="border-b border-[#fffdf3]/15 px-3 py-2 mb-1">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-[#fffdf3]/65">
+                <p
+                  class="text-[11px] font-bold uppercase tracking-wider text-[#fffdf3]/65"
+                >
                   Signed in as
                 </p>
                 <div class="mt-0.5 flex items-center justify-between gap-1.5">
@@ -376,7 +400,7 @@
                     <span
                       class="shrink-0 rounded-full border border-[#8fb8d8]/60 bg-[#8fb8d8]/20 px-2 py-0.5 text-[10px] font-black text-[#fffdf3]"
                     >
-                      {activeProfile.role === 'admin' ? 'Admin' : 'Author'}
+                      {activeProfile.role === "admin" ? "Admin" : "Author"}
                     </span>
                   {/if}
                 </div>
@@ -473,7 +497,7 @@
                 <span
                   class="shrink-0 rounded-full border border-[#8fb8d8]/60 bg-[#8fb8d8]/20 px-2 py-0.5 text-[9px] font-black text-[#fffdf3]"
                 >
-                  {activeProfile.role === 'admin' ? 'Admin' : 'Author'}
+                  {activeProfile.role === "admin" ? "Admin" : "Author"}
                 </span>
               {/if}
             </div>
@@ -536,22 +560,42 @@
   .sound-wave {
     opacity: 1;
     transform: scaleX(1);
-    transition: opacity 240ms ease, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 240ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .sound-wave-near { transform-origin: 15.54px 12px; }
-  .sound-wave-far { transform-origin: 19.07px 12px; transition-delay: 0ms, 40ms; }
-  .is-muted .sound-wave { opacity: 0; transform: scaleX(0.3); }
+  .sound-wave-near {
+    transform-origin: 15.54px 12px;
+  }
+  .sound-wave-far {
+    transform-origin: 19.07px 12px;
+    transition-delay: 0ms, 40ms;
+  }
+  .is-muted .sound-wave {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
 
   .sound-cross {
     opacity: 0;
     transform-origin: 19px 12px;
-    transition: opacity 220ms ease, transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 220ms ease,
+      transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .sound-cross-first { transform: rotate(-45deg) scale(0.3); }
-  .sound-cross-second { transform: rotate(45deg) scale(0.3); transition-delay: 0ms, 30ms; }
-  .is-muted .sound-cross { opacity: 1; transform: rotate(0deg) scale(1); }
+  .sound-cross-first {
+    transform: rotate(-45deg) scale(0.3);
+  }
+  .sound-cross-second {
+    transform: rotate(45deg) scale(0.3);
+    transition-delay: 0ms, 30ms;
+  }
+  .is-muted .sound-cross {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
 
   .nav-pill-dynamic {
     backdrop-filter: blur(12px);
@@ -562,19 +606,28 @@
     :global(:root:has([data-hero])) .nav-pill-dynamic {
       animation: nav-pill-scroll linear both;
       animation-timeline: scroll();
-      animation-range: calc(var(--hero-exit-distance, calc(100vh - 80px)) - 100px) var(--hero-exit-distance, calc(100vh - 80px));
+      animation-range: calc(
+          var(--hero-exit-distance, calc(100vh - 80px)) - 100px
+        )
+        var(--hero-exit-distance, calc(100vh - 80px));
     }
 
     :global(:root:has([data-hero])) .nav-symbol-icon {
       animation: nav-symbol-scroll linear both;
       animation-timeline: scroll();
-      animation-range: calc(var(--hero-exit-distance, calc(100vh - 80px)) - 100px) var(--hero-exit-distance, calc(100vh - 80px));
+      animation-range: calc(
+          var(--hero-exit-distance, calc(100vh - 80px)) - 100px
+        )
+        var(--hero-exit-distance, calc(100vh - 80px));
     }
 
     :global(:root:has([data-hero])) .nav-wordmark-logo {
       animation: nav-wordmark-scroll linear both;
       animation-timeline: scroll();
-      animation-range: calc(var(--hero-exit-distance, calc(100vh - 80px)) - 100px) var(--hero-exit-distance, calc(100vh - 80px));
+      animation-range: calc(
+          var(--hero-exit-distance, calc(100vh - 80px)) - 100px
+        )
+        var(--hero-exit-distance, calc(100vh - 80px));
     }
 
     :global(:root:has([data-hero])) .nav-symbol-icon,
@@ -593,12 +646,15 @@
       100% {
         border-color: #fffdf3;
         background-color: rgba(98, 115, 131, 0.92);
-        box-shadow: 0 12px 40px rgba(50, 62, 75, 0.22), 0 0 0 1px rgba(255, 253, 243, 0.4);
+        box-shadow:
+          0 12px 40px rgba(50, 62, 75, 0.22),
+          0 0 0 1px rgba(255, 253, 243, 0.4);
       }
     }
 
     @keyframes nav-symbol-scroll {
-      0%, 25% {
+      0%,
+      25% {
         opacity: 1;
         transform: scale(1) translateX(0);
         pointer-events: auto;
@@ -611,7 +667,8 @@
     }
 
     @keyframes nav-wordmark-scroll {
-      0%, 25% {
+      0%,
+      25% {
         opacity: 0;
         transform: scale(0.9) translateX(8px);
         pointer-events: none;
@@ -627,7 +684,9 @@
   :global(:root:not(:has([data-hero]))) .nav-pill-dynamic {
     border-color: #fffdf3;
     background-color: rgba(98, 115, 131, 0.92);
-    box-shadow: 0 12px 40px rgba(50, 62, 75, 0.22), 0 0 0 1px rgba(255, 253, 243, 0.4);
+    box-shadow:
+      0 12px 40px rgba(50, 62, 75, 0.22),
+      0 0 0 1px rgba(255, 253, 243, 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }

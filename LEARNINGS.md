@@ -730,7 +730,7 @@ Editorial layouts frequently rely on sticky headlines or context panels that sta
 
 **In this project**
 
-In `src/routes/careers/+page.svelte`, the `<main>` tag had `overflow-x-hidden`, causing the left column (`Tell us what you would love to make.` with `lg:sticky lg:top-28`) to scroll away rather than sticking during form completion. Removing `overflow-x-hidden` from `<main>` (with horizontal viewport bounds handled globally in CSS) restored the sticky column.
+In `src/routes/careers/+page.svelte`, the `<main>` tag had `overflow-x-hidden`, causing the left column (`Let's get to know you.` with `lg:sticky lg:top-28`) to scroll away rather than sticking during form completion. Removing `overflow-x-hidden` from `<main>` (with horizontal viewport bounds handled globally in CSS) restored the sticky column.
 
 **Tradeoffs / pitfalls**
 

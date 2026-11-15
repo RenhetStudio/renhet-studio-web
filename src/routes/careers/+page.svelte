@@ -14,11 +14,11 @@
 </script>
 
 <svelte:head>
-  <title>Careers | Renhet Studio</title>
+  <title>Be part of it | Renhet Studio</title>
 </svelte:head>
 
 <SocialMeta
-  title="Careers | Renhet Studio"
+  title="Be part of it | Renhet Studio"
   description="Make something that stays with people. Join our small international team to make games with curiosity, honest collaboration, and care for the details."
   path="/careers"
 />
@@ -38,7 +38,7 @@
         id="careers-title"
         class="text-[clamp(3.5rem,8vw,7.5rem)] font-black leading-[0.88] tracking-tight text-[#4f5f70]"
       >
-        Careers.
+        Be part of it.
       </h1>
 
       <!-- Asymmetric Editorial Split Manifesto -->
@@ -59,9 +59,10 @@
           <p
             class="text-lg font-bold leading-relaxed text-[#627383] sm:text-xl md:text-[22px]"
           >
-            We're a small team from different corners of the world, brought together by a love for making games.
-            We value curiosity, honest collaboration, and caring about the little details.
-            If that sounds like your kind of place, we'd love to hear from you.
+            We're a small team from different corners of the world, brought
+            together by a love for making games. We value curiosity, honest
+            collaboration, and caring about the little details. If that sounds
+            like your kind of place, we'd love to hear from you.
           </p>
 
           <div class="flex flex-wrap items-center gap-4">
@@ -103,7 +104,7 @@
           id="openings-title"
           class="text-[clamp(2.6rem,6vw,5.5rem)] font-black leading-[0.92] tracking-tight text-[#4f5f70]"
         >
-          Find your place.
+          Good things take different minds.
         </h2>
       </div>
 
@@ -169,15 +170,14 @@
                 <h3
                   class="mt-3 text-2xl font-black text-[#4f5f70] sm:text-3xl md:text-4xl"
                 >
-                  Show us what you make.
+                  Is yours one of them?
                 </h3>
                 <p
                   class="mt-3 text-base font-bold leading-relaxed text-[#627383] sm:text-lg"
                 >
-                  We don't have any specific open roles listed right now, but
-                  our open application is always active. Artists, developers,
-                  designers, audio people, producers, and specialists are all
-                  welcome.
+                  Every person brings something different to the table. We don't
+                  have any specific roles open right now, but we're always
+                  interested in meeting people who care about what they make.
                 </p>
               </div>
 
@@ -318,7 +318,7 @@
                 >
               </div>
               <h3 class="mt-2 text-xl sm:text-2xl font-black text-[#4f5f70]">
-                Show us what you make.
+                Is yours one of them?
               </h3>
               <p class="mt-1 text-sm sm:text-base font-bold text-[#627383]">
                 Don't see your craft above? We are always eager to meet
@@ -356,7 +356,7 @@
           id="apply-title"
           class="text-[clamp(2.6rem,5.5vw,5.5rem)] font-black leading-[0.92] tracking-tight text-[#4f5f70]"
         >
-          Tell us what you would love to make.
+          Let's get to know you.
         </h2>
       </div>
 
@@ -562,7 +562,13 @@
                     placeholder="What do you love making, and why would Renhet Studio be a good fit?"
                     class="block w-full rounded-xl border border-[#d6d5ca] bg-[#fffdf3] p-4 pb-11 font-bold text-[#344253] outline-none transition-[border-color,box-shadow] duration-180 placeholder:text-[#718191]/60 focus:border-[#4f5f70] focus:ring-2 focus:ring-[#8fb8d8]/30 resize-y"
                   ></textarea>
-                  <span id="careers-message-count" class="pointer-events-none absolute right-5 bottom-4 text-xs font-bold tabular-nums text-[#627383]">{message.length} / 5,000<span class="sr-only"> characters. Minimum 20 characters.</span></span>
+                  <span
+                    id="careers-message-count"
+                    class="pointer-events-none absolute right-5 bottom-4 text-xs font-bold tabular-nums text-[#627383]"
+                    >{message.length} / 5,000<span class="sr-only">
+                      characters. Minimum 20 characters.</span
+                    ></span
+                  >
                 </div>
                 {#if form?.errors?.message}
                   <span class="text-xs font-extrabold text-[#9a3e45]"
