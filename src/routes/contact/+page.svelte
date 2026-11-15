@@ -95,11 +95,10 @@
       <div class="min-w-0">
         {#if form?.status === "success"}
           <div class="py-6" role="status" tabindex="-1">
-            <p class="text-sm font-bold text-[#627383]">Message sent</p>
             <h3
-              class="mt-3 text-4xl font-black leading-tight tracking-tight text-[#344253] sm:text-5xl"
+              class="text-4xl font-black leading-tight tracking-tight text-[#344253] sm:text-5xl"
             >
-              Your note is here.
+              We're glad you wrote.
             </h3>
             <p
               class="mt-5 max-w-lg text-lg font-bold leading-relaxed text-[#627383]"
@@ -128,7 +127,7 @@
                   await update({ reset: false });
                   messageLength = null;
                   if (result.type === "success" && result.data?.status === "success") {
-                    showToast("Message sent");
+                    showToast("We're glad you wrote.");
                   } else if (result.type === "failure") {
                     showToast(typeof result.data?.message === "string" ? result.data.message : "We couldn't send your message. Please try again.", false);
                   }

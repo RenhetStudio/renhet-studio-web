@@ -73,6 +73,6 @@ export const actions = {
       console.error("Contact submission failed", error instanceof Error ? error.name : "UnknownError");
       return unavailable();
     }
-    return { status: "success", message: "Your message has reached our inbox. A confirmation is on its way to your email.", errors: undefined, values: undefined };
+    return { status: "success", message: "Thanks for taking the time to reach out. Your message is in our inbox, and a confirmation email is on its way.", errors: undefined, values: undefined };
   },
 } satisfies Actions;
