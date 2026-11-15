@@ -99,6 +99,15 @@
       >
         A little look into the stories behind our games.
       </p>
+      <a
+        href="#newsletter-email"
+        class="mt-6 inline-flex max-w-full flex-wrap items-center gap-x-3 gap-y-1 rounded-sm text-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4f5f70]"
+      >
+        <span class="inline-flex items-center gap-2 font-black text-[#344253] underline decoration-[#8fb8d8] decoration-2 underline-offset-4">
+          Get the newsletter <IconArrow direction="up-right" size={13} />
+        </span>
+        <span class="font-semibold text-[#627383]">A glimpse of what's to come.</span>
+      </a>
     </header>
 
     <!-- 2. Search & Category Controls with Debounced Instant Input (300ms) & Authentic Renhet Blue Accents -->
