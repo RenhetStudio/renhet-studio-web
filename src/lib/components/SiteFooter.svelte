@@ -231,7 +231,7 @@
     </div>
   </div>
   </div>
-  <div class="relative z-10 border-t border-[#fffdf3]/15 bg-[#344253]/20">
+  <div class="relative z-10 border-t border-[#fffdf3]/15 bg-[#344253]/20 backdrop-blur-[2px]">
     <div class="mx-auto max-w-[1440px] px-6 py-5 sm:px-8 lg:px-12">
       <!-- Match the logo's visible edge and exclude the 65px scroll-button slot. -->
       <div class="lg:pl-[23px] lg:pr-[65px] xl:pl-6">
