@@ -5,6 +5,7 @@
   import HeroSplit from "$lib/components/home/HeroSplit.svelte";
   import GameSpotlight from "$lib/components/home/GameSpotlight.svelte";
   import TheCrew from "$lib/components/home/TheCrew.svelte";
+  import NewsletterInvitation from "$lib/components/NewsletterInvitation.svelte";
 </script>
 
 <svelte:head>
@@ -19,6 +20,7 @@
 
 <main
   class="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f6f1e8] text-[#4f5f70]"
+  tabindex="-1"
   itemscope
   itemtype="https://schema.org/Organization"
 >
@@ -47,3 +49,5 @@
   <!-- Community & Footer (includes integrated inverted wave transition from paper) -->
   <SiteFooter />
 </main>
+
+<NewsletterInvitation />

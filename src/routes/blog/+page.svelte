@@ -7,9 +7,11 @@
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
   import BlogDecoSplash from "$lib/components/blog/BlogDecoSplash.svelte";
   import OrganicDivider from "$lib/components/OrganicDivider.svelte";
+  import NewsletterInvitation from "$lib/components/NewsletterInvitation.svelte";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
+  let newsletter: NewsletterInvitation;
 
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
   const hasQuery = $derived(
@@ -101,10 +103,11 @@
       </p>
       <a
         href="#newsletter-email"
+        onclick={(event) => newsletter?.openFromLink(event)}
         class="mt-6 inline-flex max-w-full flex-wrap items-center gap-x-3 gap-y-1 rounded-sm text-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4f5f70]"
       >
         <span class="inline-flex items-center gap-2 font-black text-[#344253] underline decoration-[#8fb8d8] decoration-2 underline-offset-4">
-          Get the newsletter <IconArrow direction="up-right" size={13} />
+          Count me in <IconArrow direction="up-right" size={13} />
         </span>
         <span class="font-semibold text-[#627383]">A glimpse of what's to come.</span>
       </a>
@@ -487,3 +490,5 @@
     {/await}
   </div>
 </BlogShell>
+
+<NewsletterInvitation bind:this={newsletter} />

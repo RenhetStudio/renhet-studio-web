@@ -36,6 +36,27 @@ Checking whether an email exists before inserting requires an extra query and ha
 **Tradeoffs / pitfalls**
 The public RPC is intentionally callable without login and does not prove mailbox ownership. Do not mistake a honeypot for a distributed rate limiter. Adding mailbox confirmation or newsletter delivery is a separate feature. The SQL schema tests must run against PostgreSQL; intercepted endpoint tests alone do not prove permissions or conflict handling. Shared Svelte rune state is safe here because it is only mutated in browser event handlers; never put request-specific server data in that singleton. Mount viewport-fixed notifications outside transformed or clipped ancestors, or their position and visibility can depend on the footer instead of the viewport.
 
+### Discoverable invitations with non-modal forms
+
+**Simple explanation**
+Show a small invitation from the start of the page on desktop. Open the form on demand and leave the page interactive.
+
+**How it works**
+Every page that mounts the invitation shows it from the top once browser preferences and footer visibility are known. An intersection observer watches a one-pixel marker at the bottom of the footer so that entering the footer alone does not hide it. Opening the panel focuses its close button so the keyboard stays closed until the visitor chooses the email field. On mobile, `visualViewport` resize and scroll events keep the panel inside the area above the keyboard.
+
+**Why it matters**
+The invitation is available without a scroll trigger. Closing the panel returns the visitor to its trigger. Only explicitly dismissing the invitation records a session preference, while local storage remembers a successful signup in that browser.
+
+**In this project**
+`NewsletterInvitation.svelte` mounts on the home page, public blog index and published articles. The blog link also opens it directly. `NewsletterSignup.svelte` supplies both forms with distinct input IDs and records a successful response from either placement.
+
+**Tradeoffs / pitfalls**
+Browser storage reflects local UI preferences and can be cleared. Use server responses as the source of truth for the submission. Keeping the form mounted lets requests finish through the exit transition. Apply `inert` immediately on close so keyboard and assistive technology already treat it as closed while opacity and position animate.
+
+Fixed controls that share a baseline need the same outer height and bottom offset. In `globals.css`, both controls use the responsive gap plus the browser's `safe-area-inset-bottom`. The newsletter uses an inset outline so its border treatment adds no height. The scroll button shares its size with its inline footer target because the docking animation translates between those rectangles.
+
+The newsletter launcher reveals its label and dismiss button by animating grid tracks from `0fr` to `1fr`. The icon keeps its position while the pill grows. Use `:focus-visible` to reveal the controls on keyboard focus, and keep the visually clipped dismiss button in the tab order so it can reveal itself on focus.
+
 ### Keep user-controlled resizing out of CSS transitions
 
 **Simple explanation**

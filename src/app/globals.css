@@ -70,9 +70,18 @@
 
 
 :root {
+  --floating-edge-gap: 1.5rem;
+  --floating-control-size: 2.75rem;
+  --floating-bottom: calc(var(--floating-edge-gap) + env(safe-area-inset-bottom, 0px));
   font-family: var(--font-sans);
   color-scheme: light;
   background: #f6f1e8;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --floating-edge-gap: 2rem;
+  }
 }
 
 html {

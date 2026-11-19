@@ -220,7 +220,7 @@
             aria-label="Scroll back to top"
             title="Scroll to top"
             tabindex={scrollDockState.isDocked ? 0 : -1}
-            class="group relative z-30 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
+            class="group relative z-30 flex size-[var(--floating-control-size)] shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-sm backdrop-blur-md hover:-translate-y-0.5 hover:border-[#fffdf3] hover:bg-[#fffdf3] hover:text-[#344253] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fffdf3] active:translate-y-0 will-change-transform {scrollDockState.isDocked
               ? 'opacity-100 pointer-events-auto transition-all duration-200'
               : 'opacity-0 pointer-events-none transition-none'}"
           >
@@ -239,6 +239,7 @@
       </div>
     </div>
   </div>
+  <div data-newsletter-footer-end aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-px"></div>
 </footer>
 
 <style>

@@ -3,6 +3,7 @@
   import BlogShell from "$lib/components/BlogShell.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
   import OrganicDivider from "$lib/components/OrganicDivider.svelte";
+  import NewsletterInvitation from "$lib/components/NewsletterInvitation.svelte";
   import type { PageProps } from "./$types";
 
   let { data, form }: PageProps = $props();
@@ -229,3 +230,5 @@
     {/if}
   </div>
 </BlogShell>
+
+<NewsletterInvitation />

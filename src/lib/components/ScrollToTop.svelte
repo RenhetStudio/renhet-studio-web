@@ -300,7 +300,7 @@
 
 <div
   bind:this={floatingBtnEl}
-  class="scroll-floating-container fixed bottom-6 right-6 z-40 sm:bottom-8 sm:right-8"
+  class="scroll-floating-container fixed z-40"
   class:is-visible={isVisible}
   class:is-hidden={!isVisible}
   class:is-docked={scrollDockState.isDocked}
@@ -308,7 +308,7 @@
   <button
     type="button"
     onclick={scrollToTop}
-    class="group flex h-10 w-10 sm:h-11 sm:w-11 cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#fffdf3] hover:text-[#344253] hover:border-[#fffdf3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fffdf3] active:translate-y-0 active:scale-95"
+    class="group flex size-[var(--floating-control-size)] cursor-pointer items-center justify-center rounded-full border border-[#fffdf3]/40 bg-[#344253]/90 text-[#fffdf3] shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#fffdf3] hover:text-[#344253] hover:border-[#fffdf3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fffdf3] active:translate-y-0 active:scale-95"
     aria-label="Scroll back to top"
     title="Scroll to top"
   >
@@ -318,6 +318,8 @@
 
 <style>
   .scroll-floating-container {
+    right: max(var(--floating-edge-gap), env(safe-area-inset-right, 0px));
+    bottom: var(--floating-bottom);
     will-change: opacity, transform;
   }
 
