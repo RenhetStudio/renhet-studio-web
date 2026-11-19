@@ -2,9 +2,19 @@
   import { enhance } from "$app/forms";
   import BlogShell from "$lib/components/BlogShell.svelte";
   import IconArrow from "$lib/components/icons/IconArrow.svelte";
+  import OrganicDivider from "$lib/components/OrganicDivider.svelte";
+  import { setNewsletterSubscription } from "$lib/components/newsletter-preferences.svelte";
   import type { PageProps } from "./$types";
 
   let { data, form }: PageProps = $props();
+  let newsletterPending = $state(false);
+  const newsletterFeedback = $derived(form?.newsletter);
+
+  $effect(() => {
+    if (newsletterFeedback?.ok) {
+      setNewsletterSubscription(newsletterFeedback.subscribed);
+    }
+  });
 </script>
 
 <svelte:head>
@@ -53,7 +63,7 @@
       </h1>
 
       <p class="mt-3 text-base font-normal leading-relaxed text-[#627383]">
-        Manage your public display name.
+        Manage your public display name and newsletter subscription.
       </p>
     </header>
 
@@ -95,5 +105,64 @@
         {/if}
       </form>
     </div>
+
+    <OrganicDivider seed="account-newsletter" class="my-8 sm:my-10" />
+
+    <section aria-labelledby="account-newsletter-title">
+      <h2 id="account-newsletter-title" class="text-2xl font-black leading-tight text-[#4f5f70]">
+        Newsletter
+      </h2>
+
+      {#if data.newsletter.status === "ready"}
+        <form
+          method="POST"
+          use:enhance={({ cancel }) => {
+            if (newsletterPending) {
+              cancel();
+              return;
+            }
+            newsletterPending = true;
+            return async ({ update }) => {
+              try {
+                await update();
+              } finally {
+                newsletterPending = false;
+              }
+            };
+          }}
+          aria-busy={newsletterPending}
+          class="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div class="min-w-0 text-sm leading-relaxed text-[#627383]">
+            <p class="font-bold">{data.newsletter.subscribed ? "Subscribed" : "Not subscribed"}</p>
+            <p class="wrap-anywhere">{data.newsletter.email}</p>
+          </div>
+          <input type="hidden" name="newsletterPreference" value={data.newsletter.subscribed ? "unsubscribe" : "subscribe"} />
+          <button
+            type="submit"
+            disabled={newsletterPending}
+            class="inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-full border px-6 text-sm font-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4f5f70] disabled:cursor-wait disabled:opacity-60 sm:w-auto sm:shrink-0 {data.newsletter.subscribed
+              ? 'border-[#4f5f70]/30 bg-[#fffdf3] text-[#4f5f70] hover:border-[#4f5f70]'
+              : 'border-transparent bg-[#4f5f70] text-[#fffdf3] hover:bg-[#344253]'}"
+          >
+            {newsletterPending ? "Updating…" : data.newsletter.subscribed ? "Unsubscribe" : "Subscribe"}
+          </button>
+        </form>
+      {:else}
+        <p class="mt-3 text-sm font-semibold text-[#627383]">
+          {data.newsletter.status === "unverified"
+            ? "Confirm your account email to manage your subscription."
+            : "Newsletter settings are temporarily unavailable."}
+        </p>
+      {/if}
+
+      <div role="status">
+        {#if newsletterFeedback}
+          <p class="mt-3 text-sm font-bold {newsletterFeedback.ok ? 'text-emerald-700' : 'text-rose-700'}">
+            {newsletterFeedback.message}
+          </p>
+        {/if}
+      </div>
+    </section>
   </div>
 </BlogShell>

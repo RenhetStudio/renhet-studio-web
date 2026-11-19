@@ -4,7 +4,7 @@
   import IconMail from "$lib/components/icons/IconMail.svelte";
   import IconArrowUpRight from "$lib/components/icons/IconArrowUpRight.svelte";
   import IconReload from "$lib/components/icons/IconReload.svelte";
-  import { newsletterPreferences, recordNewsletterSubscription } from "./newsletter-preferences.svelte";
+  import { newsletterPreferences, setNewsletterSubscription } from "./newsletter-preferences.svelte";
 
   let { compact = false, onSuccess }: { compact?: boolean; onSuccess?: () => void } = $props();
   const instanceId = $props.id();
@@ -36,7 +36,7 @@
       reportResult(result.message, response.ok);
       if (response.ok) {
         email = "";
-        recordNewsletterSubscription();
+        setNewsletterSubscription(true);
         onSuccess?.();
       }
     } catch {

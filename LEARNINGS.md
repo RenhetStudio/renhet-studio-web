@@ -36,6 +36,23 @@ Checking whether an email exists before inserting requires an extra query and ha
 **Tradeoffs / pitfalls**
 The public RPC is intentionally callable without login and does not prove mailbox ownership. Do not mistake a honeypot for a distributed rate limiter. Adding mailbox confirmation or newsletter delivery is a separate feature. The SQL schema tests must run against PostgreSQL; intercepted endpoint tests alone do not prove permissions or conflict handling. Shared Svelte rune state is safe here because it is only mutated in browser event handlers; never put request-specific server data in that singleton. Mount viewport-fixed notifications outside transformed or clipped ancestors, or their position and visibility can depend on the footer instead of the viewport.
 
+### Account-owned newsletter preferences
+
+**Simple explanation**
+An account manages the subscription associated with its confirmed email. A visitor who joined from the footer sees the existing subscription when they sign in with that address.
+
+**How it works**
+The account action validates the requested state, then calls an authenticated RPC. The database derives the normalized email from `auth.uid()` and `auth.users` before reading, inserting or deleting a subscription. Requests submit the desired state, so repeating a request has the same effect.
+
+**Why it matters**
+A browser can change its own form fields and local storage. Ownership comes from the authenticated database session, and account responses containing email and status use a private cache policy.
+
+**In this project**
+`202611190001_account_newsletter.sql` adds `manage_my_newsletter_subscription` and reuses the existing insert-only signup function. `/account` updates the invitation's browser preference after a successful response.
+
+**Tradeoffs / pitfalls**
+The public form still accepts new signup requests by email. The account operation removes the active row, so a future public signup can add it again. A suppression list or verified resubscription flow would change that policy.
+
 ### Discoverable invitations with non-modal forms
 
 **Simple explanation**

@@ -1,4 +1,4 @@
--- Run after the migration in a test database. All fixture changes roll back.
+-- Run after the newsletter migrations in a test database. All fixture changes roll back.
 begin;
 
 do $$
@@ -25,5 +25,61 @@ $$;
 set local role anon;
 select public.subscribe_newsletter('newsletter-test@example.invalid');
 reset role;
+
+insert into auth.users (id, email, email_confirmed_at) values
+  ('7d67e00f-ea1a-4e29-bba7-d925dbbb18c1', 'Newsletter-Account@Example.Invalid', now()),
+  ('7d67e00f-ea1a-4e29-bba7-d925dbbb18c2', 'newsletter-unverified@example.invalid', null);
+
+select public.subscribe_newsletter('newsletter-account@example.invalid');
+select public.subscribe_newsletter('newsletter-unverified@example.invalid');
+
+do $$
+begin
+  assert not has_function_privilege('anon', 'public.manage_my_newsletter_subscription(boolean)', 'EXECUTE'),
+    'Account subscription management must require authentication';
+end;
+$$;
+
+set local role authenticated;
+set local request.jwt.claim.sub = '7d67e00f-ea1a-4e29-bba7-d925dbbb18c1';
+
+do $$
+begin
+  assert public.manage_my_newsletter_subscription() =
+    '{"email":"newsletter-account@example.invalid","subscribed":true}'::jsonb,
+    'A public signup must appear in the matching account';
+  assert (public.manage_my_newsletter_subscription(false)->>'subscribed')::boolean is false,
+    'The confirmed address can unsubscribe';
+  assert (public.manage_my_newsletter_subscription(false)->>'subscribed')::boolean is false,
+    'Repeated opt-outs are safe';
+  assert (public.manage_my_newsletter_subscription(true)->>'subscribed')::boolean is true,
+    'The confirmed address can subscribe again';
+  assert (public.manage_my_newsletter_subscription(true)->>'subscribed')::boolean is true,
+    'Repeated opt-ins are safe';
+  perform public.manage_my_newsletter_subscription(false);
+end;
+$$;
+
+set local request.jwt.claim.sub = '7d67e00f-ea1a-4e29-bba7-d925dbbb18c2';
+
+do $$
+begin
+  assert public.manage_my_newsletter_subscription() is null,
+    'An unverified account must not be able to read the subscription';
+  assert public.manage_my_newsletter_subscription(false) is null,
+    'An unverified account must not be able to delete the subscription';
+end;
+$$;
+
+reset role;
+
+do $$
+begin
+  assert not exists (select 1 from public.newsletter_subscribers where email = 'newsletter-account@example.invalid'),
+    'The opt-out must be stored in the database';
+  assert exists (select 1 from public.newsletter_subscribers where email = 'newsletter-unverified@example.invalid'),
+    'The other address must remain subscribed';
+end;
+$$;
 
 rollback;

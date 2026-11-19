@@ -21,11 +21,12 @@ export function dismissNewsletterInvitation() {
   }
 }
 
-export function recordNewsletterSubscription() {
-  newsletterPreferences.subscribed = true;
+export function setNewsletterSubscription(subscribed: boolean) {
+  newsletterPreferences.subscribed = subscribed;
   try {
-    localStorage.setItem(subscribedKey, "1");
+    if (subscribed) localStorage.setItem(subscribedKey, "1");
+    else localStorage.removeItem(subscribedKey);
   } catch {
-    // Keep the confirmation for the current visit.
+    // Keep the preference for the current visit.
   }
 }
