@@ -78,7 +78,6 @@
       country: "Ukraine",
       href: "https://denis2003136.wixsite.com/revasound",
     },
-    { name: "Anton", role: "3D Artist", country: "Finland" },
     {
       name: "Naomi",
       role: "3D Animator",
