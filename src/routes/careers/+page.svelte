@@ -309,14 +309,6 @@
           >
             <div>
               <div class="flex items-center gap-3">
-                <span
-                  class="text-xs font-black tracking-widest text-[#718191] uppercase"
-                  >Spontaneous</span
-                >
-                <span
-                  class="rounded-full bg-[#8fb8d8]/25 px-2.5 py-0.5 text-xs font-black text-[#344253]"
-                  >Always open</span
-                >
               </div>
               <h3 class="mt-2 text-xl sm:text-2xl font-black text-[#4f5f70]">
                 Is yours one of them?
