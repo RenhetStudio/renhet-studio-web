@@ -952,6 +952,28 @@ Shared components can emit the same violation on every route, while SSR style at
 **Tradeoffs / pitfalls**
 Strict CSP can break new third-party embeds or inline styles unless their exact origins and rendering strategy are reviewed. Keep the allowlist narrow and verify response headers after deployment. `element.style.transform = value` and `style.setProperty()` are allowed CSSOM property updates, unlike setting the whole `style` attribute or `cssText` ([MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/style-src-attr)). Keep these direct updates for measured coordinates in cursors, parallax, navbar hero distance, and FLIP docking. The installed Svelte 5 transition runtime uses Web Animations, so `fade` and `fly` can remain. Check the production build in a browser on initial load, hydration, and interactions; development alone does not prove CSP compatibility. Extend the roster's stagger rules when adding members beyond its current twelve positions. Recheck the announcer hash after SvelteKit upgrades; whitespace changes its digest. That same exact style is permitted on any element, so keep this allowlist limited to the framework's fixed visually hidden declaration. Remove the exception when SvelteKit emits CSP-compatible announcer markup.
 
+### CSP-safe widths for streamed loading placeholders
+
+**Simple explanation**
+
+Give loading placeholders fixed width classes so their initial server-rendered HTML complies with CSP.
+
+**How it works**
+
+Tailwind generates CSS for complete class names such as `w-[58%]`. Svelte renders those names in the pending branch of the `{#await}` block.
+
+**Why it matters**
+
+The browser applies `style-src-attr` as soon as it parses the pending markup, before the streamed data or client hydration arrives.
+
+**In this project**
+
+`src/routes/careers/+page.svelte` assigns title, department, and location widths by placeholder row.
+
+**Tradeoffs / pitfalls**
+
+Keep each width class as a complete literal so Tailwind can detect it during compilation.
+
 ### Spreadsheet formula injection
 
 **Simple explanation**

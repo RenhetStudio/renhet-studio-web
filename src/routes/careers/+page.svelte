@@ -10,6 +10,12 @@
   import IconChevronDown from "$lib/components/icons/IconChevronDown.svelte";
   import type { PageProps } from "./$types";
 
+  const skeletonRows = [
+    { titleWidth: "w-[58%]", departmentWidth: "w-[110px]", locationWidth: "w-[130px]" },
+    { titleWidth: "w-[74%]", departmentWidth: "w-[140px]", locationWidth: "w-[110px]" },
+    { titleWidth: "w-[48%]", departmentWidth: "w-[95px]", locationWidth: "w-[145px]" },
+  ];
+
   let { data, form }: PageProps = $props();
   let message = $state("");
 </script>
@@ -118,7 +124,7 @@
           aria-label="Loading open roles"
         >
           <span class="sr-only">Loading open roles…</span>
-          {#each [1, 2, 3] as i (i)}
+          {#each skeletonRows as row (row.titleWidth)}
             <div
               class="grid grid-cols-[2.5rem_minmax(0,1fr)_2rem] sm:grid-cols-[4rem_minmax(0,1fr)_minmax(12rem,0.6fr)_2.5rem] items-center gap-4 py-6 sm:py-7 border-b border-[#d6d5ca] -mx-2 sm:-mx-4 px-2 sm:px-4"
             >
@@ -128,28 +134,17 @@
               <!-- Title & department stacked -->
               <div class="flex flex-col gap-2">
                 <div
-                  class="h-6 sm:h-7 rounded bg-[#4f5f70]/15"
-                  style="width: {i === 1 ? '58%' : i === 2 ? '74%' : '48%'};"
+                  class="h-6 sm:h-7 rounded bg-[#4f5f70]/15 {row.titleWidth}"
                 ></div>
                 <div
-                  class="h-3.5 sm:h-4 rounded bg-[#4f5f70]/10"
-                  style="width: {i === 1
-                    ? '110px'
-                    : i === 2
-                      ? '140px'
-                      : '95px'};"
+                  class="h-3.5 sm:h-4 rounded bg-[#4f5f70]/10 {row.departmentWidth}"
                 ></div>
               </div>
 
               <!-- Location & Type (desktop) -->
               <div class="hidden sm:flex sm:justify-end">
                 <div
-                  class="h-4 rounded bg-[#4f5f70]/10"
-                  style="width: {i === 1
-                    ? '130px'
-                    : i === 2
-                      ? '110px'
-                      : '145px'};"
+                  class="h-4 rounded bg-[#4f5f70]/10 {row.locationWidth}"
                 ></div>
               </div>
 
