@@ -79,16 +79,22 @@
       href: "https://denis2003136.wixsite.com/revasound",
     },
     {
-      name: "Naomi",
-      role: "3D Animator",
-      country: "Australia",
-      href: "https://www.artstation.com/naoface",
-    },
-    {
       name: "Ole",
       role: "Concept Artist",
       country: "The Netherlands",
       href: "https://www.artstation.com/olewisse",
+    },
+    {
+      name: "Somsai",
+      role: "3D Character Artist",
+      country: "USA",
+      href: "https://somsai.artstation.com/",
+    },
+    {
+      name: "Naomi",
+      role: "3D Animator",
+      country: "Australia",
+      href: "https://www.artstation.com/naoface",
     },
     {
       name: "Freya",
