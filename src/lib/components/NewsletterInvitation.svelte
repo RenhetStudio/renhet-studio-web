@@ -16,7 +16,6 @@
   let closeButton: HTMLButtonElement;
   let panel: HTMLElement;
   let opener: HTMLElement | undefined;
-  let viewportHeight = $state<number>();
   let viewportOffset = $state(0);
 
   const showLauncher = $derived(
@@ -51,8 +50,11 @@
 
     function updateViewport() {
       if (!viewport) return;
-      viewportHeight = viewport.height;
-      viewportOffset = Math.max(0, document.documentElement.clientHeight - viewport.height - viewport.offsetTop);
+      const { height, offsetTop } = viewport;
+      const offset = Math.max(0, document.documentElement.clientHeight - height - offsetTop);
+      viewportOffset = offset;
+      panel.style.setProperty("--viewport-height", height ? `${height}px` : "");
+      panel.style.setProperty("--viewport-offset", `${offset}px`);
     }
 
     updateViewport();
@@ -139,8 +141,6 @@
   class="invitation panel z-50 rounded-3xl border-2 border-[#fffdf3] bg-[#4f5f70]/95 p-4 text-[#fffdf3] shadow-[0_16px_40px_rgba(30,40,55,0.35)] ring-1 ring-[#fffdf3]/30 backdrop-blur-xl sm:p-5"
   class:is-visible={open}
   class:keyboard-open={viewportOffset > 0}
-  style:--viewport-height={viewportHeight ? `${viewportHeight}px` : undefined}
-  style:--viewport-offset={`${viewportOffset}px`}
 >
   <div class="mb-3 flex items-start justify-between gap-3">
     <div>

@@ -65,7 +65,7 @@ Every page that mounts the invitation shows it from the top once browser prefere
 The invitation is available without a scroll trigger. Closing the panel returns the visitor to its trigger. Only explicitly dismissing the invitation records a session preference, while local storage remembers a successful signup in that browser.
 
 **In this project**
-`NewsletterInvitation.svelte` mounts on the home page, public blog index and published articles. The blog link also opens it directly. `NewsletterSignup.svelte` supplies both forms with distinct input IDs and records a successful response from either placement.
+`NewsletterInvitation.svelte` mounts on the home page, public blog index and published articles. The blog link also opens it directly. `NewsletterSignup.svelte` supplies both forms with distinct input IDs and records a successful response from either placement. The panel applies measured viewport values with `panel.style.setProperty()` because Svelte's `style:` directives serialize initial values into HTML attributes that CSP blocks.
 
 **Tradeoffs / pitfalls**
 Browser storage reflects local UI preferences and can be cleared. Use server responses as the source of truth for the submission. Keeping the form mounted lets requests finish through the exit transition. Apply `inert` immediately on close so keyboard and assistive technology already treat it as closed while opacity and position animate.
